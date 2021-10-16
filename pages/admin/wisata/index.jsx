@@ -3,9 +3,11 @@ import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
 import CardWisata from '../../../components/Cards/Wisata'
 import { Dialog, Button } from 'evergreen-ui'
+import { useRouter } from 'next/router'
 const Wisata = () => {
   const [value, setValue] = useState(0)
   const [showDelete, setShowDelete] = useState(false)
+  const router = useRouter()
 
   const datas = [
     {
@@ -108,7 +110,6 @@ const Wisata = () => {
         intent='danger'
         onCloseComplete={() => {
           setShowDelete(false)
-          console.log('close')
         }}
         confirmLabel='Delete'
       >

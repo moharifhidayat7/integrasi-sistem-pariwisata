@@ -27,13 +27,7 @@ import CustomItem from './Customs/MenuItem'
 const NavMenu = () => {
   return (
     <Menu>
-      <Menu.Group
-        title={
-          <Heading color='#E6E8F0' size={100}>
-            Menu Utama
-          </Heading>
-        }
-      >
+      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Menu Utama</span>}>
         <CustomItem icon={<DashboardIcon color='#F9FAFC' />} text='Dashboard' />
         <CustomItem
           icon={<SettingsIcon color='#F9FAFC' />}
@@ -47,13 +41,7 @@ const NavMenu = () => {
         <CustomItem icon={<HomeIcon color='#F9FAFC' />} text='Penginapan' />
         <CustomItem icon={<ShopIcon color='#F9FAFC' />} text='UMKM' />
       </Menu.Group>
-      <Menu.Group
-        title={
-          <Heading color='#E6E8F0' size={100}>
-            Marketplace
-          </Heading>
-        }
-      >
+      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Marketplace</span>}>
         <CustomItem icon={<BoxIcon color='#F9FAFC' />} text='Produk' />
         <CustomItem
           icon={<ShoppingCartIcon color='#F9FAFC' />}
@@ -64,13 +52,7 @@ const NavMenu = () => {
           text='Metode Pembayaran'
         />
       </Menu.Group>
-      <Menu.Group
-        title={
-          <Heading color='#E6E8F0' size={100}>
-            User
-          </Heading>
-        }
-      >
+      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>User</span>}>
         <CustomItem icon={<UserIcon color='#F9FAFC' />} text='Pengelola' />
       </Menu.Group>
     </Menu>

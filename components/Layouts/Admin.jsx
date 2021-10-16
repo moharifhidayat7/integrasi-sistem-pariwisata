@@ -30,7 +30,7 @@ import NextLink from 'next/link'
 import Sidebar from '../Sidebar'
 const Admin = ({ children }) => {
   return (
-    <Pane fontFamily='sans-serif' display='flex'>
+    <Pane fontFamily='sans-serif' backgroundColor='#f4f6fa' display='flex'>
       <Sidebar></Sidebar>
       {children}
     </Pane>
