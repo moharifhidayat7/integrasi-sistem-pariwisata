@@ -1,0 +1,28 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints';
+
+@include media-breakpoint-down(sm) {
+  .sidebarRes {
+    padding-top: 80px;
+    margin-left: -250px;
+    -webkit-transition: margin 0.4s 0s ease;
+    -moz-transition: margin 0.4s 0s ease;
+    -o-transition: margin 0.4s 0s ease;
+    transition: margin 0.4s 0s ease;
+  }
+  .sidebarShow {
+    padding-top: 80px;
+    margin-left: 0;
+    -webkit-transition: margin 0.4s 0s ease;
+    -moz-transition: margin 0.4s 0s ease;
+    -o-transition: margin 0.4s 0s ease;
+    transition: margin 0.4s 0s ease;
+  }
+  .sidebarButton {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1030;
+  }
+}

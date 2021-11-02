@@ -23,9 +23,9 @@ import {
   Card,
 } from 'evergreen-ui'
 import NextLink from 'next/link'
-const Wisata = ({ name, id, userId, image, user, setShowDelete }) => {
+const UMKM = ({ name, id, userId, image, user, setShowDelete }) => {
   return (
-    <Pane className='col-sm-6 col-md-6 col-lg-3' position='relative'>
+    <Pane className='col-sm-6 col-md-4 col-lg-3 col-xl-2' position='relative'>
       <Card elevation={1} backgroundColor='white' width='100%'>
         <Pane
           height={160}
@@ -37,10 +37,7 @@ const Wisata = ({ name, id, userId, image, user, setShowDelete }) => {
             backgroundSize: 'cover',
           }}
         ></Pane>
-        <Pane
-          padding={10}
-          className='d-flex d-lg-block d-xl-flex align-items-start justify-content-between'
-        >
+        <Pane padding={10}>
           <Pane>
             <Heading is='h2' size={500}>
               {name}
@@ -52,7 +49,10 @@ const Wisata = ({ name, id, userId, image, user, setShowDelete }) => {
               </NextLink>
             </Link>
           </Pane>
-          <Pane className='d-flex justify-content-center' marginLeft={4}>
+          <Pane
+            className='d-flex justify-content-center align-items-center'
+            marginTop={5}
+          >
             <Button appearance='primary'>Kelola</Button>
             <IconButton
               icon={TrashIcon}
@@ -68,4 +68,4 @@ const Wisata = ({ name, id, userId, image, user, setShowDelete }) => {
   )
 }
 
-export default Wisata
+export default UMKM

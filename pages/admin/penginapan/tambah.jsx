@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
-import CardWisata from '../../../components/Cards/Wisata'
 import StepWizard from 'react-step-wizard'
-import HorizontalScroll from 'react-scroll-horizontal'
 import { useForm } from 'react-hook-form'
 
 import _ from 'lodash'
@@ -45,7 +43,7 @@ const Tambah = () => {
   return (
     <Layout>
       <Content>
-        <Content.Header title='Tambah Wisata' />
+        <Content.Header title='Tambah Penginapan' />
         <Content.Body>
           <Pane className='d-flex justify-content-center'>
             <Pane
@@ -170,22 +168,22 @@ const Detail = (props) => {
         <TextInputField
           isInvalid={errors.objectName ? true : false}
           validationMessage={errors.objectName && 'Harus di isi!'}
-          label='Nama Tempat Wisata *'
-          placeholder='Nama Tempat Wisata'
+          label='Nama Penginapan *'
+          placeholder='Nama Penginapan'
           id='objectName'
           {...register('objectName', { required: true })}
         />
         <TextInputField
           isInvalid={errors.objectAddress ? true : false}
           validationMessage={errors.objectAddress && 'Harus di isi!'}
-          label='Alamat Tempat Wisata *'
-          placeholder='Alamat Tempat Wisata'
+          label='Alamat Penginapan *'
+          placeholder='Alamat Penginapan'
           id='objectAddress'
           {...register('objectAddress', { required: true })}
         />
         <TextareaField
           label='Deskripsi'
-          placeholder='Deskripsi singkat Tempat Wisata'
+          placeholder='Deskripsi singkat Penginapan'
           id='description'
           {...register('description')}
         />
@@ -507,7 +505,7 @@ const Review = (props) => {
   return (
     <Pane>
       <Pane>
-        <Strong>Detail Wisata</Strong>
+        <Strong>Detail Penginapan</Strong>
         <Pane>
           <Text>Nama : tes</Text>
         </Pane>

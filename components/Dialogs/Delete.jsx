@@ -1,18 +1,22 @@
 import { Pane, Dialog } from 'evergreen-ui'
 import { useState } from 'react'
-const Delete = () => {
-  const [showDelete, setShowDelete] = useState(false)
-
+const Delete = ({
+  isShown,
+  setIsShown,
+  onConfirm,
+  text = 'Apakah anda yakin ingin menghapus item ini?',
+}) => {
   return (
     <Pane>
       <Dialog
-        showDelete={showDelete}
-        title='Dialog title'
+        isShown={isShown}
+        title='Delete'
         intent='danger'
-        onCloseComplete={() => setShowDelete(false)}
+        onCloseComplete={() => setIsShown(false)}
         confirmLabel='Delete'
+        onConfirm={onConfirm}
       >
-        Apakah anda yakin ingin menghapus item ini?
+        {text}
       </Dialog>
     </Pane>
   )

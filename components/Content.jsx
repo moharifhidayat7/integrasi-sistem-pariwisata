@@ -24,10 +24,17 @@ import {
 } from 'evergreen-ui'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
+import style from './Content.module.scss'
 
 const Content = ({ children }) => {
   return (
-    <Pane flex={1} backgroundColor='#f4f6fa' marginLeft={250} height='100vh'>
+    <Pane
+      flex={1}
+      backgroundColor='#f4f6fa'
+      height='100%'
+      paddingBottom={100}
+      className={style.layoutMargin}
+    >
       {children}
     </Pane>
   )
@@ -35,7 +42,7 @@ const Content = ({ children }) => {
 const Header = ({ title, button }) => {
   const router = useRouter()
   return (
-    <Pane backgroundColor='#e6e8f0'>
+    <Pane backgroundColor='#e6e8f0' className={style.contentMargin}>
       <Pane
         className='container d-flex align-items-center justify-content-between'
         height={180}
