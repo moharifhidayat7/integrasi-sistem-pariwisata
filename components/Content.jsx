@@ -45,7 +45,8 @@ const Header = ({ title, button }) => {
     <Pane backgroundColor='#e6e8f0' className={style.contentMargin}>
       <Pane
         className='container d-flex align-items-center justify-content-between'
-        height={180}
+        paddingTop={60}
+        paddingBottom={30}
       >
         <Heading is='h1' size={900}>
           {title}

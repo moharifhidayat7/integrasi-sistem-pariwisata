@@ -22,18 +22,29 @@ import {
   Button,
   Card,
 } from 'evergreen-ui'
-import './Admin.module.scss'
 import { useState } from 'react'
 import CustomItem from '../Customs/MenuItem'
 import Image from 'next/image'
 import NextLink from 'next/link'
 import Sidebar from '../Sidebar'
-const Admin = ({ children }) => {
+import Head from 'next/head'
+
+const Admin = ({ children, title = 'Admin' }) => {
   return (
-    <Pane fontFamily='sans-serif' backgroundColor='#f4f6fa' display='flex'>
-      <Sidebar></Sidebar>
-      {children}
-    </Pane>
+    <>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <Pane
+        fontFamily='sans-serif'
+        backgroundColor='#f4f6fa'
+        display='flex'
+        minHeight='100vh'
+      >
+        <Sidebar></Sidebar>
+        {children}
+      </Pane>
+    </>
   )
 }
 

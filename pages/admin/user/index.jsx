@@ -14,7 +14,10 @@ import {
   IconButton,
   Badge,
   TrashIcon,
+  PlusIcon,
+  ResetIcon,
   SearchInput,
+  EyeOpenIcon,
   Text,
   Avatar,
 } from 'evergreen-ui'
@@ -141,8 +144,9 @@ const User = () => {
           button={
             <Button
               appearance='primary'
-              height={38}
+              size='large'
               onClick={() => router.push(`${router.asPath}/tambah`)}
+              iconBefore={PlusIcon}
             >
               Tambah User
             </Button>
@@ -174,6 +178,7 @@ const User = () => {
                     >
                       Foto
                     </Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Nama</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Email</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Role</Table.TextHeaderCell>
                     <Table.TextHeaderCell textAlign='center'>
@@ -197,6 +202,7 @@ const User = () => {
                             size={50}
                           />
                         </Table.Cell>
+                        <Table.TextCell>Imam</Table.TextCell>
                         <Table.TextCell>ASDASDSDasdas dasd asd</Table.TextCell>
                         <Table.TextCell>
                           <Pane flexBasis={120}>
@@ -209,14 +215,12 @@ const User = () => {
                         </Table.TextCell>
 
                         <Table.Cell className='d-flex justify-content-end align-items-center gap-1'>
+                          <Button iconBefore={EyeOpenIcon}>Detail</Button>
                           <Button appearance='primary' iconBefore={EditIcon}>
                             Edit
                           </Button>
-                          <IconButton
-                            icon={TrashIcon}
-                            intent='danger'
-                            appearance='primary'
-                          />
+                          <Button iconBefore={ResetIcon}>Reset</Button>
+                          <IconButton icon={TrashIcon} intent='danger' />
                         </Table.Cell>
                       </Table.Row>
                     ))}

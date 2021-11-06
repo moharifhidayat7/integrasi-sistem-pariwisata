@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
 import CardPenginapan from '../../../components/Cards/Wisata'
-import { Dialog, Button } from 'evergreen-ui'
+import { Dialog, Button, PlusIcon } from 'evergreen-ui'
 import { useRouter } from 'next/router'
 const Penginapan = () => {
   const [value, setValue] = useState(0)
@@ -121,8 +121,9 @@ const Penginapan = () => {
           button={
             <Button
               appearance='primary'
-              height={38}
+              size='large'
               onClick={() => router.push(`${router.asPath}/tambah`)}
+              iconBefore={PlusIcon}
             >
               Tambah Penginapan
             </Button>

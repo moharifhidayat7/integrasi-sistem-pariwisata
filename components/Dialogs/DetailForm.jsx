@@ -5,14 +5,44 @@ import {
   TextInputField,
   TextareaField,
 } from 'evergreen-ui'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-function DetailForm({ isShown, setIsShown, data = [] }) {
+import axios from 'axios'
+function DetailForm({
+  isShown,
+  setIsShown,
+  data = [],
+  mutate,
+  toastMessage = () => {},
+}) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm()
+
+  const onSubmit = (postData) =>
+    axios
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        name: postData.objectName,
+        address: postData.objectAddress,
+        description: postData.description,
+      })
+      .then(function (response) {
+        setIsShown(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+  useEffect(() => {
+    setValue('objectName', data.name)
+    setValue('objectAddress', data.address)
+    setValue('description', data.description)
+  }, [isShown])
 
   return (
     <Pane>
@@ -22,7 +52,7 @@ function DetailForm({ isShown, setIsShown, data = [] }) {
         onCloseComplete={() => setIsShown(false)}
         confirmLabel='Update'
         overlayProps={{ zIndex: 2500 }}
-        onConfirm={handleSubmit((data) => console.log(data))}
+        onConfirm={handleSubmit(onSubmit)}
       >
         <form>
           <Pane className='d-flex flex-column'>
@@ -31,7 +61,6 @@ function DetailForm({ isShown, setIsShown, data = [] }) {
               validationMessage={errors.objectName && 'Harus di isi!'}
               label='Nama Tempat Wisata *'
               placeholder='Nama Tempat Wisata'
-              value={data.objectName}
               id='objectName'
               {...register('objectName', { required: true })}
             />
@@ -41,14 +70,12 @@ function DetailForm({ isShown, setIsShown, data = [] }) {
               label='Alamat Tempat Wisata *'
               placeholder='Alamat Tempat Wisata'
               id='objectAddress'
-              value={data.objectAddress}
               {...register('objectAddress', { required: true })}
             />
             <TextareaField
               label='Deskripsi'
               placeholder='Deskripsi singkat Tempat Wisata'
               id='description'
-              value={data.description}
               {...register('description')}
             />
           </Pane>

@@ -27,6 +27,7 @@ import {
   SettingsIcon,
   Button,
   Card,
+  KnownVehicleIcon,
   GroupedBarChartIcon,
   LogOutIcon,
   KeyIcon,
@@ -56,6 +57,11 @@ const NavMenu = () => {
           icon={<ShopIcon color='#F9FAFC' />}
           text='UMKM'
           href='/admin/umkm'
+        />
+        <CustomItem
+          icon={<UserIcon color='#F9FAFC' />}
+          text='User'
+          href='/admin/user'
         />
       </Menu.Group>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
@@ -101,16 +107,14 @@ const NavMenu = () => {
           href='/admin/pengunjung'
         />
         <CustomItem
+          icon={<KnownVehicleIcon color='#F9FAFC' />}
+          text='Parkir'
+          href='/admin/parkir'
+        />
+        <CustomItem
           icon={<ChartIcon color='#F9FAFC' />}
           text='Keuangan'
           href='/admin/keuangan'
-        />
-      </Menu.Group>
-      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>User</span>}>
-        <CustomItem
-          icon={<UserIcon color='#F9FAFC' />}
-          text='User'
-          href='/admin/user'
         />
       </Menu.Group>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Akun</span>}>

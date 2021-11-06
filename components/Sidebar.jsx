@@ -34,7 +34,7 @@ const Sidebar = () => {
         </Button>
         <Link href='/admin'>
           <a>
-            <Heading is='h1' size={700} marginLeft={20} color='#F9FAFC'>
+            <Heading is='h1' size={700} marginLeft={20} color='#52BD95'>
               Rumah Digital Gombengsari
             </Heading>
           </a>

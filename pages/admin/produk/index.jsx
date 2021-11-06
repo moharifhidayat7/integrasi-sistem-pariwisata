@@ -14,6 +14,7 @@ import {
   IconButton,
   Badge,
   TrashIcon,
+  PlusIcon,
   SearchInput,
   Text,
 } from 'evergreen-ui'
@@ -140,8 +141,9 @@ const Produk = () => {
           button={
             <Button
               appearance='primary'
-              height={38}
+              size='large'
               onClick={() => router.push(`${router.asPath}/tambah`)}
+              iconBefore={PlusIcon}
             >
               Tambah Produk
             </Button>
@@ -188,8 +190,8 @@ const Produk = () => {
                       >
                         <Table.Cell>
                           <Pane
-                            width={100}
-                            height={100}
+                            width={80}
+                            height={80}
                             position='relative'
                             borderRadius={4}
                             overflow='hidden'

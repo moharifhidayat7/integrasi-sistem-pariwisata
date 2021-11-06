@@ -5,14 +5,40 @@ import {
   TextInputField,
   TextareaField,
 } from 'evergreen-ui'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-function VideoForm({ isShown, setIsShown }) {
+import axios from 'axios'
+function VideoForm({
+  isShown,
+  setIsShown,
+  mutate,
+  data = [],
+  toastMessage = () => {},
+}) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm()
+
+  const onSubmit = (postData) =>
+    axios
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        youtube: postData.link,
+      })
+      .then(function (response) {
+        setIsShown(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+  useEffect(() => {
+    setValue('link', data.youtube)
+  }, [isShown])
 
   return (
     <Pane>
@@ -22,7 +48,7 @@ function VideoForm({ isShown, setIsShown }) {
         overlayProps={{ zIndex: 2500 }}
         onCloseComplete={() => setIsShown(false)}
         confirmLabel='Update'
-        onClick={handleSubmit((data) => console.log(data))}
+        onConfirm={handleSubmit(onSubmit)}
       >
         <form>
           <Pane>

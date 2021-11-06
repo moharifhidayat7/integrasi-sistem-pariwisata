@@ -3,5 +3,6 @@
   "editor.formatOnSave": true,
   "prettier.jsxSingleQuote": true,
   "prettier.singleQuote": true,
-  "prettier.semi": false
+  "prettier.semi": false,
+  "editor.bracketPairColorization.enabled": true
 }

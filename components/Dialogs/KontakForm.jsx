@@ -5,14 +5,47 @@ import {
   TextInputField,
   TextareaField,
 } from 'evergreen-ui'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-function KontakForm({ isShown, setIsShown }) {
+import axios from 'axios'
+
+function KontakForm({
+  isShown,
+  setIsShown,
+  data = [],
+  mutate,
+  toastMessage = () => {},
+}) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm()
+
+  const onSubmit = (postData) =>
+    axios
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        contact: [postData],
+      })
+      .then(function (response) {
+        setIsShown(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+  useEffect(() => {
+    const setForm = () => {
+      setValue('name', data.contact[0].name)
+      setValue('address', data.contact[0].address)
+      setValue('email', data.contact[0].email)
+      setValue('phone', data.contact[0].phone)
+    }
+    data.contact && setForm()
+  }, [isShown])
 
   return (
     <Pane>
@@ -22,7 +55,7 @@ function KontakForm({ isShown, setIsShown }) {
         overlayProps={{ zIndex: 2500 }}
         onCloseComplete={() => setIsShown(false)}
         confirmLabel='Update'
-        onConfirm={handleSubmit((data) => console.log(data))}
+        onConfirm={handleSubmit(onSubmit)}
       >
         <form>
           <Pane>

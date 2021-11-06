@@ -18,6 +18,7 @@ import {
   CreditCardIcon,
   UserIcon,
   Link,
+  EditIcon,
   SettingsIcon,
   Button,
   Card,
@@ -42,18 +43,16 @@ const UMKM = ({ name, id, userId, image, user, setShowDelete }) => {
             <Heading is='h2' size={500}>
               {name}
             </Heading>
-            <Text color='#429777'>{'Pengelola : '}</Text>
-            <Link>
-              <NextLink href={`#${user.id}`}>
-                <a style={{ color: '#a3e6cd' }}>{user.name}</a>
-              </NextLink>
-            </Link>
+            <Text>{'Pengelola : '}</Text>
+            <Link>{user.name}</Link>
           </Pane>
           <Pane
             className='d-flex justify-content-center align-items-center'
             marginTop={5}
           >
-            <Button appearance='primary'>Kelola</Button>
+            <Button appearance='primary' iconBefore={EditIcon}>
+              Kelola
+            </Button>
             <IconButton
               icon={TrashIcon}
               onClick={() => setShowDelete(true)}
