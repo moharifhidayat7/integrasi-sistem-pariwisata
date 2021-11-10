@@ -200,6 +200,7 @@ const WisataPage = () => {
           <Pane className='row' marginY={24}>
             <Pane>
               <Card elevation={1} backgroundColor='white' padding={20}>
+                you
                 <Pane className='d-flex justify-content-between align-items-center'>
                   <Heading is='h1' size={900}>
                     {data && data.name}
