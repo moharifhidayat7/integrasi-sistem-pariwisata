@@ -67,10 +67,10 @@ const Body = ({ children }) => {
 }
 Content.Body = Body
 
-const Pages = ({ page = 1, totalPages = 5 }) => {
+const Pages = ({ page = 1, totalPages = 5, onPageChange }) => {
   return (
     <div className='d-flex justify-content-center mt-3'>
-      <Pagination page={page} totalPages={totalPages}></Pagination>
+      <Pagination page={page} onPageChange={onPageChange}></Pagination>
     </div>
   )
 }

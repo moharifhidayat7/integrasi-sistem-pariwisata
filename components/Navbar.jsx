@@ -1,3 +1,4 @@
+import Link from 'next/link'
 const Navbar = () => {
   return (
     <nav
@@ -5,9 +6,9 @@ const Navbar = () => {
       id='mainNav'
     >
       <div className='container px-5'>
-        <a className='navbar-brand fw-bold' href='#page-top'>
-          Rumah Digital Gombengsari
-        </a>
+        <Link href='/'>
+          <a className='navbar-brand fw-bold'>Rumah Digital Gombengsari</a>
+        </Link>
         <button
           className='navbar-toggler'
           type='button'
@@ -21,7 +22,7 @@ const Navbar = () => {
           <i className='bi-list'></i>
         </button>
         <div className='collapse navbar-collapse' id='navbarResponsive'>
-          <ul className='navbar-nav ms-5 me-4 my-3 my-lg-0'>
+          <ul className='navbar-nav ms-3 me-4 my-3 my-lg-0'>
             <li className='nav-item'>
               <a className='nav-link me-lg-3' href='#features'>
                 Beranda
@@ -48,22 +49,22 @@ const Navbar = () => {
               </a>
             </li>
           </ul>
-          <button
-            className='btn rounded-pill ms-auto px-3 mb-2 mb-lg-0'
-            style={{ backgroundColor: '#E9E9E9' }}
-            data-bs-toggle='modal'
-            data-bs-target='#feedbackModal'
-          >
-            <span className='small'>Masuk</span>
-          </button>
-          <button
-            className='btn rounded-pill ms-2 px-3 mb-2 mb-lg-0'
-            style={{ backgroundColor: '#38B520', color: 'white' }}
-            data-bs-toggle='modal'
-            data-bs-target='#feedbackModal'
-          >
-            <span className='small'>Daftar</span>
-          </button>
+          <Link href='/login'>
+            <a
+              role='button'
+              className='btn rounded-pill ms-auto px-3 mb-2 mb-lg-0 ispBtn-secondary'
+            >
+              <span className='small'>Masuk</span>
+            </a>
+          </Link>
+          <Link href='/register'>
+            <a
+              role='button'
+              className='btn rounded-pill ms-2 px-3 mb-2 mb-lg-0 ispBtn-primary'
+            >
+              <span className='small'>Daftar</span>
+            </a>
+          </Link>
         </div>
       </div>
     </nav>

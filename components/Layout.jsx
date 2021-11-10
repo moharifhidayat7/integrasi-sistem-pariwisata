@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import Navbar from '@components/Navbar'
 import Header from '@components/Header'
-
-const Layout = ({ children }) => {
+import Footer from '@components/Footer'
+const Layout = ({ children, withFooter = true }) => {
   return (
     <>
       <Head>
@@ -11,8 +11,9 @@ const Layout = ({ children }) => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Navbar />
-      <Header />
-      <aside className='text-center bg-gradient-primary-to-secondary'>
+      {children}
+
+      {/* <aside className='text-center bg-gradient-primary-to-secondary'>
         <div className='container px-5'>
           <div className='row gx-5 justify-content-center'>
             <div className='col-xl-8'>
@@ -28,7 +29,7 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
-      </aside>
+      </aside> */}
       {/* <section id='features'>
         <div className='container px-5'>
           <div className='row gx-5 align-items-center'>
@@ -154,7 +155,7 @@ const Layout = ({ children }) => {
           </div>
         </div>
       </section> */}
-      <section className='bg-light'>
+      {/* <section className='bg-light'>
         <div className='container px-5'>
           <div className='row gx-5 align-items-center justify-content-center justify-content-lg-between'>
             <div className='col-12 col-lg-5'>
@@ -213,21 +214,9 @@ const Layout = ({ children }) => {
             </a>
           </div>
         </div>
-      </section>
-      <footer className='bg-black text-center py-5'>
-        <div className='container px-5'>
-          <div className='text-white-50 small'>
-            <div className='mb-2'>
-              &copy; Your Website 2021. All Rights Reserved.
-            </div>
-            <a href='#!'>Privacy</a>
-            <span className='mx-1'>&middot;</span>
-            <a href='#!'>Terms</a>
-            <span className='mx-1'>&middot;</span>
-            <a href='#!'>FAQ</a>
-          </div>
-        </div>
-      </footer>
+      </section> */}
+      {withFooter && <Footer />}
+
       <div
         className='modal fade'
         id='feedbackModal'

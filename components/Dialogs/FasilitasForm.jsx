@@ -7,12 +7,35 @@ import {
 } from 'evergreen-ui'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-function FasilitasForm({ isShown, setIsShown }) {
+import axios from 'axios'
+function FasilitasForm({
+  isShown,
+  setIsShown,
+  mutate,
+  data = [],
+  toastMessage = () => {},
+}) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm()
+
+  const onSubmit = (postData) =>
+    axios
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        facility: [...data.facility, postData.fasilitas],
+      })
+      .then(function (response) {
+        reset()
+        setIsShown(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
 
   return (
     <Pane>
@@ -22,7 +45,7 @@ function FasilitasForm({ isShown, setIsShown }) {
         onCloseComplete={() => setIsShown(false)}
         confirmLabel='Tambah'
         overlayProps={{ zIndex: 2500 }}
-        onClick={handleSubmit((data) => console.log(data))}
+        onConfirm={handleSubmit(onSubmit)}
       >
         <form>
           <Pane>

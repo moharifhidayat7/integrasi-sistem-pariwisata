@@ -7,9 +7,9 @@ import {
 } from 'evergreen-ui'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { clientAxios, isValidEmail } from '@helpers/functions'
+import { clientAxios } from '@helpers/functions'
 
-function KontakForm({
+function UserForm({
   isShown,
   setIsShown,
   data = [],
@@ -24,29 +24,25 @@ function KontakForm({
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (postData) =>
+  const onSubmit = (postData) => {
     clientAxios
-      .put('/objects/' + data.id, {
-        contact: [postData],
-      })
+      .put('/users/' + data.id, postData)
       .then(function (response) {
         setIsShown(false)
         toastMessage()
         mutate()
       })
       .catch(function (error) {
-        console.log(error)
+        setError('email', { type: 'focus', message: 'Email sudah digunakan' })
       })
-
+  }
   useEffect(() => {
     const setForm = () => {
-      if (data.contact) {
-        if (data.contact.length > 0) {
-          setValue('name', data.contact[0].name)
-          setValue('address', data.contact[0].address)
-          setValue('email', data.contact[0].email)
-          setValue('phone', data.contact[0].phone)
-        }
+      if (data) {
+        setValue('name', data.name)
+        setValue('address', data.address)
+        setValue('email', data.email)
+        setValue('phone', data.phone)
       }
     }
     setForm()
@@ -62,7 +58,7 @@ function KontakForm({
         confirmLabel='Update'
         onConfirm={handleSubmit(onSubmit)}
       >
-        <form noValidate>
+        <form>
           <Pane>
             <TextInputField
               isInvalid={errors.name ? true : false}
@@ -83,10 +79,10 @@ function KontakForm({
                 <TextInputField
                   isInvalid={errors.email ? true : false}
                   validationMessage={errors.email && errors.email.message}
-                  label='Email *'
+                  label='Email'
+                  type='email'
                   placeholder='Email'
                   id='email'
-                  type='email'
                   {...register('email', {
                     required: 'Harus di Isi!',
                     validate: (value) =>
@@ -101,7 +97,7 @@ function KontakForm({
                   label='Nomor Telepon *'
                   placeholder='Nomor Telepon'
                   id='phone'
-                  {...register('phone', { required: true })}
+                  {...register('phone')}
                 />
               </Pane>
             </Pane>
@@ -112,4 +108,4 @@ function KontakForm({
   )
 }
 
-export default KontakForm
+export default UserForm

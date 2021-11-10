@@ -170,7 +170,6 @@ const Produk = () => {
                   <Table.Head borderRadius={4}>
                     <Table.TextHeaderCell>Foto</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Nama Produk</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Kategori</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Penjual</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Harga</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Tampilkan</Table.TextHeaderCell>
@@ -208,15 +207,6 @@ const Produk = () => {
                           <Strong>
                             ASDASDSDasdas asdas das asd asd dasd asd
                           </Strong>
-                        </Table.TextCell>
-                        <Table.TextCell>
-                          <Pane flexBasis={120}>
-                            <Link href='#'>
-                              <a>
-                                <Badge color='blue'>Kopi</Badge>
-                              </a>
-                            </Link>
-                          </Pane>
                         </Table.TextCell>
                         <Table.TextCell>
                           <Link href='#'>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Pane, Dialog, IconButton, TickIcon } from 'evergreen-ui'
 
 import ImagePicker from 'react-image-picker'
@@ -6,10 +6,20 @@ import 'react-image-picker/dist/index.css'
 
 import style from './ImagePickerForm.module.scss'
 
-const ImageCheck = ({ checked = false, img }) => {
+import _ from 'lodash'
+import axios from 'axios'
+
+const ImageCheck = ({ checked = false, img, images, setImages }) => {
   const [check, setCheck] = useState(checked)
 
   const toggleCheck = () => {
+    if (!check) {
+      setImages([...images, img.id])
+    } else {
+      _.remove(images, function (n) {
+        return n == img.id
+      })
+    }
     setCheck(!check)
   }
 
@@ -18,7 +28,7 @@ const ImageCheck = ({ checked = false, img }) => {
       width={170}
       height={150}
       borderRadius={4}
-      backgroundImage={`url(${img})`}
+      backgroundImage={`url(${process.env.NEXT_PUBLIC_API_URI}${img.formats.thumbnail.url})`}
       backgroundSize='cover'
       backgroundPosition='center'
       backgroundRepeat='no-repeat'
@@ -40,36 +50,35 @@ const ImageCheck = ({ checked = false, img }) => {
   )
 }
 
-const ImagePickerForm = ({ isShown, setIsShown }) => {
+const ImagePickerForm = ({
+  isShown,
+  setIsShown,
+  mutate,
+  data = [],
+  toastMessage = () => {},
+}) => {
   const [images, setImages] = useState([])
 
-  const imageList = [
-    {
-      img: 'https://picsum.photos/400',
-      checked: true,
-    },
-    {
-      img: 'https://picsum.photos/400',
-      checked: false,
-    },
-    {
-      img: 'https://picsum.photos/400',
-      checked: false,
-    },
-    {
-      img: 'https://picsum.photos/500',
-      checked: true,
-    },
-    {
-      img: 'https://picsum.photos/300',
-      checked: true,
-    },
-  ]
-
-  const onPickImages = (pickedImages) => {
-    setImages(pickedImages)
-    console.log(JSON.stringify(pickedImages))
+  const onSubmit = () => {
+    axios
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        slideshow: images,
+      })
+      .then(function (response) {
+        setIsShown(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   }
+
+  useEffect(() => {
+    const temp = data.slideshow ? data.slideshow.map((s) => s.id) : []
+
+    setImages(temp)
+  }, [isShown])
 
   return (
     <Pane overflowY='auto'>
@@ -80,18 +89,24 @@ const ImagePickerForm = ({ isShown, setIsShown }) => {
         confirmLabel='Update'
         width={800}
         overlayProps={{ zIndex: 2500 }}
+        onConfirm={() => onSubmit()}
       >
         <Pane height={450}>
           <Pane className='d-inline-flex flex-wrap gap-1'>
-            {imageList.map((item, index) => {
-              return (
-                <ImageCheck
-                  key={`${item.img}-${index}`}
-                  img={item.img}
-                  checked={item.checked}
-                />
-              )
-            })}
+            {data.images &&
+              data.images.map((item, index) => {
+                return (
+                  <ImageCheck
+                    key={item.name}
+                    img={item}
+                    checked={_.find(data.slideshow, function (o) {
+                      return o.id == item.id
+                    })}
+                    images={images}
+                    setImages={setImages}
+                  />
+                )
+              })}
           </Pane>
         </Pane>
       </Dialog>

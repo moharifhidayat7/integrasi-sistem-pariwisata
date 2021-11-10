@@ -1,6 +1,6 @@
 import useSWR, { useSWRConfig } from 'swr'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Layout from '@components/Layouts/Admin'
 import Content from '@components/Content'
 import Iframe from '@components/Iframe'
@@ -18,7 +18,9 @@ import {
   SmallCrossIcon,
   Avatar,
   EditIcon,
+  Spinner,
   PlusIcon,
+  UploadIcon,
   toaster,
 } from 'evergreen-ui'
 import KontakForm from '@components/Dialogs/KontakForm'
@@ -28,10 +30,14 @@ import GaleriForm from '@components/Dialogs/GaleriForm'
 import ImagePickerForm from '@components/Dialogs/ImagePickerForm'
 import ContentWrapper from '@components/Wrapper/ContentWrapper'
 import DeleteDialog from '@components/Dialogs/Delete'
-
+import { clientAxios } from '@helpers/functions'
+import axios from 'axios'
+import Image from 'next/image'
+import _ from 'lodash'
 const WisataPage = () => {
   const router = useRouter()
   const { slug } = router.query
+  const { mutate } = useSWRConfig()
 
   const [detailForm, setDetailForm] = useState(false)
   const [pengelolaForm, setPengelolaForm] = useState(false)
@@ -45,7 +51,7 @@ const WisataPage = () => {
   const [deleteDialogText, setDeleteDialogText] = useState(
     'Apakah anda yakin ingin menghapus item ini?'
   )
-
+  const featuredRef = useRef(null)
   const [onDelete, setOnDelete] = useState(null)
 
   const toastMessage = () => {
@@ -56,13 +62,81 @@ const WisataPage = () => {
 
   const getWisata = async (url) => await fetch(url).then((res) => res.json())
 
-  const { data, mutate, error } = useSWR(
+  const { data, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`,
-    getWisata,
-    { fallbackData: getWisata }
+    getWisata
   )
 
-  const a = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  const deleteFasilitas = (index) => {
+    data.facility.splice(index, 1)
+    axios
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        facility: data.facility,
+      })
+      .then(function (response) {
+        setDeleteDialog(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
+  const deleteImage = (id) => {
+    axios
+      .delete(process.env.NEXT_PUBLIC_API_URI + '/upload/files/' + id)
+      .then(function (response) {
+        setDeleteDialog(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
+  const updateSlide = (id) => {
+    const newSlide = data.slideshow
+      .filter((ss) => ss.id != id)
+      .map((sn) => sn.id)
+    axios
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        slideshow: newSlide,
+      })
+      .then(function (response) {
+        setDeleteDialog(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
+  const uploadFeaturedImage = (e) => {
+    const img = e.target.files
+
+    const formData = new FormData()
+
+    if (img.length > 0) {
+      formData.append('files', img[0])
+      formData.append('ref', 'object')
+      formData.append('refId', data.id)
+      formData.append('field', 'featured_image')
+    }
+
+    axios
+      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData)
+      .then(function (response) {
+        toastMessage()
+        mutate(`${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
+
   return (
     <Layout>
       <DeleteDialog
@@ -78,7 +152,13 @@ const WisataPage = () => {
         isShown={detailForm}
         setIsShown={setDetailForm}
       />
-      <PengelolaForm isShown={pengelolaForm} setIsShown={setPengelolaForm} />
+      <PengelolaForm
+        data={data}
+        mutate={mutate(`${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`)}
+        toastMessage={toastMessage}
+        isShown={pengelolaForm}
+        setIsShown={setPengelolaForm}
+      />
       <KontakForm
         data={data}
         mutate={mutate}
@@ -93,9 +173,24 @@ const WisataPage = () => {
         isShown={videoForm}
         setIsShown={setVideoForm}
       />
-      <FasilitasForm isShown={fasilitasForm} setIsShown={setFasilitasForm} />
-      <GaleriForm isShown={galeriForm} setIsShown={setGaleriForm} />
+      <FasilitasForm
+        data={data}
+        mutate={mutate}
+        toastMessage={toastMessage}
+        isShown={fasilitasForm}
+        setIsShown={setFasilitasForm}
+      />
+      <GaleriForm
+        data={data}
+        mutate={mutate}
+        toastMessage={toastMessage}
+        isShown={galeriForm}
+        setIsShown={setGaleriForm}
+      />
       <ImagePickerForm
+        data={data}
+        mutate={mutate}
+        toastMessage={toastMessage}
         isShown={imagePickerForm}
         setIsShown={setImagePickerForm}
       />
@@ -105,9 +200,52 @@ const WisataPage = () => {
           <Pane className='row' marginY={24}>
             <Pane>
               <Card elevation={1} backgroundColor='white' padding={20}>
+                <Pane position='relative' height={380} marginBottom={12}>
+                  {data ? (
+                    data.featured_image ? (
+                      <Image
+                        alt={data.featured_image.name}
+                        src={
+                          process.env.NEXT_PUBLIC_API_URI +
+                          data.featured_image.url
+                        }
+                        layout='fill'
+                        objectFit='cover'
+                        objectPosition='center'
+                        quality={100}
+                      />
+                    ) : (
+                      <Image
+                        alt='Tidak ada foto'
+                        src='https://via.placeholder.com/1000x600?text=Tidak-ada-foto'
+                        layout='fill'
+                        objectFit='cover'
+                        quality={100}
+                      />
+                    )
+                  ) : (
+                    <Spinner size={24} />
+                  )}
+                  <Pane position='absolute' top={12} right={12}>
+                    <input
+                      type='file'
+                      onChange={uploadFeaturedImage}
+                      ref={featuredRef}
+                      accept='image/*'
+                      hidden
+                    />
+                    <Button
+                      appearance='primary'
+                      iconBefore={UploadIcon}
+                      onClick={() => featuredRef.current.click()}
+                    >
+                      Upload
+                    </Button>
+                  </Pane>
+                </Pane>
                 <Pane className='d-flex justify-content-between align-items-center'>
                   <Heading is='h1' size={900}>
-                    {data.name}
+                    {data && data.name}
                   </Heading>
                   <Button
                     appearance='primary'
@@ -117,13 +255,13 @@ const WisataPage = () => {
                     Edit
                   </Button>
                 </Pane>
-                <Text color='muted'>{data.address}</Text>
-                <Paragraph>{data.description}</Paragraph>
+                <Text color='muted'>{data && data.address}</Text>
+                <Paragraph>{data && data.description}</Paragraph>
               </Card>
             </Pane>
           </Pane>
           <Pane className='row g-2'>
-            <Pane className='col-sm-12 col-md-3'>
+            <Pane className='col-sm-12 col-md-12 col-lg-4 col-xl-3'>
               <Card
                 elevation={1}
                 backgroundColor='white'
@@ -142,29 +280,34 @@ const WisataPage = () => {
                     Edit
                   </Button>
                 </Pane>
-                <Pane
-                  padding={12}
-                  marginTop={12}
-                  backgroundColor='#EDEFF5'
-                  borderRadius={4}
-                  cursor='pointer'
-                >
-                  <Pane className='d-flex align-items-center'>
-                    <Avatar
-                      src='https://picsum.photos/200'
-                      name='asdsd'
-                      size={40}
-                    />
-                    <Pane marginLeft={10}>
-                      <Pane marginBottom={-8}>
-                        <Strong>asdsd</Strong>
+                {data ? (
+                  data.users_permissions_user && (
+                    <Pane
+                      padding={12}
+                      marginTop={12}
+                      backgroundColor='#EDEFF5'
+                      borderRadius={4}
+                      cursor='pointer'
+                    >
+                      <Pane className='d-flex align-items-center'>
+                        <Avatar
+                          name={data.users_permissions_user.name}
+                          size={40}
+                        />
+                        <Pane marginLeft={10}>
+                          <Pane marginBottom={-8}>
+                            <Strong>{data.users_permissions_user.name}</Strong>
+                          </Pane>
+                          <Text size={300} color='#474D66'>
+                            {data.users_permissions_user.email}
+                          </Text>
+                        </Pane>
                       </Pane>
-                      <Text size={300} color='#474D66'>
-                        asdsd
-                      </Text>
                     </Pane>
-                  </Pane>
-                </Pane>
+                  )
+                ) : (
+                  <Spinner size={24} />
+                )}
               </Card>
               <Card elevation={1} backgroundColor='white' padding={20}>
                 <Pane className='d-flex justify-content-between align-items-center'>
@@ -180,10 +323,10 @@ const WisataPage = () => {
                   </Button>
                 </Pane>
                 <Pane marginTop={12}>
-                  {data.contact &&
+                  {data &&
                     data.contact.map((c) => (
                       <Paragraph key={c.id} marginBottom={5}>
-                        {c.name}
+                        <Strong>{c.name}</Strong>
                         <br />
                         {c.address && (
                           <>
@@ -198,7 +341,10 @@ const WisataPage = () => {
                 </Pane>
               </Card>
             </Pane>
-            <Pane className='col-sm-12 col-md-9' position='relative'>
+            <Pane
+              className='col-sm-12 col-md-12 col-lg-8 col-xl-9'
+              position='relative'
+            >
               <Card
                 elevation={1}
                 backgroundColor='white'
@@ -219,7 +365,7 @@ const WisataPage = () => {
                 </Pane>
                 <Pane marginTop={12} overflowX='auto' whiteSpace='nowrap'>
                   <Pane>
-                    {data.slideshow &&
+                    {data &&
                       data.slideshow.map((item, index) => {
                         return (
                           <Pane
@@ -245,7 +391,7 @@ const WisataPage = () => {
                               right={4}
                               position='absolute'
                               onClick={() => {
-                                setOnDelete(() => () => alert(index))
+                                setOnDelete(() => () => updateSlide(item.id))
                                 setDeleteDialog(true)
                               }}
                             />
@@ -256,7 +402,7 @@ const WisataPage = () => {
                 </Pane>
               </Card>
               <Pane className='row g-2'>
-                <Pane className='col-sm-12 col-md-7'>
+                <Pane className='col-sm-12 col-md-12 col-lg-12 col-xl-7'>
                   <Card elevation={1} backgroundColor='white' padding={20}>
                     <Pane className='d-flex justify-content-between align-items-center'>
                       <Heading is='h2' size={500}>
@@ -271,11 +417,11 @@ const WisataPage = () => {
                       </Button>
                     </Pane>
                     <Pane marginTop={12}>
-                      {data.youtube && <Iframe url={data.youtube}></Iframe>}
+                      {data && <Iframe url={data.youtube}></Iframe>}
                     </Pane>
                   </Card>
                 </Pane>
-                <Pane className='col-sm-12 col-md-5'>
+                <Pane className='col-sm-12 col-md-12 col-lg-12 col-xl-5'>
                   <Card elevation={1} backgroundColor='white' padding={20}>
                     <Pane className='d-flex justify-content-between align-items-center'>
                       <Heading is='h2' size={500}>
@@ -290,12 +436,13 @@ const WisataPage = () => {
                       </Button>
                     </Pane>
                     <Pane marginTop={12} overflowY='auto'>
-                      <Pane height={300}>
-                        {data.facility &&
+                      <Pane maxHeight={300}>
+                        {data &&
+                          data.facility &&
                           data.facility.map((f, index) => {
                             return (
                               <Pane
-                                key={f.id}
+                                key={'f' + index}
                                 padding={8}
                                 marginBottom={4}
                                 backgroundColor='#EDEFF5'
@@ -303,7 +450,7 @@ const WisataPage = () => {
                               >
                                 <Pane className='d-flex justify-content-between align-items-center'>
                                   <Pane marginLeft={10}>
-                                    <Strong>{f.name}</Strong>
+                                    <Strong>{f}</Strong>
                                   </Pane>
                                   <IconButton
                                     icon={SmallCrossIcon}
@@ -311,7 +458,9 @@ const WisataPage = () => {
                                     intent='danger'
                                     size='small'
                                     onClick={() => {
-                                      setOnDelete(() => () => alert(index))
+                                      setOnDelete(
+                                        () => () => deleteFasilitas(index)
+                                      )
                                       setDeleteDialog(true)
                                     }}
                                   />
@@ -347,7 +496,7 @@ const WisataPage = () => {
                         className='d-inline-flex flex-wrap gap-1'
                         maxHeight={500}
                       >
-                        {data.images &&
+                        {data &&
                           data.images.map((item, index) => {
                             return (
                               <Pane
@@ -373,7 +522,9 @@ const WisataPage = () => {
                                   right={4}
                                   position='absolute'
                                   onClick={() => {
-                                    setOnDelete(() => () => alert(index))
+                                    setOnDelete(
+                                      () => () => deleteImage(item.id)
+                                    )
                                     setDeleteDialog(true)
                                   }}
                                 />

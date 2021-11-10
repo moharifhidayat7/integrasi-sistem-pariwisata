@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 function DetailForm({
   isShown,
   setIsShown,
@@ -22,6 +23,8 @@ function DetailForm({
     formState: { errors },
   } = useForm()
 
+  const router = useRouter()
+
   const onSubmit = (postData) =>
     axios
       .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
@@ -32,7 +35,12 @@ function DetailForm({
       .then(function (response) {
         setIsShown(false)
         toastMessage()
-        mutate()
+        if (data.slug != response.data.slug) {
+          const path = router.pathname.split('/').slice(0, -1)
+          router.push(path.join('/') + `/${response.data.slug}`)
+        } else {
+          mutate()
+        }
       })
       .catch(function (error) {
         console.log(error)

@@ -14,7 +14,7 @@ const StepNav = ({ activeStep, checked, setChecked }) => {
   return (
     <>
       <Pane
-        className='d-flex justify-content-center align-items-center gap-2 gap-md-0'
+        className='d-flex justify-content-center align-items-center gap-2'
         marginBottom={25}
       >
         <Pane
@@ -28,9 +28,6 @@ const StepNav = ({ activeStep, checked, setChecked }) => {
         >
           <ManuallyEnteredDataIcon color='#F9FAFC' size={30} />
           <Heading color='#F9FAFC'>Detail</Heading>
-        </Pane>
-        <Pane paddingX={20} paddingY={16} className='d-none d-md-block'>
-          <ArrowRightIcon color='#696f8c' size={40} />
         </Pane>
         <Pane
           width={150}
@@ -46,11 +43,8 @@ const StepNav = ({ activeStep, checked, setChecked }) => {
             size={30}
           />
           <Heading color={activeStep >= 2 ? '#F9FAFC' : '#696f8c'}>
-            Media
+            Kontak
           </Heading>
-        </Pane>
-        <Pane paddingX={20} paddingY={16} className='d-none d-md-block'>
-          <ArrowRightIcon color='#696f8c' size={40} />
         </Pane>
         <Pane
           width={150}
@@ -61,17 +55,29 @@ const StepNav = ({ activeStep, checked, setChecked }) => {
           textAlign='center'
           className={activeStep == 3 ? 'd-block' : 'd-none d-md-block'}
         >
-          <UserIcon color={activeStep >= 3 ? '#F9FAFC' : '#696f8c'} size={30} />
+          <MediaIcon
+            color={activeStep >= 3 ? '#F9FAFC' : '#696f8c'}
+            size={30}
+          />
           <Heading color={activeStep >= 3 ? '#F9FAFC' : '#696f8c'}>
+            Media
+          </Heading>
+        </Pane>
+        <Pane
+          width={150}
+          paddingY={16}
+          backgroundColor={activeStep >= 4 ? '#52BD94' : '#EDEFF5'}
+          borderRadius={5}
+          borderColor='#c1c4d6'
+          textAlign='center'
+          className={activeStep == 3 ? 'd-block' : 'd-none d-md-block'}
+        >
+          <UserIcon color={activeStep >= 4 ? '#F9FAFC' : '#696f8c'} size={30} />
+          <Heading color={activeStep >= 4 ? '#F9FAFC' : '#696f8c'}>
             Pengelola
           </Heading>
         </Pane>
       </Pane>
-      {activeStep == 3 && (
-        <Pane marginBottom={12} className='d-flex gap-2 justify-content-center'>
-          <RadioPengelola checked={checked} setChecked={setChecked} />
-        </Pane>
-      )}
     </>
   )
 }

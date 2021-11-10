@@ -1,3 +1,4 @@
+import useSWR from 'swr'
 import { useState } from 'react'
 import {
   Pane,
@@ -7,89 +8,45 @@ import {
   Strong,
   SearchInput,
   Dialog,
+  Spinner,
 } from 'evergreen-ui'
+import PengelolaList from '@components/PengelolaList'
+import { clientAxios } from '@helpers/functions'
 
-const PengelolaList = ({ pengelola, index, active, setActive }) => {
-  const [bg, setBg] = useState('#EDEFF5')
+const PengelolaForm = ({
+  isShown,
+  setIsShown,
+  data = [],
+  toastMessage = () => {},
+}) => {
+  const [active, setActive] = useState([])
+  const [keyName, setKeyName] = useState('')
 
-  return (
-    <Pane
-      padding={12}
-      onMouseEnter={() => setBg('#a3e6cd')}
-      onMouseLeave={() => setBg('#EDEFF5')}
-      onClick={() => setActive(index)}
-      backgroundColor={active == index ? '#a3e6cd' : bg}
-      borderRadius={4}
-      cursor='pointer'
-    >
-      <Pane className='d-flex align-items-center'>
-        <Avatar src={pengelola.picture} name={pengelola.name} size={40} />
-        <Pane marginLeft={10}>
-          <Pane marginBottom={-8}>
-            <Strong>{pengelola.name}</Strong>
-          </Pane>
-          <Text size={300} color='#474D66'>
-            {pengelola.email}
-          </Text>
-        </Pane>
-      </Pane>
-    </Pane>
+  const getUser = async (url) => await fetch(url).then((res) => res.json())
+
+  const { data: users, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URI}/users?name_contains=${keyName}`,
+    getUser
   )
-}
 
-const PengelolaForm = ({ isShown, setIsShown }) => {
-  const [active, setActive] = useState(null)
-
-  const handleSubmit = (onSubmit) => () => {
-    console.log('submitted')
-    console.log(youtubeVideo)
-    onSubmit()
+  const handleSubmit = () => {
+    if (!active.id) {
+      setIsShown(false)
+    } else {
+      clientAxios
+        .put('/objects/' + data.id, {
+          users_permissions_user: active.id,
+        })
+        .then(function (response) {
+          setIsShown(false)
+          toastMessage()
+          mutate({ ...data, users_permissions_user: active })
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
   }
-
-  const pengelolas = [
-    {
-      name: 'Pokdarwis Gombengsari',
-      email: 'tes',
-      picture:
-        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg',
-    },
-    {
-      name: 'Pokdarwis Gombengsari',
-      email: 'tes',
-      picture:
-        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg',
-    },
-    {
-      name: 'Pokdarwis Gombengsari',
-      email: 'tes',
-      picture:
-        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg',
-    },
-    {
-      name: 'Pokdarwis Gombengsari',
-      email: 'tes',
-      picture:
-        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg',
-    },
-    {
-      name: 'Pokdarwis Gombengsari',
-      email: 'tes',
-      picture:
-        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg',
-    },
-    {
-      name: 'Pokdarwis Gombengsari',
-      email: 'tes',
-      picture:
-        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg',
-    },
-    {
-      name: 'Pokdarwis Gombengsari',
-      email: 'tes',
-      picture:
-        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg',
-    },
-  ]
 
   return (
     <Pane>
@@ -99,28 +56,35 @@ const PengelolaForm = ({ isShown, setIsShown }) => {
         onCloseComplete={() => setIsShown(false)}
         confirmLabel='Update'
         overlayProps={{ zIndex: 2500 }}
+        onConfirm={handleSubmit}
       >
         <Pane>
-          <FormField marginBottom={12} label=''>
-            <SearchInput placeholder='Cari Pengelola...' width='100%' />
-          </FormField>
+          <SearchInput
+            placeholder='Cari User...'
+            width='100%'
+            onChange={(e) => setKeyName(e.target.value)}
+          />
           <Pane
             className='d-flex flex-column gap-1'
-            maxHeight={280}
+            maxHeight={300}
             overflowY='auto'
             marginBottom={20}
+            marginTop={12}
           >
-            {pengelolas.map((pengelola, index) => {
-              return (
-                <PengelolaList
-                  key={index}
-                  pengelola={pengelola}
-                  index={index}
-                  active={active}
-                  setActive={setActive}
-                />
-              )
-            })}
+            {!users ? (
+              <Spinner size={24} />
+            ) : (
+              users.map((user, index) => {
+                return (
+                  <PengelolaList
+                    key={user.id}
+                    user={user}
+                    active={active}
+                    setActive={setActive}
+                  />
+                )
+              })
+            )}
           </Pane>
         </Pane>
       </Dialog>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Pane,
   Dialog,
@@ -15,8 +15,14 @@ import {
 } from 'evergreen-ui'
 import { useDropzone } from 'react-dropzone'
 import _ from 'lodash'
-
-const GaleriForm = ({ isShown, setIsShown }) => {
+import axios from 'axios'
+const GaleriForm = ({
+  isShown,
+  setIsShown,
+  mutate,
+  data = [],
+  toastMessage = () => {},
+}) => {
   const [files, setFiles] = useState([])
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
@@ -40,12 +46,37 @@ const GaleriForm = ({ isShown, setIsShown }) => {
     setFiles(newFiles)
   }
 
-  // useEffect(
-  //   () => () => {
-  //     files.forEach((file) => URL.revokeObjectURL(file.preview))
-  //   },
-  //   [files]
-  // )
+  useEffect(
+    () => () => {
+      files.forEach((file) => URL.revokeObjectURL(file.preview))
+    },
+    [files]
+  )
+
+  const uploadImage = () => {
+    const formData = new FormData()
+
+    formData.append('ref', 'object')
+    formData.append('refId', data.id)
+    formData.append('field', 'images')
+
+    for (let i = 0; i < files.length; i++) {
+      const element = files[i]
+      formData.append('files', element)
+    }
+
+    axios
+      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData)
+      .then(function (response) {
+        setFiles([])
+        setIsShown(false)
+        toastMessage()
+        mutate()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+  }
 
   return (
     <Pane>
@@ -54,7 +85,7 @@ const GaleriForm = ({ isShown, setIsShown }) => {
         title='Upload Foto'
         onCloseComplete={() => setIsShown(false)}
         confirmLabel='Upload'
-        onClick={() => console.log(files)}
+        onConfirm={() => uploadImage()}
         overlayProps={{ zIndex: 2500 }}
       >
         <Pane>
