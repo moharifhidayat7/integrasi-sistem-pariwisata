@@ -1,6 +1,6 @@
 import Layout from '@components/Layouts/Admin'
 import Content from '@components/Content'
-import { Button, PrintIcon, Table } from 'evergreen-ui'
+import { Button, PrintIcon, Table, BarcodeIcon } from 'evergreen-ui'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ResponsiveLine } from '@nivo/line'
@@ -41,7 +41,7 @@ const Pengunjung = () => {
           button={
             <Link href={`${router.asPath}/tambah`}>
               <a>
-                <Button size='large' iconBefore={PrintIcon}>
+                <Button size='large' iconBefore={BarcodeIcon}>
                   Download QR Code
                 </Button>
               </a>

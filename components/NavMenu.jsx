@@ -20,6 +20,7 @@ import {
   ShoppingCartIcon,
   CreditCardIcon,
   CalendarIcon,
+  BankAccountIcon,
   AirplaneIcon,
   UserIcon,
   Link,
@@ -45,7 +46,7 @@ const NavMenu = () => {
         <CustomItem
           icon={<DashboardIcon color='#F9FAFC' />}
           text='Dashboard'
-          href='/admin/dashboard'
+          href='/admin'
         />
         <CustomItem
           icon={<MountainIcon color='#F9FAFC' />}
@@ -96,6 +97,11 @@ const NavMenu = () => {
         <CustomItem
           icon={<CreditCardIcon color='#F9FAFC' />}
           text='Metode Pembayaran'
+          href='/admin/pembayaran'
+        />
+        <CustomItem
+          icon={<BankAccountIcon color='#F9FAFC' />}
+          text='Manajemen Keuangan'
           href='/admin/pembayaran'
         />
       </Menu.Group>
