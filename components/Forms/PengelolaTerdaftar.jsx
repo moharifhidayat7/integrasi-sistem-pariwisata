@@ -13,12 +13,14 @@ import Stats from '@components/Stats'
 import { clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
 import PengelolaList from '@components/PengelolaList'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
 const PengelolaTerdaftar = (props) => {
   const router = useRouter()
   const [active, setActive] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [keyName, setKeyName] = useState('')
+  const [session, loading] = useSession()
 
   clientAxios.interceptors.request.use(
     function (config) {
@@ -31,7 +33,12 @@ const PengelolaTerdaftar = (props) => {
     }
   )
 
-  const getUser = async (url) => await fetch(url).then((res) => res.json())
+  const getUser = async (url) =>
+    await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${session.jwt}`,
+      },
+    }).then((res) => res.json())
 
   const { data, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URI}/users?name_contains=${keyName}`,
@@ -86,7 +93,11 @@ const PengelolaTerdaftar = (props) => {
 
     formData.append('data', JSON.stringify(json))
     clientAxios
-      .post('/objects', formData)
+      .post('/objects', formData, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then(function (response) {
         const path = router.pathname.split('/').slice(0, -1)
         router.push(path.join('/'))

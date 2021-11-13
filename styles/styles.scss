@@ -537,8 +537,10 @@ progress {
 }
 
 .display-2 {
+  color: white;
+  font-family: 'Poppins', sans-serif;
   font-size: calc(1.575rem + 3.9vw);
-  font-weight: 300;
+  font-weight: 600;
   line-height: 1.2;
 }
 @media (min-width: 1200px) {
@@ -4370,6 +4372,7 @@ fieldset:disabled .btn {
   border: 1px solid transparent;
   border-radius: 0.25rem;
   transition: box-shadow 0.15s ease-in-out;
+  width: 100%;
 }
 @media (prefers-reduced-motion: reduce) {
   .navbar-toggler {
@@ -11924,7 +11927,6 @@ footer a:focus {
   background-color: #f8f9fa;
   padding-top: 9.5rem;
   padding-bottom: 5rem;
-  
 }
 .masthead .masthead-device-mockup {
   display: flex;
@@ -12004,4 +12006,8 @@ footer a:focus {
   .masthead .masthead-device-mockup .device-wrapper {
     max-width: 17rem;
   }
+}
+
+.nav-link:hover {
+  color: #38b520 !important;
 }

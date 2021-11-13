@@ -1,0 +1,21 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints';
+
+@include media-breakpoint-down(sm) {
+  .headerH {
+    height: 200px;
+  }
+  .mHead {
+    margin-top: 2rem;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .headerH {
+    height: 50vh;
+  }
+  .mHead {
+    margin-top: 0;
+  }
+}

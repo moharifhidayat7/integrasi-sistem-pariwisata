@@ -1,7 +1,8 @@
+import style from './Header.module.scss'
 const Header = () => {
   return (
     <header
-      className='masthead'
+      className={`masthead ${style.mHead}`}
       style={{
         backgroundImage:
           'url(https://phinemo.com/wp-content/uploads/2018/10/puncak-asmoro-banyuwangi.jpg)',
@@ -11,15 +12,12 @@ const Header = () => {
       }}
     >
       <div className='container px-5'>
-        <div
-          className='row gx-5 align-items-center'
-          style={{ padding: '10rem 0' }}
-        >
+        <div className={`row gx-5 align-items-center ${style.headerH}`}>
           <div className='mb-5 mb-lg-0 text-center text-lg-start'>
-            <h1 className='display-1 lh-1 mb-3 text-center'>
-              Rumah Digital Gombengsari
+            <h1 className='display-2 mb-3 text-center'>
+              Rumah Digital
               <br />
-              Banyuwangi
+              Gombengsari, Banyuwangi
             </h1>
           </div>
         </div>

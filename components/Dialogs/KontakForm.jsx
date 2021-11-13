@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { clientAxios, isValidEmail } from '@helpers/functions'
+import { useSession } from 'next-auth/client'
 
 function KontakForm({
   isShown,
@@ -23,12 +24,20 @@ function KontakForm({
     setValue,
     formState: { errors },
   } = useForm()
-
+  const [session, loading] = useSession()
   const onSubmit = (postData) =>
     clientAxios
-      .put('/objects/' + data.id, {
-        contact: [postData],
-      })
+      .put(
+        '/objects/' + data.id,
+        {
+          contact: [postData],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
       .then(function (response) {
         setIsShown(false)
         toastMessage()
@@ -62,7 +71,7 @@ function KontakForm({
         confirmLabel='Update'
         onConfirm={handleSubmit(onSubmit)}
       >
-        <form noValidate>
+        <form>
           <Pane>
             <TextInputField
               isInvalid={errors.name ? true : false}

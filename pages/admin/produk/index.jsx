@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import useSWR from 'swr'
+import { useEffect, useState } from 'react'
 import { formatRp } from '../../../src/helpers/functions'
 import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
@@ -15,125 +16,72 @@ import {
   Badge,
   TrashIcon,
   PlusIcon,
+  ResetIcon,
   SearchInput,
   Text,
+  SelectMenu,
 } from 'evergreen-ui'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import ControlledSwitch from '@components/ControlledSwitch'
-import SingleSelectedItem from '@components/SingleSelectedItem'
 
 const Produk = () => {
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const router = useRouter()
+  const [search, setSearch] = useState('')
+  const [selectPenjual, setSelectPenjual] = useState(null)
+  const [penjual, setPenjual] = useState([])
+  const [squery, setSquery] = useState('')
 
-  const datas = [
-    {
-      id: 1,
-      name: 'Kean Yoakley',
-      image: 'https://picsum.photos/300',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 2,
-      name: 'Stearne Yelding',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 3,
-      name: 'Tripp Perrington',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 4,
-      name: 'Cristiano Brimley',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 5,
-      name: 'Sybil Bryenton',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 6,
-      name: 'Putnem Pleasance',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 7,
-      name: 'Carri McGrill',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 8,
-      name: 'Clarette Reynoldson',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 9,
-      name: 'Judi Ludewig',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-    {
-      id: 10,
-      name: 'Lanette Kewish',
-      image: 'https://picsum.photos/200',
-      user: {
-        id: 5,
-        name: 'Imam',
-      },
-    },
-  ]
+  const toastMessage = () => {
+    toaster.success('Data Berhasil di Edit', {
+      duration: 4,
+    })
+  }
+
+  const getUser = async (url) => await fetch(url).then((res) => res.json())
+  const { data, mutate, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URI}/products?name_contains=${search}&_sort=created_at:desc${squery}`,
+    getUser
+  )
+
+  const getPenjual = async () => {
+    const json = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`
+    ).then((res) => res.json())
+
+    setPenjual(json.map((j) => ({ label: j.name, value: j.id })))
+  }
+
+  const onDelete = (id) => {
+    axios
+      .delete(`${process.env.NEXT_PUBLIC_API_URI}/users/${id}`)
+      .then((response) => {
+        setShowDelete(false)
+        mutate()
+      })
+      .catch((error) => console.log(error))
+  }
+
+  useEffect(() => {
+    getPenjual()
+  }, [])
 
   return (
-    <Layout>
+    <Layout title='Produk'>
       <Dialog
         isShown={showDelete}
-        title='Hapus "Puncak Asmoro"'
+        title={`Hapus "${value.name}"`}
         intent='danger'
         onCloseComplete={() => {
           setShowDelete(false)
         }}
         confirmLabel='Delete'
+        onConfirm={() => onDelete(value.id)}
       >
-        Apakah anda yakin ingin menghapus item ini?
+        Apakah anda yakin ingin menghapus &quot;{value.name}&quot;?
       </Dialog>
       <Content>
         <Content.Header
@@ -157,16 +105,41 @@ const Produk = () => {
                 paddingY={5}
               >
                 <Text color='muted'>Filter</Text>
-                <SingleSelectedItem name='Kategori ...' />
-                <SingleSelectedItem name='Penjual ...' />
+                {/* <SingleSelectedItem name='Kategori ...' /> */}
+                <SelectMenu
+                  title='Penjual ...'
+                  options={penjual}
+                  selected={selectPenjual}
+                  onSelect={(item) => {
+                    setSelectPenjual(item.label)
+                    setSquery('&object=' + item.value)
+                  }}
+                >
+                  <Button>{selectPenjual || 'Penjual ...'}</Button>
+                </SelectMenu>
+                <Button
+                  iconBefore={ResetIcon}
+                  onClick={(e) => {
+                    setSelectPenjual()
+                    setSearch('')
+                    setSquery('')
+                  }}
+                >
+                  Reset
+                </Button>
               </Pane>
               <Pane className='col-md-3 col-sm-12' paddingY={5}>
-                <SearchInput width='100%' placeholder='Cari Produk ...' />
+                <SearchInput
+                  width='100%'
+                  placeholder='Cari Produk ...'
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </Pane>
             </Pane>
             <Pane overflowX='auto'>
               <Pane>
-                <Table border={0} overflowX='auto'>
+                <Table overflowX='auto'>
                   <Table.Head borderRadius={4}>
                     <Table.TextHeaderCell>Foto</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Nama Produk</Table.TextHeaderCell>
@@ -178,61 +151,78 @@ const Produk = () => {
                     </Table.TextHeaderCell>
                   </Table.Head>
                   <Table.Body>
-                    {datas.map((profile, index) => (
-                      <Table.Row
-                        key={index}
-                        height='auto'
-                        paddingY={5}
-                        marginY={5}
-                        borderRadius={4}
-                        className='shadow-sm'
-                      >
-                        <Table.Cell>
-                          <Pane
-                            width={80}
-                            height={80}
-                            position='relative'
-                            borderRadius={4}
-                            overflow='hidden'
-                          >
-                            <Image
-                              alt='Mountains'
-                              src='https://picsum.photos/300'
-                              layout='fill'
-                              objectFit='cover'
+                    {data &&
+                      data.map((profile, index) => (
+                        <Table.Row
+                          key={index}
+                          height='auto'
+                          paddingY={10}
+                          marginY={5}
+                          borderRadius={4}
+                          className='shadow-sm'
+                        >
+                          <Table.Cell>
+                            <Pane
+                              width={80}
+                              height={80}
+                              position='relative'
+                              borderRadius={4}
+                              overflow='hidden'
+                            >
+                              <Image
+                                alt={profile.featured_image.name}
+                                src={
+                                  process.env.NEXT_PUBLIC_API_URI +
+                                  profile.featured_image.formats.thumbnail.url
+                                }
+                                layout='fill'
+                                objectFit='cover'
+                              />
+                            </Pane>
+                          </Table.Cell>
+                          <Table.TextCell>
+                            <Strong>{profile.name}</Strong>
+                          </Table.TextCell>
+                          <Table.TextCell>
+                            {profile.object && (
+                              <Link href='#'>
+                                <a>
+                                  <Text color='blue500'>
+                                    {profile.object.name}
+                                  </Text>
+                                </a>
+                              </Link>
+                            )}
+                          </Table.TextCell>
+                          <Table.TextCell isNumber>
+                            {profile.prices.map((ps, index) => (
+                              <Strong
+                                color='green500'
+                                key={index + ps.variation}
+                              >
+                                {ps.variation} - {formatRp(ps.price)} <br />
+                              </Strong>
+                            ))}
+                          </Table.TextCell>
+                          <Table.TextCell>
+                            <ControlledSwitch
+                              id={profile.id}
+                              defaultCheck={profile.visible}
+                              mutate={mutate}
                             />
-                          </Pane>
-                        </Table.Cell>
-                        <Table.TextCell>
-                          <Strong>
-                            ASDASDSDasdas asdas das asd asd dasd asd
-                          </Strong>
-                        </Table.TextCell>
-                        <Table.TextCell>
-                          <Link href='#'>
-                            <a>
-                              <Text color='blue500'>Pengelola</Text>
-                            </a>
-                          </Link>
-                        </Table.TextCell>
-                        <Table.TextCell isNumber>
-                          <Strong color='green500'>{formatRp(882923)}</Strong>
-                        </Table.TextCell>
-                        <Table.TextCell>
-                          <ControlledSwitch />
-                        </Table.TextCell>
-                        <Table.Cell className='d-flex justify-content-end align-items-center gap-1'>
-                          <Button appearance='primary' iconBefore={EditIcon}>
-                            Edit
-                          </Button>
-                          <IconButton
-                            icon={TrashIcon}
-                            intent='danger'
-                            appearance='primary'
-                          />
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
+                          </Table.TextCell>
+                          <Table.Cell className='d-flex justify-content-end align-items-center gap-1'>
+                            <Button appearance='primary' iconBefore={EditIcon}>
+                              Edit
+                            </Button>
+                            <IconButton
+                              icon={TrashIcon}
+                              intent='danger'
+                              appearance='primary'
+                            />
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
                   </Table.Body>
                 </Table>
               </Pane>

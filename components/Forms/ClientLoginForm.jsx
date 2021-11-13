@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 const ClientLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const [error, setError] = useState(false)
 
   const {
     register,
@@ -28,6 +29,7 @@ const ClientLoginForm = () => {
   )
 
   const onSubmit = async (data) => {
+    setError(false)
     setIsLoading(true)
 
     const signin = await signIn('credentials', { redirect: false, ...data })
@@ -36,6 +38,7 @@ const ClientLoginForm = () => {
       router.push('/')
     }
     if (signin.error != null) {
+      setError(true)
       setIsLoading(false)
     }
   }
@@ -65,6 +68,13 @@ const ClientLoginForm = () => {
             />
             <label htmlFor='password'>Kata Sandi</label>
           </div>
+
+          {error && (
+            <div className='mb-3'>
+              <span className='text-danger'>Email/Katasandi Salah!</span>
+            </div>
+          )}
+
           <div className='d-grid'>
             <button
               type='submit'

@@ -42,7 +42,9 @@ import PengelolaTerdaftar from '@components/Forms/PengelolaTerdaftar'
 import Stats from '@components/Stats'
 import Media from '@components/Forms/Media'
 import Kontak from '@components/Forms/Kontak'
-const Tambah = () => {
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+
+const Tambah = ({ session }) => {
   const [activeStep, setActiveStep] = useState(1)
   const [checked, setChecked] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -50,7 +52,7 @@ const Tambah = () => {
   const [postData, setPostData] = useState([])
 
   return (
-    <Layout>
+    <Layout title='Tambah Wisata'>
       <Sukses isShown={success} setIsShown={setSuccess} data={successData} />
       <Content>
         <Content.Header title='Tambah Wisata' />
@@ -119,7 +121,7 @@ const Detail = (props) => {
           >
             <option value='Wisata Alam'>Wisata Alam</option>
             <option value='Wisata Edukasi'>Wisata Edukasi</option>
-            <option value='Wisata'>Lainnya</option>
+            <option value='Wisata Lainnya'>Lainnya</option>
           </Select>
         </FormField>
         <TextInputField
@@ -148,4 +150,20 @@ const Detail = (props) => {
       </Pane>
     </form>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  return {
+    props: { session },
+  }
 }

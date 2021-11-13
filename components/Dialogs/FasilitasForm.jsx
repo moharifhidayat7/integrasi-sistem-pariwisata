@@ -8,6 +8,8 @@ import {
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+
 function FasilitasForm({
   isShown,
   setIsShown,
@@ -21,12 +23,21 @@ function FasilitasForm({
     reset,
     formState: { errors },
   } = useForm()
+  const [session, loading] = useSession()
 
   const onSubmit = (postData) =>
     axios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
-        facility: [...data.facility, postData.fasilitas],
-      })
+      .put(
+        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
+        {
+          facility: [...data.facility, postData.fasilitas],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
       .then(function (response) {
         reset()
         setIsShown(false)

@@ -8,6 +8,8 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+
 function VideoForm({
   isShown,
   setIsShown,
@@ -21,12 +23,21 @@ function VideoForm({
     setValue,
     formState: { errors },
   } = useForm()
+  const [session, loading] = useSession()
 
   const onSubmit = (postData) =>
     axios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
-        youtube: postData.link,
-      })
+      .put(
+        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
+        {
+          youtube: postData.link,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
       .then(function (response) {
         setIsShown(false)
         toastMessage()

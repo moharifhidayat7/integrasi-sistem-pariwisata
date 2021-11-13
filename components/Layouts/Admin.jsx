@@ -29,11 +29,13 @@ import NextLink from 'next/link'
 import Sidebar from '../Sidebar'
 import Head from 'next/head'
 
-const Admin = ({ children, title = 'Admin' }) => {
+const Admin = ({ children, title }) => {
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>
+          {title} | {process.env.NEXT_PUBLIC_APP_TITLE}
+        </title>
       </Head>
       <Pane
         fontFamily='sans-serif'

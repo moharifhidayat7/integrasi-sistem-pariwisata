@@ -34,7 +34,9 @@ import { clientAxios } from '@helpers/functions'
 import axios from 'axios'
 import Image from 'next/image'
 import _ from 'lodash'
-const WisataPage = () => {
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+
+const WisataPage = ({ session }) => {
   const router = useRouter()
   const { slug } = router.query
   const { mutate } = useSWRConfig()
@@ -60,7 +62,12 @@ const WisataPage = () => {
     })
   }
 
-  const getWisata = async (url) => await fetch(url).then((res) => res.json())
+  const getWisata = async (url) =>
+    await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${session.jwt}`,
+      },
+    }).then((res) => res.json())
 
   const { data, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`,
@@ -70,9 +77,17 @@ const WisataPage = () => {
   const deleteFasilitas = (index) => {
     data.facility.splice(index, 1)
     axios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
-        facility: data.facility,
-      })
+      .put(
+        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
+        {
+          facility: data.facility,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -85,7 +100,11 @@ const WisataPage = () => {
 
   const deleteImage = (id) => {
     axios
-      .delete(process.env.NEXT_PUBLIC_API_URI + '/upload/files/' + id)
+      .delete(process.env.NEXT_PUBLIC_API_URI + '/upload/files/' + id, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -101,9 +120,17 @@ const WisataPage = () => {
       .filter((ss) => ss.id != id)
       .map((sn) => sn.id)
     axios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
-        slideshow: newSlide,
-      })
+      .put(
+        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
+        {
+          slideshow: newSlide,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -127,7 +154,11 @@ const WisataPage = () => {
     }
 
     axios
-      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData)
+      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then(function (response) {
         toastMessage()
         mutate(`${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`)
@@ -138,7 +169,7 @@ const WisataPage = () => {
   }
 
   return (
-    <Layout>
+    <Layout title={data && data.name}>
       <DeleteDialog
         isShown={deleteDialog}
         setIsShown={setDeleteDialog}
@@ -545,3 +576,20 @@ const WisataPage = () => {
 }
 
 export default WisataPage
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: { session },
+  }
+}

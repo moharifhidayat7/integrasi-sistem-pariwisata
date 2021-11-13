@@ -8,6 +8,7 @@ import style from './ImagePickerForm.module.scss'
 
 import _ from 'lodash'
 import axios from 'axios'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
 const ImageCheck = ({ checked = false, img, images, setImages }) => {
   const [check, setCheck] = useState(checked)
@@ -25,8 +26,8 @@ const ImageCheck = ({ checked = false, img, images, setImages }) => {
 
   return (
     <Pane
-      width={170}
-      height={150}
+      width={150}
+      height={130}
       borderRadius={4}
       backgroundImage={`url(${process.env.NEXT_PUBLIC_API_URI}${img.formats.thumbnail.url})`}
       backgroundSize='cover'
@@ -58,12 +59,21 @@ const ImagePickerForm = ({
   toastMessage = () => {},
 }) => {
   const [images, setImages] = useState([])
+  const [session, loading] = useSession()
 
   const onSubmit = () => {
     axios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
-        slideshow: images,
-      })
+      .put(
+        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
+        {
+          slideshow: images,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
       .then(function (response) {
         setIsShown(false)
         toastMessage()

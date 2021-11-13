@@ -1,21 +1,75 @@
 import { useForm } from 'react-hook-form'
-import { Pane, Card, TextInputField, Button, Heading } from 'evergreen-ui'
+import {
+  Pane,
+  Card,
+  TextInputField,
+  Button,
+  Heading,
+  toaster,
+} from 'evergreen-ui'
 import Content from '@components/Content'
 import Layout from '@components/Layouts/Admin'
 import ContentWrapper from '@components/Wrapper/ContentWrapper'
-const GantiPassword = () => {
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { useRef, useState } from 'react'
+import { clientAxios } from '@helpers/functions'
+const GantiPassword = ({ session }) => {
   const {
     register,
     handleSubmit,
+    watch,
+    reset,
+    setError,
     formState: { errors },
   } = useForm()
+  const [isLoading, setIsLoading] = useState(false)
+  const currentPassword = useRef({})
+  currentPassword.current = watch('newPassword', '')
+
+  const toastMessage = () => {
+    toaster.success('Data Berhasil di Edit', {
+      duration: 4,
+    })
+  }
+  const errorMessage = () => {
+    toaster.danger('Password Lama Salah', {
+      duration: 4,
+    })
+  }
+
+  clientAxios.interceptors.request.use(
+    function (config) {
+      setIsLoading(true)
+      return config
+    },
+    function (error) {
+      // Do something with request error
+      return Promise.reject(error)
+    }
+  )
 
   const onSubmit = (data) => {
-    alert(data)
+    clientAxios
+      .post('/profiles/change-password', data, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
+      .then(function (response) {
+        setIsLoading(false)
+        toastMessage()
+        reset()
+        signOut({ callbackUrl: '/' })
+      })
+      .catch(function (error) {
+        setIsLoading(false)
+        errorMessage()
+        setError('currentPassword', 'Password Salah')
+      })
   }
 
   return (
-    <Layout>
+    <Layout title='Ganti Password'>
       <ContentWrapper>
         <Content>
           <Content.Body>
@@ -36,37 +90,52 @@ const GantiPassword = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <Pane>
                       <TextInputField
-                        isInvalid={errors.oldPassword ? true : false}
+                        isInvalid={errors.currentPassword ? true : false}
                         validationMessage={
-                          errors.oldPassword && 'Harus di isi!'
+                          errors.currentPassword &&
+                          errors.currentPassword.message
                         }
                         type='password'
                         label='Password Lama *'
                         placeholder='Password Lama'
-                        id='oldPassword'
-                        {...register('oldPassword', { required: true })}
+                        id='currentPassword'
+                        {...register('currentPassword', {
+                          required: 'Harus di isi!',
+                        })}
                       />
                       <TextInputField
                         isInvalid={errors.newPassword ? true : false}
                         validationMessage={
-                          errors.newPassword && 'Harus di isi!'
+                          errors.newPassword && errors.newPassword.message
                         }
                         type='password'
                         label='Password Baru *'
                         placeholder='Password Baru'
                         id='newPassword'
-                        {...register('newPassword', { required: true })}
+                        {...register('newPassword', {
+                          required: 'Harus di isi!',
+                          minLength: {
+                            value: 8,
+                            message: 'Password minimal 8 karakter',
+                          },
+                        })}
                       />
                       <TextInputField
-                        isInvalid={errors.newPassword2 ? true : false}
+                        isInvalid={errors.confirmNewPassword ? true : false}
                         validationMessage={
-                          errors.newPassword2 && 'Harus di isi!'
+                          errors.confirmNewPassword &&
+                          errors.confirmNewPassword.message
                         }
                         type='password'
                         label='Konfirmasi Password Baru *'
                         placeholder='Konfirmasi Password Baru'
-                        id='newPassword2'
-                        {...register('newPassword2', { required: true })}
+                        id='confirmNewPassword'
+                        {...register('confirmNewPassword', {
+                          required: 'Harus di isi!',
+                          validate: (value) =>
+                            value === currentPassword.current ||
+                            'Password tidak sesuai',
+                        })}
                       />
                       <Pane className='d-flex justify-content-end'>
                         <Button appearance='primary'>Submit</Button>
@@ -84,3 +153,21 @@ const GantiPassword = () => {
 }
 
 export default GantiPassword
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  return {
+    props: {
+      session,
+    },
+  }
+}

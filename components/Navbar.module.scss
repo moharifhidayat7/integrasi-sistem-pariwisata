@@ -1,0 +1,22 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints';
+
+@include media-breakpoint-down(lg) {
+  .menuRes {
+    width: 100%;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .menuRes {
+    width: auto;
+  }
+}
+
+.showMenu {
+  -webkit-transition: display 2s ease-out;
+  -moz-transition: display 2s ease-out;
+  -o-transition: display 2s ease-out;
+  transition: display 2s ease-out;
+}

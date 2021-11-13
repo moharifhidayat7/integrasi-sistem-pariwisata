@@ -33,8 +33,12 @@ import {
   KeyIcon,
 } from 'evergreen-ui'
 import CustomItem from './Customs/MenuItem'
+import SignOutMenu from '@components/Customs/SignOutMenu'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
 const NavMenu = () => {
+  const [session, loading] = useSession()
+
   return (
     <Menu>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Menu Utama</span>}>
@@ -67,13 +71,8 @@ const NavMenu = () => {
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
         <CustomItem
           icon={<BookIcon color='#F9FAFC' />}
-          text='Paket Wisata Edukasi'
-          href='/admin/wisata-edukasi'
-        />
-        <CustomItem
-          icon={<AirplaneIcon color='#F9FAFC' />}
-          text='Paket Travel'
-          href='/admin/travel'
+          text='Paket Wisata'
+          href='/admin/paket-wisata'
         />
         <CustomItem
           icon={<CalendarIcon color='#F9FAFC' />}
@@ -128,11 +127,7 @@ const NavMenu = () => {
           text='Ganti Password'
           href='/admin/ganti-password'
         />
-        <CustomItem
-          icon={<LogOutIcon color='#F9FAFC' />}
-          text='Keluar'
-          href='/auth/logout'
-        />
+        <SignOutMenu icon={<LogOutIcon color='#F9FAFC' />} text='Keluar' />
       </Menu.Group>
     </Menu>
   )

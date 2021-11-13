@@ -12,6 +12,7 @@ import {
 } from 'evergreen-ui'
 import PengelolaList from '@components/PengelolaList'
 import { clientAxios } from '@helpers/functions'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
 const PengelolaForm = ({
   isShown,
@@ -21,8 +22,14 @@ const PengelolaForm = ({
 }) => {
   const [active, setActive] = useState([])
   const [keyName, setKeyName] = useState('')
+  const [session, loading] = useSession()
 
-  const getUser = async (url) => await fetch(url).then((res) => res.json())
+  const getUser = async (url) =>
+    await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${session.jwt}`,
+      },
+    }).then((res) => res.json())
 
   const { data: users, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URI}/users?name_contains=${keyName}`,
@@ -34,9 +41,17 @@ const PengelolaForm = ({
       setIsShown(false)
     } else {
       clientAxios
-        .put('/objects/' + data.id, {
-          users_permissions_user: active.id,
-        })
+        .put(
+          '/objects/' + data.id,
+          {
+            users_permissions_user: active.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${session.jwt}`,
+            },
+          }
+        )
         .then(function (response) {
           setIsShown(false)
           toastMessage()

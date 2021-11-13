@@ -16,6 +16,7 @@ import {
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
 const Data = ({ setShowDelete, setWisata, data }) => {
   const router = useRouter()
@@ -38,12 +39,17 @@ const Data = ({ setShowDelete, setWisata, data }) => {
   })
 }
 
-const Wisata = () => {
+const Wisata = ({ session }) => {
   const [showDelete, setShowDelete] = useState(false)
   const [wisata, setWisata] = useState([])
   const router = useRouter()
 
-  const getWisata = async (url) => await fetch(url).then((res) => res.json())
+  const getWisata = async (url) =>
+    await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${session.jwt}`,
+      },
+    }).then((res) => res.json())
 
   const { data, mutate, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URI}/objects?type=Wisata&type=Wisata Alam&type=Wisata Edukasi&_sort=created_at:desc`,
@@ -52,7 +58,11 @@ const Wisata = () => {
 
   const onDelete = (id) => {
     axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`)
+      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then((response) => {
         setShowDelete(false)
         mutate()
@@ -61,7 +71,7 @@ const Wisata = () => {
   }
 
   return (
-    <Layout>
+    <Layout title='Wisata'>
       <Dialog
         isShown={showDelete}
         title={`Hapus "${wisata.name}"`}
@@ -100,3 +110,19 @@ const Wisata = () => {
 }
 
 export default Wisata
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  return {
+    props: { session },
+  }
+}

@@ -1,5 +1,6 @@
+import Layout from '@components/Layouts/Admin'
 const index = () => {
-  return <>tes</>
+  return <Layout title='Dashboard'></Layout>
 }
 
 export default index

@@ -16,6 +16,8 @@ import {
 import { useDropzone } from 'react-dropzone'
 import _ from 'lodash'
 import axios from 'axios'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+
 const GaleriForm = ({
   isShown,
   setIsShown,
@@ -24,6 +26,7 @@ const GaleriForm = ({
   toastMessage = () => {},
 }) => {
   const [files, setFiles] = useState([])
+  const [session, loading] = useSession()
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: 'image/*',
@@ -46,13 +49,6 @@ const GaleriForm = ({
     setFiles(newFiles)
   }
 
-  useEffect(
-    () => () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview))
-    },
-    [files]
-  )
-
   const uploadImage = () => {
     const formData = new FormData()
 
@@ -66,7 +62,11 @@ const GaleriForm = ({
     }
 
     axios
-      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData)
+      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then(function (response) {
         setFiles([])
         setIsShown(false)

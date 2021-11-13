@@ -1,0 +1,100 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints';
+
+.wisataList {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: 'Poppins', sans-serif;
+  }
+  :global {
+    & .wisataCard {
+      overflow: hidden;
+      margin-bottom: 10px;
+      .wisataItem {
+        height: 380px;
+        position: relative;
+        overflow: hidden;
+      }
+      .umkmItem {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+      }
+      .card-title {
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #262626 !important;
+      }
+      .umkm-card-title {
+        font-weight: 500;
+        margin-bottom: 0.2rem;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #262626 !important;
+      }
+      .card-text {
+        font-size: medium;
+        color: #262626;
+        height: 3.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .card-label {
+        font-size: small;
+        color: #676767;
+        margin-bottom: 10px;
+      }
+    }
+    & .wisataInfo {
+      padding: 10px 0;
+    }
+    .iconChev {
+      padding: 10px;
+      background-color: white;
+      border-radius: 50%;
+      color: #38b520;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease-in;
+      &:hover {
+        background-color: #e9e9e9;
+      }
+    }
+  }
+}
+@include media-breakpoint-down(lg) {
+  .customChevArrow {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(0, -50%);
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .customChevArrow {
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    right: -30px;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(0, -50%);
+  }
+}

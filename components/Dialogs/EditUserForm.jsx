@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { clientAxios } from '@helpers/functions'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
 function UserForm({
   isShown,
@@ -23,10 +24,15 @@ function UserForm({
     setValue,
     formState: { errors },
   } = useForm()
+  const [session, loading] = useSession()
 
   const onSubmit = (postData) => {
     clientAxios
-      .put('/users/' + data.id, postData)
+      .put('/users/' + data.id, postData, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then(function (response) {
         setIsShown(false)
         toastMessage()

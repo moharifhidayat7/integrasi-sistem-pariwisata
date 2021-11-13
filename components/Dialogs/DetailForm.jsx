@@ -9,6 +9,8 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+
 function DetailForm({
   isShown,
   setIsShown,
@@ -24,14 +26,23 @@ function DetailForm({
   } = useForm()
 
   const router = useRouter()
+  const [session, loading] = useSession()
 
   const onSubmit = (postData) =>
     axios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
-        name: postData.objectName,
-        address: postData.objectAddress,
-        description: postData.description,
-      })
+      .put(
+        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
+        {
+          name: postData.objectName,
+          address: postData.objectAddress,
+          description: postData.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
       .then(function (response) {
         setIsShown(false)
         toastMessage()

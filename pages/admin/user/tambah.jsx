@@ -6,8 +6,10 @@ import StepWizard from 'react-step-wizard'
 import HorizontalScroll from 'react-scroll-horizontal'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 import _ from 'lodash'
 import { clientAxios, YouTubeGetID } from '@helpers/functions'
+import axios from 'axios'
 import {
   Dialog,
   Pane,
@@ -35,8 +37,9 @@ import {
   Avatar,
   SmallCrossIcon,
   IconButton,
+  SelectField,
 } from 'evergreen-ui'
-const Tambah = () => {
+const Tambah = ({ roles, session }) => {
   const {
     register,
     handleSubmit,
@@ -62,7 +65,11 @@ const Tambah = () => {
 
   const onSubmit = (data) => {
     clientAxios
-      .post('/profiles', data)
+      .post('/profiles/create-user', data, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then(function (response) {
         const path = router.pathname.split('/').slice(0, -1)
         router.push(path.join('/'))
@@ -70,11 +77,12 @@ const Tambah = () => {
       .catch(function (error) {
         setError('email', { type: 'focus', message: 'Email Sudah Digunakan' })
         setIsLoading(false)
+        console.log(error)
       })
   }
 
   return (
-    <Layout>
+    <Layout title='Tambah User'>
       <Content>
         <Content.Header title='Tambah User' />
         <Content.Body>
@@ -92,11 +100,11 @@ const Tambah = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <TextInputField
                     isInvalid={errors.name ? true : false}
-                    validationMessage={errors.name && 'Harus di isi!'}
+                    validationMessage={errors.name && errors.name.message}
                     label='Nama *'
                     placeholder='Nama'
                     id='name'
-                    {...register('name', { required: true })}
+                    {...register('name', { required: 'Harus di isi!' })}
                   />
                   <TextInputField
                     label='Alamat'
@@ -114,25 +122,43 @@ const Tambah = () => {
                         type='email'
                         id='email'
                         {...register('email', {
-                          required: true,
-                          message: 'Harus di isi!',
+                          required: 'Harus di isi!',
                         })}
                       />
                     </Pane>
                     <Pane className='col-6'>
                       <TextInputField
                         isInvalid={errors.phone ? true : false}
-                        validationMessage={errors.phone && 'Harus di isi!'}
+                        validationMessage={errors.phone && errors.phone.message}
                         label='Nomor Telepon *'
                         placeholder='Nomor Telepon'
                         id='phone'
-                        {...register('phone', { required: true })}
+                        {...register('phone', { required: 'Harus di isi!' })}
                       />
                     </Pane>
                   </Pane>
+                  <FormField
+                    label='Hak Akses'
+                    labelFor='role'
+                    validationMessage={errors.role && errors.role.message}
+                  >
+                    <Select
+                      isInvalid={errors.role ? true : false}
+                      {...register('role', { required: 'Harus di Isi!' })}
+                      id='role'
+                      width='100%'
+                    >
+                      {roles.map((role) => (
+                        <option value={role.id} key={role.id}>
+                          {role.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormField>
                   <Checkbox
                     label='Acak Kata sandi'
                     checked={checked}
+                    id='randompassword'
                     onChange={(e) => {
                       setChecked(e.target.checked)
                       if (e.target.checked) {
@@ -153,8 +179,7 @@ const Tambah = () => {
                     placeholder='Kata sandi'
                     id='password'
                     {...register('password', {
-                      required: true,
-                      message: 'Harus di Isi!',
+                      required: 'Harus di Isi!',
                     })}
                   />
 
@@ -179,3 +204,31 @@ const Tambah = () => {
 }
 
 export default Tambah
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  const { data } = await axios.get(
+    `${process.env.API_URI}/users-permissions/roles`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.jwt}`,
+      },
+    }
+  )
+
+  return {
+    props: {
+      session,
+      roles: data.roles.filter((role) => role.id != 2),
+    },
+  }
+}
