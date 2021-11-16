@@ -5,7 +5,6 @@ import StepWizard from 'react-step-wizard'
 import { useForm } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
 import _ from 'lodash'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 import axios from 'axios'
 import {
   Dialog,
@@ -15,7 +14,6 @@ import {
   PlusIcon,
   ManuallyEnteredDataIcon,
   MediaIcon,
-  Select,
   UserIcon,
   ArrowRightIcon,
   Heading,
@@ -31,6 +29,7 @@ import {
   SearchInput,
   FilePicker,
   Avatar,
+  Select,
   SmallCrossIcon,
   IconButton,
 } from 'evergreen-ui'
@@ -39,22 +38,26 @@ import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
 import Image from 'next/image'
 import { formatRp, clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 import Variasi from '@components/Dialogs/Variasi'
-const Tambah = ({ session }) => {
+const Edit = ({ session }) => {
   const router = useRouter()
+  const { id: productId } = router.query
   const [activeStep, setActiveStep] = useState(1)
   const [checked, setChecked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [postData, setPostData] = useState([])
   const [umkm, setUmkm] = useState([])
+  const [product, setProduct] = useState([])
   const [image, setImage] = useState(null)
   const [variasiForm, setVariasiForm] = useState(false)
   const [variasi, setVariasi] = useState([])
   const featuredImageRef = useRef(null)
-
+  const [dataImage, setDataImage] = useState([])
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm()
 
@@ -100,6 +103,7 @@ const Tambah = ({ session }) => {
       description: data.description,
       prices: variasi,
       category: data.category,
+      images: dataImage.map((d) => d.id),
     }
 
     if (data.object != 'pokdarwis') {
@@ -116,7 +120,7 @@ const Tambah = ({ session }) => {
     formData.append('files.featured_image', image)
 
     clientAxios
-      .post('/products', formData, {
+      .put('/products/' + productId, formData, {
         headers: {
           Authorization: `Bearer ${session.jwt}`,
         },
@@ -131,7 +135,30 @@ const Tambah = ({ session }) => {
       })
   }
 
+  const removeImages = (id) => {
+    setDataImage(dataImage.filter((d) => d.id != id))
+  }
+
   useEffect(() => {
+    const getProduct = async () => {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URI}/products/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.jwt}`,
+          },
+        }
+      )
+      setProduct(data)
+      setValue('productName', data.name)
+      setValue('description', data.description)
+      setValue('category', data.category)
+      setValue('object', data.object.id)
+      setVariasi(data.prices)
+      setDataImage(data.images)
+    }
+    getProduct()
+
     const getUmkm = async () => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`,
@@ -147,7 +174,7 @@ const Tambah = ({ session }) => {
   }, [])
 
   return (
-    <Layout title='Tambah Produk'>
+    <Layout title='Edit Produk'>
       <Variasi
         isShown={variasiForm}
         setIsShown={setVariasiForm}
@@ -155,7 +182,7 @@ const Tambah = ({ session }) => {
         setVariasi={setVariasi}
       />
       <Content>
-        <Content.Header title='Tambah Produk' />
+        <Content.Header title='Edit Produk' />
         <Content.Body>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Pane className='d-flex justify-content-center'>
@@ -190,7 +217,6 @@ const Tambah = ({ session }) => {
                             accept='image/*'
                             ref={featuredImageRef}
                             onChange={(e) => setImage(e.target.files[0])}
-                            required
                             hidden
                           />
                           {image ? (
@@ -204,11 +230,63 @@ const Tambah = ({ session }) => {
                               backgroundSize='cover'
                               backgroundPosition='center'
                             ></Pane>
+                          ) : product.featured_image ? (
+                            <Pane
+                              width='100%'
+                              height='100%'
+                              backgroundImage={`url(${process.env.NEXT_PUBLIC_API_URI}${product.featured_image.url})`}
+                              backgroundRepeat='no-repeat'
+                              backgroundSize='cover'
+                              backgroundPosition='center'
+                            ></Pane>
                           ) : (
                             <Text color='muted'>Foto Utama</Text>
                           )}
                         </Pane>
                       </Pane>
+                      {dataImage &&
+                        dataImage.map((file, index) => (
+                          <Pane
+                            verticalAlign='top'
+                            marginRight={5}
+                            key={file.name}
+                          >
+                            <Pane
+                              borderStyle='dashed'
+                              bordersize={2}
+                              borderColor='#E6E8F0'
+                              position='relative'
+                              padding={5}
+                              width={120}
+                              height={120}
+                              className='d-flex justify-content-center align-items-center'
+                              textAlign='center'
+                            >
+                              <Pane
+                                width='100%'
+                                height='100%'
+                                style={{
+                                  backgroundImage: `url('${
+                                    process.env.NEXT_PUBLIC_API_URI + file.url
+                                  }')`,
+                                  backgroundSize: 'cover',
+                                  backgroundPosition: 'center',
+                                  backgroundRepeat: 'no-repeat',
+                                }}
+                              ></Pane>
+                              <IconButton
+                                icon={SmallCrossIcon}
+                                appearance='primary'
+                                intent='danger'
+                                size='small'
+                                top={4}
+                                right={4}
+                                position='absolute'
+                                onClick={() => removeImages(file.id)}
+                              />
+                            </Pane>
+                          </Pane>
+                        ))}
                       {files.length > 0 &&
                         files.map((file, index) => (
                           <Pane
@@ -322,25 +400,28 @@ const Tambah = ({ session }) => {
                         <Table.TextCell>Harga</Table.TextCell>
                       </Table.Head>
                       <Table.Body>
-                        {variasi.map((v, index) => (
-                          <Table.Row key={v.variation + index} height={40}>
-                            <Table.TextCell>{v.variation}</Table.TextCell>
-                            <Table.TextCell>{formatRp(v.price)}</Table.TextCell>
-                            <div className='float-right d-flex align-items-center'>
-                              <IconButton
-                                icon={SmallCrossIcon}
-                                appearance='primary'
-                                intent='danger'
-                                size='small'
-                                onClick={() =>
-                                  setVariasi(
-                                    variasi.filter((v, i) => i != index)
-                                  )
-                                }
-                              />
-                            </div>
-                          </Table.Row>
-                        ))}
+                        {variasi != null &&
+                          variasi.map((v, index) => (
+                            <Table.Row key={v.variation + index} height={40}>
+                              <Table.TextCell>{v.variation}</Table.TextCell>
+                              <Table.TextCell>
+                                {formatRp(v.price)}
+                              </Table.TextCell>
+                              <div className='float-right d-flex align-items-center'>
+                                <IconButton
+                                  icon={SmallCrossIcon}
+                                  appearance='primary'
+                                  intent='danger'
+                                  size='small'
+                                  onClick={() =>
+                                    setVariasi(
+                                      variasi.filter((v, i) => i != index)
+                                    )
+                                  }
+                                />
+                              </div>
+                            </Table.Row>
+                          ))}
 
                         <Table.Row>
                           <Table.TextCell textAlign='center'>
@@ -376,7 +457,7 @@ const Tambah = ({ session }) => {
   )
 }
 
-export default Tambah
+export default Edit
 export async function getServerSideProps(context) {
   const session = await getSession(context)
 

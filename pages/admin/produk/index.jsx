@@ -25,8 +25,9 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import ControlledSwitch from '@components/ControlledSwitch'
-
-const Produk = () => {
+import axios from 'axios'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+const Produk = ({session}) => {
   const [value, setValue] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const router = useRouter()
@@ -41,7 +42,12 @@ const Produk = () => {
     })
   }
 
-  const getUser = async (url) => await fetch(url).then((res) => res.json())
+  const getUser = async (url) =>
+    await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${session.jwt}`,
+      },
+    }).then((res) => res.json())
   const { data, mutate, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URI}/products?name_contains=${search}&_sort=created_at:desc${squery}`,
     getUser
@@ -49,7 +55,12 @@ const Produk = () => {
 
   const getPenjual = async () => {
     const json = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`
+      `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      }
     ).then((res) => res.json())
 
     setPenjual(json.map((j) => ({ label: j.name, value: j.id })))
@@ -57,7 +68,11 @@ const Produk = () => {
 
   const onDelete = (id) => {
     axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URI}/users/${id}`)
+      .delete(`${process.env.NEXT_PUBLIC_API_URI}/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${session.jwt}`,
+        },
+      })
       .then((response) => {
         setShowDelete(false)
         mutate()
@@ -143,6 +158,7 @@ const Produk = () => {
                   <Table.Head borderRadius={4}>
                     <Table.TextHeaderCell>Foto</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Nama Produk</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Kategori</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Penjual</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Harga</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Tampilkan</Table.TextHeaderCell>
@@ -184,6 +200,11 @@ const Produk = () => {
                             <Strong>{profile.name}</Strong>
                           </Table.TextCell>
                           <Table.TextCell>
+                            {profile.category && (
+                              <Badge color='blue'>{profile.category}</Badge>
+                            )}
+                          </Table.TextCell>
+                          <Table.TextCell>
                             {profile.object && (
                               <Link href='#'>
                                 <a>
@@ -195,14 +216,15 @@ const Produk = () => {
                             )}
                           </Table.TextCell>
                           <Table.TextCell isNumber>
-                            {profile.prices.map((ps, index) => (
-                              <Strong
-                                color='green500'
-                                key={index + ps.variation}
-                              >
-                                {ps.variation} - {formatRp(ps.price)} <br />
-                              </Strong>
-                            ))}
+                            {profile.prices != null &&
+                              profile.prices.map((ps, index) => (
+                                <Strong
+                                  color='green500'
+                                  key={index + ps.variation}
+                                >
+                                  {ps.variation} - {formatRp(ps.price)} <br />
+                                </Strong>
+                              ))}
                           </Table.TextCell>
                           <Table.TextCell>
                             <ControlledSwitch
@@ -212,13 +234,24 @@ const Produk = () => {
                             />
                           </Table.TextCell>
                           <Table.Cell className='d-flex justify-content-end align-items-center gap-1'>
-                            <Button appearance='primary' iconBefore={EditIcon}>
-                              Edit
-                            </Button>
+                            <Link href={`${router.asPath}/${profile.id}`}>
+                              <a>
+                                <Button
+                                  appearance='primary'
+                                  iconBefore={EditIcon}
+                                >
+                                  Edit
+                                </Button>
+                              </a>
+                            </Link>
                             <IconButton
                               icon={TrashIcon}
                               intent='danger'
                               appearance='primary'
+                              onClick={(e) => {
+                                setValue(profile)
+                                setShowDelete(true)
+                              }}
                             />
                           </Table.Cell>
                         </Table.Row>
@@ -229,10 +262,25 @@ const Produk = () => {
             </Pane>
           </Pane>
         </Content.Body>
-        <Content.Pagination />
+        {/* <Content.Pagination /> */}
       </Content>
     </Layout>
   )
 }
 
 export default Produk
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  return {
+    props: { session },
+  }
+}

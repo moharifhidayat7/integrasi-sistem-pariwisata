@@ -7,6 +7,11 @@ import { ResponsiveLine } from '@nivo/line'
 import { area, curveMonotoneX } from 'd3-shape'
 import * as time from 'd3-time'
 import { timeFormat } from 'd3-time-format'
+import useSWR from 'swr'
+import { useState } from 'react'
+import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import _ from 'lodash'
+
 const CustomSymbol = ({ size, color, borderWidth, borderColor }) => (
   <g>
     <circle
@@ -24,8 +29,30 @@ const CustomSymbol = ({ size, color, borderWidth, borderColor }) => (
     />
   </g>
 )
-const Pengunjung = () => {
+const Pengunjung = ({ session }) => {
   const router = useRouter()
+
+  const getPengunjung = async (url) => {
+    const json = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${session.jwt}`,
+      },
+    }).then((res) => res.json())
+    const d = json.map((j) => ({ x: j.created_at.slice(0, 10), y: j.people }))
+
+    return _.chain(d)
+      .groupBy((s) => s.x)
+      .map((value, key) => ({
+        x: key,
+        y: _.sumBy(value, 'y'),
+      }))
+      .value()
+  }
+
+  const { data, mutate, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URI}/visitors`,
+    getPengunjung
+  )
 
   const commonProperties = {
     margin: { top: 20, right: 20, bottom: 60, left: 80 },
@@ -39,13 +66,13 @@ const Pengunjung = () => {
         <Content.Header
           title='Laporan Pengunjung'
           button={
-            <Link href={`${router.asPath}/tambah`}>
-              <a>
-                <Button size='large' iconBefore={BarcodeIcon}>
-                  Download QR Code
-                </Button>
-              </a>
-            </Link>
+            <Button
+              size='large'
+              iconBefore={BarcodeIcon}
+              onClick={() => console.log(data)}
+            >
+              Download QR Code
+            </Button>
           }
         />
         <Content.Body>
@@ -56,17 +83,8 @@ const Pengunjung = () => {
                   {...commonProperties}
                   data={[
                     {
-                      id: 'fake corp. A',
-                      data: [
-                        { x: '2018-01-01', y: 7 },
-                        { x: '2018-01-02', y: 5 },
-                        { x: '2018-01-03', y: 11 },
-                        { x: '2018-01-04', y: 9 },
-                        { x: '2018-01-05', y: 12 },
-                        { x: '2018-01-06', y: 20 },
-                        { x: '2018-01-07', y: 13 },
-                        { x: '2018-01-08', y: 13 },
-                      ],
+                      id: 'Pengunjung',
+                      data: data ? data : [{ x: '2021-12-12', y: 0 }],
                     },
                   ]}
                   xScale={{
@@ -123,3 +141,18 @@ const Pengunjung = () => {
 }
 
 export default Pengunjung
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+  return {
+    props: { session },
+  }
+}

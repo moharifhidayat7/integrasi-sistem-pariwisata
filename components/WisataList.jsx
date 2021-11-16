@@ -54,19 +54,20 @@ const WisataItemCard = ({ detail }) => {
         })`,
       }}
     >
+      {/* <div className='wisataOv'></div> */}
       <div
         className='d-flex flex-column h-100 px-5 pb-3 m-auto text-white text-shadow-1'
         style={{ paddingTop: '12rem' }}
       >
         <h2
           className='pt-5 mt-auto mb-4 display-6 lh-1 fw-bold align-self-end overflow-hidden'
-          style={{ height: '8rem' }}
+          style={{ height: '12rem' }}
         >
-          Short title
+          {detail.name}
         </h2>
         <ul className='d-flex list-unstyled mx-auto'>
           <li className='d-flex align-items-center'>
-            <small>Wisata Alam</small>
+            <small>{detail.type}</small>
           </li>
         </ul>
       </div>
@@ -108,7 +109,7 @@ const WisataList = ({ wisata }) => {
                   perPage: 3,
                 },
                 1400: {
-                  perPage: 4,
+                  perPage: 3,
                 },
               },
             }}
@@ -116,7 +117,7 @@ const WisataList = ({ wisata }) => {
               <div className={`splide__arrows`}>
                 <CustomChevron
                   direction='left'
-                  className='splide__arrow--prev'
+                  className='splide__arrow--prev customChevArrow d-sm-none'
                   style={{
                     position: 'absolute',
                     top: '50%',
@@ -126,7 +127,7 @@ const WisataList = ({ wisata }) => {
                 />
                 <CustomChevron
                   direction='right'
-                  className='splide__arrow--next'
+                  className='splide__arrow--next customChevArrow d-sm-none'
                   style={{
                     position: 'absolute',
                     top: '50%',
