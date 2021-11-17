@@ -1,18 +1,35 @@
 import Layout from '@components/Layouts/ClientLogin'
 import ClientLoginForm from '@components/Forms/ClientLoginForm'
+import { getSession } from 'next-auth/react'
 
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
-import { useRouter } from 'next/router'
 export default function Login() {
-  const [session, loading] = useSession()
-  const router = useRouter()
-
-  if (session != null) {
-    router.push('/')
-  }
   return (
     <Layout title='Masuk'>
       <ClientLoginForm />
     </Layout>
   )
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  if (session.jwt) {
+    if (session.role.id === 4) {
+      return {
+        redirect: {
+          destination: '/admin',
+          permanent: false,
+        },
+      }
+    }
+    return {
+      redirect: {
+        destination: '/account',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {},
+  }
 }

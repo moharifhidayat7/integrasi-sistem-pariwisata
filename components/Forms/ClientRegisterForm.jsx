@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 import { clientAxios } from '@helpers/functions'
 
 import Link from 'next/link'

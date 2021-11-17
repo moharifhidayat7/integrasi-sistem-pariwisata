@@ -1,43 +1,56 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import style from './Login.module.scss'
-import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
-import { clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
+import axios from 'axios'
+
+import { signIn } from 'next-auth/react'
+
+const { NEXT_PUBLIC_API_URI } = process.env
 
 const ClientLoginForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const [error, setError] = useState(false)
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
 
-  clientAxios.interceptors.request.use(
+  const instance = axios.create({
+    baseURL: NEXT_PUBLIC_API_URI,
+    timeout: 1000,
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  instance.interceptors.request.use(
     function (config) {
       setIsLoading(true)
       return config
     },
     function (error) {
-      // Do something with request error
       return Promise.reject(error)
     }
   )
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     setError(false)
     setIsLoading(true)
 
-    const signin = await signIn('credentials', { redirect: false, ...data })
+    const login = await signIn('credentials', {
+      redirect: false,
+      email: formData.email,
+      password: formData.password,
+      callbackUrl: '/',
+    })
 
-    if (signin.ok) {
-      router.push('/')
+    if (login.ok) {
+      router.replace('/')
     }
-    if (signin.error != null) {
+
+    if (login.error) {
       setError(true)
       setIsLoading(false)
     }
@@ -52,11 +65,11 @@ const ClientLoginForm = () => {
             <input
               type='text'
               className='form-control'
-              id='email'
+              id='Email'
               placeholder='name@example.com'
               {...register('email', { required: true })}
             />
-            <label htmlFor='email'>Alamat Email</label>
+            <label htmlFor='Email'>Alamat Email</label>
           </div>
           <div className='form-floating mb-3'>
             <input
@@ -96,7 +109,7 @@ const ClientLoginForm = () => {
       </form>
       <div className='text-center'>
         <div className='mb-4'>
-          <Link href='#'>
+          <Link href='#ss'>
             <a>Lupa kata sandi?</a>
           </Link>
         </div>
