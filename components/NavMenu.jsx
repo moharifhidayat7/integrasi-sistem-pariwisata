@@ -35,10 +35,10 @@ import {
 } from 'evergreen-ui'
 import CustomItem from './Customs/MenuItem'
 import SignOutMenu from '@components/Customs/SignOutMenu'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 
 const NavMenu = () => {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   return (
     <Menu>

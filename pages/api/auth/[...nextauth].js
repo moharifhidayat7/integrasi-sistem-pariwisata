@@ -1,19 +1,19 @@
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import CredentialsProvider from 'next-auth/providers/credentials'
 import axios from 'axios'
 
 const options = {
   providers: [
-    Providers.Credentials({
+    CredentialsProvider({
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'text', placeholder: 'test@test.com' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         try {
           const { data } = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URI}/auth/local`,
+            c`${process.env.NEXT_PUBLIC_API_URI}/auth/local`,
             {
               identifier: credentials.email,
               password: credentials.password,
@@ -38,10 +38,18 @@ const options = {
   session: {
     jwt: true,
   },
-
+  jwt: {
+    secret: '37d7fbf4a2b1af6aaaad02ee71111f2a',
+    maxAge: 60 * 60 * 24 * 30,
+  },
+  pages: {
+    signIn: '/login',
+    signOut: '/logout',
+    newUser: '/',
+  },
   callbacks: {
     // Getting the JWT token from API response
-    jwt: async (token, user, account) => {
+    async jwt(token, user, account) {
       const isSignIn = user ? true : false
       if (isSignIn) {
         token.jwt = user.jwt
@@ -53,7 +61,7 @@ const options = {
       return Promise.resolve(token)
     },
 
-    session: async (session, user) => {
+    async session(session, user) {
       session.jwt = user.jwt
       session.id = user.id
       session.role = user.role

@@ -1,4 +1,4 @@
-import { Provider } from 'next-auth/client'
+import { SessionProvider } from 'next-auth/react'
 
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -9,9 +9,9 @@ import '../styles/features.scss'
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={pageProps.session} refetchInterval={5 * 60}>
       <Component {...pageProps} />
-    </Provider>
+    </SessionProvider>
   )
 }
 

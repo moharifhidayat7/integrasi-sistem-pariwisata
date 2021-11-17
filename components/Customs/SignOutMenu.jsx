@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Menu, Strong } from 'evergreen-ui'
-import { signOut } from 'next-auth/client'
+import { signOut } from 'next-auth/react'
 
 const CustomItem = (props) => {
   const [bg, setBg] = useState('#474D66')

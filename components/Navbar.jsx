@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import style from './Navbar.module.scss'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import LoggedIn from './LoggedIn'
 
 const Navbar = () => {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   const [show, setShow] = useState(false)
   const toggleShow = (e) => {

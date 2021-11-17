@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import style from './Login.module.scss'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
