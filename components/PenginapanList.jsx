@@ -16,25 +16,26 @@ const WisataItem = ({ detail, style: customStyle }) => {
     <div style={customStyle}>
       <div style={{ width: '100%' }}>
         <div className='card wisataCard shadow-sm'>
-          <div className='wisataItem'>
+          <div className='penginapanItem'>
             <Image
               alt={detail.featured_image.name}
               src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
               layout='fill'
               objectFit='cover'
+              className='p-2'
             />
           </div>
           <div className='card-body'>
             <Link href={`/wisata/${detail.slug}`}>
               <a>
-                <h5 className='umkm-card-title pb-2'>{detail.name}</h5>
+                <h4 className='umkm-card-title pb-2'>{detail.name}</h4>
               </a>
             </Link>
-            <Link href={`/wisata/${detail.slug}`}>
+            {/* <Link href={`/wisata/${detail.slug}`}>
               <a role='button' className='btn btn-md ispBtn'>
                 Lihat Profil
               </a>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
@@ -57,7 +58,7 @@ const PenginapanList = ({ penginapan }) => {
           </div>
           <Splide
             options={{
-              perPage: 2,
+              perPage: 3,
               gap: '1rem',
               pagination: false,
               breakpoints: {
@@ -71,10 +72,10 @@ const PenginapanList = ({ penginapan }) => {
                   perPage: 2,
                 },
                 1200: {
-                  perPage: 2,
+                  perPage: 3,
                 },
                 1400: {
-                  perPage: 2,
+                  perPage: 3,
                 },
               },
             }}
@@ -82,7 +83,7 @@ const PenginapanList = ({ penginapan }) => {
               <div className={`splide__arrows`}>
                 <CustomChevron
                   direction='left'
-                  className='splide__arrow--prev'
+                  className='splide__arrow--prev d-sm-none'
                   style={{
                     position: 'absolute',
                     top: '50%',
@@ -92,7 +93,7 @@ const PenginapanList = ({ penginapan }) => {
                 />
                 <CustomChevron
                   direction='right'
-                  className='splide__arrow--next'
+                  className='splide__arrow--next d-sm-none'
                   style={{
                     position: 'absolute',
                     top: '50%',

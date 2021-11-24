@@ -6,7 +6,7 @@ const Iframe = ({ url = '', height = 290 }) => {
     <Pane className='videowrapper' position='relative'>
       <iframe
         width='100%'
-        height={height}
+        style={{ height: height, borderRadius: '5px' }}
         src={url}
         title='Video Profil'
         frameBorder='0'
@@ -18,3 +18,4 @@ const Iframe = ({ url = '', height = 290 }) => {
 }
 
 export default Iframe
+

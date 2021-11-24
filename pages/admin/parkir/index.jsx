@@ -31,7 +31,7 @@ const Parkir = () => {
         <Content.Body>
           <div>
             <div className='row gy-3'>
-              <Table border={false}>
+              <Table>
                 <Table.Head>
                   <Table.TextHeaderCell>No. Urut</Table.TextHeaderCell>
                   <Table.TextHeaderCell>Nomor Polisi</Table.TextHeaderCell>

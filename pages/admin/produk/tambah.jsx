@@ -5,7 +5,7 @@ import StepWizard from 'react-step-wizard'
 import { useForm } from 'react-hook-form'
 import { useDropzone } from 'react-dropzone'
 import _ from 'lodash'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import axios from 'axios'
 import {
   Dialog,
@@ -116,11 +116,7 @@ const Tambah = ({ session }) => {
     formData.append('files.featured_image', image)
 
     clientAxios
-      .post('/products', formData, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .post('/products', formData)
       .then(function (response) {
         const path = router.pathname.split('/').slice(0, -1)
         router.push(path.join('/'))
@@ -134,12 +130,7 @@ const Tambah = ({ session }) => {
   useEffect(() => {
     const getUmkm = async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`
       )
       setUmkm(data)
     }
@@ -377,18 +368,3 @@ const Tambah = ({ session }) => {
 }
 
 export default Tambah
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}

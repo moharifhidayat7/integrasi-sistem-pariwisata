@@ -1,4 +1,3 @@
-import useSWR, { useSWRConfig } from 'swr'
 import { useRouter } from 'next/router'
 import { useEffect, useState, useRef } from 'react'
 import Layout from '@components/Layouts/Admin'
@@ -34,12 +33,11 @@ import { clientAxios } from '@helpers/functions'
 import axios from 'axios'
 import Image from 'next/image'
 import _ from 'lodash'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
-const WisataPage = ({ session }) => {
+const WisataPage = () => {
   const router = useRouter()
   const { slug } = router.query
-  const { mutate } = useSWRConfig()
+  const [data, setData] = useState([])
 
   const [detailForm, setDetailForm] = useState(false)
   const [pengelolaForm, setPengelolaForm] = useState(false)
@@ -62,32 +60,22 @@ const WisataPage = ({ session }) => {
     })
   }
 
-  const getWisata = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
-
-  const { data, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`,
-    getWisata
-  )
+  const mutate = () => {
+    const json = async () =>
+      await axios
+        .get(process.env.NEXT_PUBLIC_API_URI + '/objects/' + slug)
+        .then((res) => {
+          setData(res.data)
+        })
+    json()
+  }
 
   const deleteFasilitas = (index) => {
     data.facility.splice(index, 1)
     axios
-      .put(
-        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
-        {
-          facility: data.facility,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
-      )
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        facility: data.facility,
+      })
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -100,11 +88,7 @@ const WisataPage = ({ session }) => {
 
   const deleteImage = (id) => {
     axios
-      .delete(process.env.NEXT_PUBLIC_API_URI + '/upload/files/' + id, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .delete(process.env.NEXT_PUBLIC_API_URI + '/upload/files/' + id)
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -120,17 +104,9 @@ const WisataPage = ({ session }) => {
       .filter((ss) => ss.id != id)
       .map((sn) => sn.id)
     axios
-      .put(
-        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
-        {
-          slideshow: newSlide,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
-      )
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        slideshow: newSlide,
+      })
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -154,19 +130,26 @@ const WisataPage = ({ session }) => {
     }
 
     axios
-      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData)
       .then(function (response) {
         toastMessage()
-        mutate(`${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`)
+        mutate()
       })
       .catch(function (error) {
         console.log(error)
       })
   }
+
+  useEffect(() => {
+    if (!router.isReady) return
+    const json = async () =>
+      await axios
+        .get(process.env.NEXT_PUBLIC_API_URI + '/objects/' + router.query.slug)
+        .then((res) => {
+          setData(res.data)
+        })
+    json()
+  }, [router.isReady, router.query.slug])
 
   return (
     <Layout title={data && data.name}>
@@ -185,7 +168,7 @@ const WisataPage = ({ session }) => {
       />
       <PengelolaForm
         data={data}
-        mutate={mutate(`${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`)}
+        mutate={mutate}
         toastMessage={toastMessage}
         isShown={pengelolaForm}
         setIsShown={setPengelolaForm}
@@ -354,21 +337,20 @@ const WisataPage = ({ session }) => {
                   </Button>
                 </Pane>
                 <Pane marginTop={12}>
-                  {data &&
-                    data.contact.map((c) => (
-                      <Paragraph key={c.id} marginBottom={5}>
-                        <Strong>{c.name}</Strong>
-                        <br />
-                        {c.address && (
-                          <>
-                            Alamat : {c.address} <br />
-                          </>
-                        )}
-                        Telp. : {c.phone}
-                        <br />
-                        Email : {c.email}
-                      </Paragraph>
-                    ))}
+                  {data.contact && (
+                    <Paragraph marginBottom={5}>
+                      <Strong>{data.contact.name}</Strong>
+                      <br />
+                      {data.contact.address && (
+                        <>
+                          Alamat : {data.contact.address} <br />
+                        </>
+                      )}
+                      Telp. : {data.contact.phone}
+                      <br />
+                      Email : {data.contact.email}
+                    </Paragraph>
+                  )}
                 </Pane>
               </Card>
             </Pane>
@@ -396,7 +378,7 @@ const WisataPage = ({ session }) => {
                 </Pane>
                 <Pane marginTop={12} overflowX='auto' whiteSpace='nowrap'>
                   <Pane>
-                    {data &&
+                    {data.slideshow &&
                       data.slideshow.map((item, index) => {
                         return (
                           <Pane
@@ -527,7 +509,7 @@ const WisataPage = ({ session }) => {
                         className='d-inline-flex flex-wrap gap-1'
                         maxHeight={500}
                       >
-                        {data &&
+                        {data.images &&
                           data.images.map((item, index) => {
                             return (
                               <Pane
@@ -576,20 +558,3 @@ const WisataPage = ({ session }) => {
 }
 
 export default WisataPage
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-
-  return {
-    props: { session },
-  }
-}

@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 
 function DetailForm({
   isShown,
@@ -26,23 +26,15 @@ function DetailForm({
   } = useForm()
 
   const router = useRouter()
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   const onSubmit = (postData) =>
     axios
-      .put(
-        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
-        {
-          name: postData.objectName,
-          address: postData.objectAddress,
-          description: postData.description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
-      )
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        name: postData.objectName,
+        address: postData.objectAddress,
+        description: postData.description,
+      })
       .then(function (response) {
         setIsShown(false)
         toastMessage()
@@ -73,7 +65,7 @@ function DetailForm({
         overlayProps={{ zIndex: 2500 }}
         onConfirm={handleSubmit(onSubmit)}
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Pane className='d-flex flex-column'>
             <TextInputField
               isInvalid={errors.objectName ? true : false}

@@ -16,7 +16,7 @@ import {
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 const Data = ({ setShowDelete, setWisata, data }) => {
   const router = useRouter()
 
@@ -38,10 +38,11 @@ const Data = ({ setShowDelete, setWisata, data }) => {
   })
 }
 
-const Penginapan = ({ session }) => {
+const Penginapan = () => {
   const [showDelete, setShowDelete] = useState(false)
   const [wisata, setWisata] = useState([])
   const router = useRouter()
+  const { data: session, status } = useSession()
 
   const getPenginapan = async (url) =>
     await fetch(url, {
@@ -109,18 +110,3 @@ const Penginapan = ({ session }) => {
 }
 
 export default Penginapan
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}

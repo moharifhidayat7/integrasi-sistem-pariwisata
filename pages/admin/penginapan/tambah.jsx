@@ -42,7 +42,7 @@ import PengelolaTerdaftar from '@components/Forms/PengelolaTerdaftar'
 import Stats from '@components/Stats'
 import Media from '@components/Forms/Media'
 import Kontak from '@components/Forms/Kontak'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 const Tambah = ({ session }) => {
   const [activeStep, setActiveStep] = useState(1)
   const [checked, setChecked] = useState(false)
@@ -145,19 +145,4 @@ const Detail = (props) => {
       </Pane>
     </form>
   )
-}
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
 }

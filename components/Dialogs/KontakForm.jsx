@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { clientAxios, isValidEmail } from '@helpers/functions'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 
 function KontakForm({
   isShown,
@@ -24,13 +24,13 @@ function KontakForm({
     setValue,
     formState: { errors },
   } = useForm()
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
   const onSubmit = (postData) =>
     clientAxios
       .put(
         '/objects/' + data.id,
         {
-          contact: [postData],
+          contact: postData,
         },
         {
           headers: {
@@ -50,11 +50,11 @@ function KontakForm({
   useEffect(() => {
     const setForm = () => {
       if (data.contact) {
-        if (data.contact.length > 0) {
-          setValue('name', data.contact[0].name)
-          setValue('address', data.contact[0].address)
-          setValue('email', data.contact[0].email)
-          setValue('phone', data.contact[0].phone)
+        if (data.contact.name) {
+          setValue('name', data.contact.name)
+          setValue('address', data.contact.address)
+          setValue('email', data.contact.email)
+          setValue('phone', data.contact.phone)
         }
       }
     }
@@ -71,7 +71,7 @@ function KontakForm({
         confirmLabel='Update'
         onConfirm={handleSubmit(onSubmit)}
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Pane>
             <TextInputField
               isInvalid={errors.name ? true : false}

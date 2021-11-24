@@ -16,7 +16,7 @@ import {
 import { useDropzone } from 'react-dropzone'
 import _ from 'lodash'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 
 const GaleriForm = ({
   isShown,
@@ -26,7 +26,7 @@ const GaleriForm = ({
   toastMessage = () => {},
 }) => {
   const [files, setFiles] = useState([])
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: 'image/*',

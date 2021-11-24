@@ -30,7 +30,7 @@ export async function getServerSideProps(context) {
 
   const penginapan = dataHasImage.filter((p) => p.type == 'Penginapan')
 
-  const umkm = dataHasImage.filter((u) => u.type == 'UMKM')
+  const umkm = data.filter((u) => u.type == 'UMKM')
 
   return {
     props: {

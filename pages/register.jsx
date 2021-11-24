@@ -13,7 +13,7 @@ export default function Login() {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  if (session.jwt) {
+  if (session) {
     if (session.role.id === 4) {
       return {
         redirect: {

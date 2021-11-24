@@ -34,13 +34,13 @@ import { clientAxios } from '@helpers/functions'
 import axios from 'axios'
 import Image from 'next/image'
 import _ from 'lodash'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 
-const WisataPage = ({ session }) => {
+const WisataPage = () => {
   const router = useRouter()
   const { slug } = router.query
   const { mutate } = useSWRConfig()
-
+  const { data: session, status } = useSession()
   const [detailForm, setDetailForm] = useState(false)
   const [pengelolaForm, setPengelolaForm] = useState(false)
   const [kontakForm, setKontakForm] = useState(false)
@@ -359,21 +359,20 @@ const WisataPage = ({ session }) => {
                   </Button>
                 </Pane>
                 <Pane marginTop={12}>
-                  {data &&
-                    data.contact.map((c) => (
-                      <Paragraph key={c.id} marginBottom={5}>
-                        <Strong>{c.name}</Strong>
-                        <br />
-                        {c.address && (
-                          <>
-                            Alamat : {c.address} <br />
-                          </>
-                        )}
-                        Telp. : {c.phone}
-                        <br />
-                        Email : {c.email}
-                      </Paragraph>
-                    ))}
+                  {data && (
+                    <Paragraph marginBottom={5}>
+                      <Strong>{data.contact.name}</Strong>
+                      <br />
+                      {data.contact.address && (
+                        <>
+                          Alamat : {data.contact.address} <br />
+                        </>
+                      )}
+                      Telp. : {data.contact.phone}
+                      <br />
+                      Email : {data.contact.email}
+                    </Paragraph>
+                  )}
                 </Pane>
               </Card>
             </Pane>
@@ -530,18 +529,3 @@ const WisataPage = ({ session }) => {
 }
 
 export default WisataPage
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}

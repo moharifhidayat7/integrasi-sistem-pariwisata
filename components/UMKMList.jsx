@@ -18,8 +18,8 @@ const WisataItem = ({ detail, style: customStyle }) => {
         <div className='card wisataCard shadow-sm'>
           <div className='umkmItem'>
             <Image
-              alt={detail.featured_image.name}
-              src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
+              alt={detail.logo ? detail.logo.name : 'no logo'}
+              src={`${process.env.NEXT_PUBLIC_API_URI}${detail.logo.url}`}
               layout='fill'
               objectFit='cover'
               className='p-2'
@@ -53,7 +53,7 @@ const UMKMList = ({ umkm }) => {
           </div>
           <Splide
             options={{
-              perPage: 6,
+              perPage: 3,
               gap: '0.7rem',
               pagination: false,
               breakpoints: {
@@ -64,13 +64,13 @@ const UMKMList = ({ umkm }) => {
                   perPage: 2,
                 },
                 992: {
-                  perPage: 4,
+                  perPage: 2,
                 },
                 1200: {
-                  perPage: 5,
+                  perPage: 3,
                 },
                 1400: {
-                  perPage: 6,
+                  perPage: 3,
                 },
               },
             }}
@@ -78,7 +78,7 @@ const UMKMList = ({ umkm }) => {
               <div className={`splide__arrows`}>
                 <CustomChevron
                   direction='left'
-                  className='splide__arrow--prev'
+                  className='splide__arrow--prev d-sm-none'
                   style={{
                     position: 'absolute',
                     top: '50%',
@@ -88,7 +88,7 @@ const UMKMList = ({ umkm }) => {
                 />
                 <CustomChevron
                   direction='right'
-                  className='splide__arrow--next'
+                  className='splide__arrow--next d-sm-none'
                   style={{
                     position: 'absolute',
                     top: '50%',

@@ -8,7 +8,7 @@ import {
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 
 function FasilitasForm({
   isShown,
@@ -23,14 +23,18 @@ function FasilitasForm({
     reset,
     formState: { errors },
   } = useForm()
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
-  const onSubmit = (postData) =>
+  const onSubmit = (postData) => {
+    const facility =
+      data.facility != null
+        ? [...data.facility, postData.fasilitas]
+        : [postData.fasilitas]
     axios
       .put(
         process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
         {
-          facility: [...data.facility, postData.fasilitas],
+          facility: facility,
         },
         {
           headers: {
@@ -47,6 +51,7 @@ function FasilitasForm({
       .catch(function (error) {
         console.log(error)
       })
+  }
 
   return (
     <Pane>
@@ -58,7 +63,7 @@ function FasilitasForm({
         overlayProps={{ zIndex: 2500 }}
         onConfirm={handleSubmit(onSubmit)}
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Pane>
             <TextInputField
               isInvalid={errors.fasilitas ? true : false}

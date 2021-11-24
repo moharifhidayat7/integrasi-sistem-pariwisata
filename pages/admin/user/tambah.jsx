@@ -1,53 +1,28 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import Layout from '../../../components/Layouts/Admin'
-import Content from '../../../components/Content'
-import CardWisata from '../../../components/Cards/Wisata'
-import StepWizard from 'react-step-wizard'
-import HorizontalScroll from 'react-scroll-horizontal'
+import { useState, useEffect } from 'react'
+import Layout from '@components/Layouts/Admin'
+import Content from '@components/Content'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
-import _ from 'lodash'
-import { clientAxios, YouTubeGetID } from '@helpers/functions'
+import { clientAxios } from '@helpers/functions'
 import axios from 'axios'
 import {
-  Dialog,
   Pane,
-  Text,
   Card,
-  ManuallyEnteredDataIcon,
-  MediaIcon,
-  UserIcon,
-  ArrowRightIcon,
-  Heading,
   TextInputField,
-  TextareaField,
   Button,
-  Strong,
   Select,
-  Small,
-  ResetIcon,
   Checkbox,
-  AddIcon,
   FormField,
-  UploadIcon,
-  SearchInput,
-  Spinner,
-  FilePicker,
-  Avatar,
-  SmallCrossIcon,
-  IconButton,
-  SelectField,
 } from 'evergreen-ui'
-const Tambah = ({ roles, session }) => {
+const Tambah = () => {
   const {
     register,
     handleSubmit,
     setValue,
     setError,
     formState: { errors },
-  } = useForm()
-
+  } = useForm({ defaultValues: { role: 2 } })
+  const [roles, setRoles] = useState([])
   const router = useRouter()
   const [checked, setChecked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -58,17 +33,15 @@ const Tambah = ({ roles, session }) => {
       return config
     },
     function (error) {
-      // Do something with request error
       return Promise.reject(error)
     }
   )
 
   const onSubmit = (data) => {
     clientAxios
-      .post('/profiles/create-user', data, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
+      .post('/users', {
+        ...data,
+        username: data.email,
       })
       .then(function (response) {
         const path = router.pathname.split('/').slice(0, -1)
@@ -77,9 +50,18 @@ const Tambah = ({ roles, session }) => {
       .catch(function (error) {
         setError('email', { type: 'focus', message: 'Email Sudah Digunakan' })
         setIsLoading(false)
-        console.log(error)
       })
   }
+  useEffect(() => {
+    const getRoles = async () => {
+      await axios
+        .get(process.env.NEXT_PUBLIC_API_URI + '/users-permissions/roles')
+        .then((res) => {
+          setRoles(res.data.roles.filter((role) => role.id != 2))
+        })
+    }
+    getRoles()
+  }, [])
 
   return (
     <Layout title='Tambah User'>
@@ -175,6 +157,10 @@ const Tambah = ({ roles, session }) => {
                     }}
                   />
                   <TextInputField
+                    isInvalid={errors.password ? true : false}
+                    validationMessage={
+                      errors.password && errors.password.message
+                    }
                     label='Kata sandi *'
                     placeholder='Kata sandi'
                     id='password'
@@ -204,31 +190,3 @@ const Tambah = ({ roles, session }) => {
 }
 
 export default Tambah
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  const { data } = await axios.get(
-    `${process.env.API_URI}/users-permissions/roles`,
-    {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }
-  )
-
-  return {
-    props: {
-      session,
-      roles: data.roles.filter((role) => role.id != 2),
-    },
-  }
-}

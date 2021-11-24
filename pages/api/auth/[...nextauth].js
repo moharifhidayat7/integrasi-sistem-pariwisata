@@ -24,7 +24,7 @@ const options = {
       },
     }),
   ],
-  secret: '37d7fbf4a2b1af6aaaad02ee71111f2a',
+  secret: process.env.SECRET,
   session: {
     jwt: true,
   },

@@ -7,9 +7,9 @@ import '../styles/styles.scss'
 import '../styles/custom.scss'
 import '../styles/features.scss'
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
-    <SessionProvider session={pageProps.session} refetchInterval={5 * 60}>
+    <SessionProvider session={session} refetchInterval={5 * 60}>
       <Component {...pageProps} />
     </SessionProvider>
   )

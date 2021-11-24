@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 
 function VideoForm({
   isShown,
@@ -23,7 +23,7 @@ function VideoForm({
     setValue,
     formState: { errors },
   } = useForm()
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   const onSubmit = (postData) =>
     axios
@@ -61,7 +61,7 @@ function VideoForm({
         confirmLabel='Update'
         onConfirm={handleSubmit(onSubmit)}
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Pane>
             <TextInputField
               isInvalid={errors.link ? true : false}

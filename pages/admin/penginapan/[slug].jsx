@@ -34,8 +34,8 @@ import { clientAxios } from '@helpers/functions'
 import axios from 'axios'
 import Image from 'next/image'
 import _ from 'lodash'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
-const PenginapanPage = ({ session }) => {
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
+const PenginapanPage = () => {
   const router = useRouter()
   const { slug } = router.query
   const { mutate } = useSWRConfig()
@@ -48,7 +48,7 @@ const PenginapanPage = ({ session }) => {
   const [galeriForm, setGaleriForm] = useState(false)
   const [imagePickerForm, setImagePickerForm] = useState(false)
   const [deleteDialog, setDeleteDialog] = useState(false)
-
+  const { data: session, status } = useSession()
   const [deleteDialogText, setDeleteDialogText] = useState(
     'Apakah anda yakin ingin menghapus item ini?'
   )
@@ -353,21 +353,20 @@ const PenginapanPage = ({ session }) => {
                   </Button>
                 </Pane>
                 <Pane marginTop={12}>
-                  {data &&
-                    data.contact.map((c) => (
-                      <Paragraph key={c.id} marginBottom={5}>
-                        <Strong>{c.name}</Strong>
-                        <br />
-                        {c.address && (
-                          <>
-                            Alamat : {c.address} <br />
-                          </>
-                        )}
-                        Telp. : {c.phone}
-                        <br />
-                        Email : {c.email}
-                      </Paragraph>
-                    ))}
+                  {data && (
+                    <Paragraph marginBottom={5}>
+                      <Strong>{data.contact.name}</Strong>
+                      <br />
+                      {data.contact.address && (
+                        <>
+                          Alamat : {data.contact.address} <br />
+                        </>
+                      )}
+                      Telp. : {data.contact.phone}
+                      <br />
+                      Email : {data.contact.email}
+                    </Paragraph>
+                  )}
                 </Pane>
               </Card>
             </Pane>
@@ -575,18 +574,3 @@ const PenginapanPage = ({ session }) => {
 }
 
 export default PenginapanPage
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}

@@ -50,6 +50,12 @@
 .contentPageTitle {
   padding-top: 1rem;
   padding-bottom: 2rem;
+  font-family: 'Poppins', sans-serif !important;
+}
+.singlePageTitle {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'Poppins', sans-serif !important;
 }
 .contentDetail {
   margin-top: 1rem;
@@ -68,6 +74,7 @@
   }
 }
 .contentTitle {
+  font-size: 1.5rem;
   color: #262626;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
@@ -114,4 +121,40 @@
   -o-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.singleMenu {
+  margin-bottom: 1rem;
+}
+
+.singleMenu a {
+  font-weight: 400;
+  color: #262626;
+  display: inline-block;
+  padding: 1rem 2rem;
+  margin-right: 5px;
+}
+.singleMenu a:hover {
+  color: #38b520;
+}
+
+.singleMenu .active {
+  border-bottom: 5px solid #38b520;
+}
+.slideshowSingle {
+  position: relative;
+  height: 30rem;
+}
+
+.kontakSingle {
+  background-color: #e9e9e9;
+}
+.fasilitasIcon {
+  padding: 6px;
+  background-color: #cbffc1;
+  border-radius: 50%;
+}
+.sectionTitle {
+  font-size: 1.3rem;
+  font-family: 'Poppins', sans-serif !important;
 }

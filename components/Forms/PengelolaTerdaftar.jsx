@@ -1,26 +1,17 @@
-import useSWR from 'swr'
 import { useState, useEffect } from 'react'
-import {
-  Pane,
-  Avatar,
-  Strong,
-  Text,
-  FormField,
-  Spinner,
-  SearchInput,
-} from 'evergreen-ui'
+import { Pane, Spinner, SearchInput } from 'evergreen-ui'
 import Stats from '@components/Stats'
 import { clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
 import PengelolaList from '@components/PengelolaList'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import axios from 'axios'
 
 const PengelolaTerdaftar = (props) => {
   const router = useRouter()
+  const [data, setData] = useState([])
   const [active, setActive] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [keyName, setKeyName] = useState('')
-  const [session, loading] = useSession()
 
   clientAxios.interceptors.request.use(
     function (config) {
@@ -33,18 +24,6 @@ const PengelolaTerdaftar = (props) => {
     }
   )
 
-  const getUser = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
-
-  const { data, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/users?name_contains=${keyName}`,
-    getUser
-  )
-
   const finalSubmit = () => {
     const formData = new FormData()
 
@@ -54,7 +33,7 @@ const PengelolaTerdaftar = (props) => {
       type: props.postData[1].type,
       description: props.postData[1].description,
       youtube: '',
-      contact: [],
+      contact: {},
       users_permissions_user: '',
     }
     if (props.postData[3]) {
@@ -63,7 +42,10 @@ const PengelolaTerdaftar = (props) => {
         formData.append('files.images', element)
       }
       if (props.postData[3].featuredImage) {
-        if (props.postData[1].type == 'UMKM') {
+        if (
+          props.postData[1].type == 'UMKM' ||
+          props.postData[1].type == 'Travel'
+        ) {
           formData.append('files.logo', props.postData[3].featuredImage)
         } else {
           formData.append(
@@ -76,14 +58,12 @@ const PengelolaTerdaftar = (props) => {
     }
 
     if (props.postData[2]) {
-      json.contact = [
-        {
-          name: props.postData[2].name,
-          address: props.postData[2].address,
-          phone: props.postData[2].phone,
-          email: props.postData[2].email,
-        },
-      ]
+      json.contact = {
+        name: props.postData[2].name,
+        address: props.postData[2].address,
+        phone: props.postData[2].phone,
+        email: props.postData[2].email,
+      }
     }
     if (active.id) {
       json.users_permissions_user = active.id
@@ -93,11 +73,7 @@ const PengelolaTerdaftar = (props) => {
 
     formData.append('data', JSON.stringify(json))
     clientAxios
-      .post('/objects', formData, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .post('/objects', formData)
       .then(function (response) {
         const path = router.pathname.split('/').slice(0, -1)
         router.push(path.join('/'))
@@ -106,6 +82,19 @@ const PengelolaTerdaftar = (props) => {
         console.log(error)
       })
   }
+
+  useEffect(() => {
+    const json = async () => {
+      await axios
+        .get(
+          process.env.NEXT_PUBLIC_API_URI + '/users?name_contains=' + keyName
+        )
+        .then((res) => {
+          setData(res.data)
+        })
+    }
+    json()
+  }, [keyName])
 
   return (
     <Pane>

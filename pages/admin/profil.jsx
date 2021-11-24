@@ -10,12 +10,12 @@ import {
 import Content from '@components/Content'
 import Layout from '@components/Layouts/Admin'
 import ContentWrapper from '@components/Wrapper/ContentWrapper'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { clientAxios } from '@helpers/functions'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-const Profil = ({ profil, session }) => {
+const Profil = ({ profil }) => {
   const [isLoading, setIsLoading] = useState(false)
   const {
     register,
@@ -24,6 +24,8 @@ const Profil = ({ profil, session }) => {
     setError,
     formState: { errors },
   } = useForm()
+
+  const { data: session, status } = useSession()
 
   const toastMessage = () => {
     toaster.success('Data Berhasil di Edit', {
@@ -43,16 +45,11 @@ const Profil = ({ profil, session }) => {
   )
 
   const onSubmit = (data) => {
-    // if (profil.email == data.email) {
-    //   delete data.email
-    // }
-
+    if (profil.email == data.email) {
+      delete data.email
+    }
     clientAxios
-      .put('/users/' + session.id, data, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .put('/users/' + session.id, data)
       .then(function (response) {
         setIsLoading(false)
         toastMessage()
@@ -154,15 +151,6 @@ export default Profil
 export async function getServerSideProps(context) {
   const session = await getSession(context)
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-
   const { data } = await axios.get(`${process.env.API_URI}/users/me`, {
     headers: {
       Authorization: `Bearer ${session.jwt}`,
@@ -172,7 +160,6 @@ export async function getServerSideProps(context) {
   return {
     props: {
       profil: data,
-      session,
     },
   }
 }

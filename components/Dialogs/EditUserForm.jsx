@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { clientAxios } from '@helpers/functions'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 
 function UserForm({
   isShown,
@@ -24,7 +24,7 @@ function UserForm({
     setValue,
     formState: { errors },
   } = useForm()
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   const onSubmit = (postData) => {
     clientAxios
@@ -64,7 +64,7 @@ function UserForm({
         confirmLabel='Update'
         onConfirm={handleSubmit(onSubmit)}
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Pane>
             <TextInputField
               isInvalid={errors.name ? true : false}

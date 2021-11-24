@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { TextInputField, Pane, TextInput, FormField } from 'evergreen-ui'
+import { TextInputField, Pane } from 'evergreen-ui'
 import Stats from '@components/Stats'
 const Kontak = (props) => {
   const {

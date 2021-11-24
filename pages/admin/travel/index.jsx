@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import { useState } from 'react'
 import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
-import CardUMKM from '../../../components/Cards/Umkm'
+import CardTravel from '../../../components/Cards/Umkm'
 import {
   Dialog,
   Button,
@@ -28,7 +28,7 @@ const Data = ({ setShowDelete, setWisata, data }) => {
     )
   return data.map((wisata) => {
     return (
-      <CardUMKM
+      <CardTravel
         key={wisata.id}
         data={wisata}
         setShowDelete={setShowDelete}
@@ -38,7 +38,7 @@ const Data = ({ setShowDelete, setWisata, data }) => {
   })
 }
 
-const UMKM = () => {
+const Travel = () => {
   const [showDelete, setShowDelete] = useState(false)
   const [wisata, setWisata] = useState([])
   const router = useRouter()
@@ -52,7 +52,7 @@ const UMKM = () => {
     }).then((res) => res.json())
 
   const { data, mutate, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM&_sort=created_at:desc`,
+    `${process.env.NEXT_PUBLIC_API_URI}/objects?type=Travel&_sort=created_at:desc`,
     getWisata
   )
 
@@ -71,7 +71,7 @@ const UMKM = () => {
   }
 
   return (
-    <Layout title='UMKM'>
+    <Layout title='Travel'>
       <Dialog
         isShown={showDelete}
         title={`Hapus "${wisata.name}"`}
@@ -86,12 +86,12 @@ const UMKM = () => {
       </Dialog>
       <Content>
         <Content.Header
-          title='UMKM'
+          title='Travel'
           button={
             <Link href={`${router.asPath}/tambah`}>
               <a>
                 <Button appearance='primary' size='large' iconBefore={PlusIcon}>
-                  Tambah UMKM
+                  Tambah Travel
                 </Button>
               </a>
             </Link>
@@ -109,19 +109,4 @@ const UMKM = () => {
   )
 }
 
-export default UMKM
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}
+export default Travel

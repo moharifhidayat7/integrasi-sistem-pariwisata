@@ -1,50 +1,24 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import Layout from '../../../components/Layouts/Admin'
-import Content from '../../../components/Content'
-import CardWisata from '../../../components/Cards/Wisata'
+import { useState } from 'react'
+import Layout from '@components/Layouts/Admin'
+import Content from '@components/Content'
 import StepWizard from 'react-step-wizard'
-import HorizontalScroll from 'react-scroll-horizontal'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
-import _ from 'lodash'
-import { clientAxios, YouTubeGetID } from '@helpers/functions'
 import {
-  Dialog,
   Pane,
-  Text,
   Card,
-  ManuallyEnteredDataIcon,
-  MediaIcon,
-  UserIcon,
-  ArrowRightIcon,
-  Heading,
   TextInputField,
   TextareaField,
-  Button,
-  Strong,
   Select,
-  Small,
-  ResetIcon,
-  AddIcon,
   FormField,
-  UploadIcon,
-  SearchInput,
-  Spinner,
-  FilePicker,
-  Avatar,
-  SmallCrossIcon,
-  IconButton,
 } from 'evergreen-ui'
-import { useDropzone } from 'react-dropzone'
 import StepNav from '@components/StepNav'
 import Sukses from '@components/Dialogs/Sukses'
 import PengelolaTerdaftar from '@components/Forms/PengelolaTerdaftar'
 import Stats from '@components/Stats'
 import Media from '@components/Forms/Media'
 import Kontak from '@components/Forms/Kontak'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
 
-const Tambah = ({ session }) => {
+const Tambah = () => {
   const [activeStep, setActiveStep] = useState(1)
   const [checked, setChecked] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -150,20 +124,4 @@ const Detail = (props) => {
       </Pane>
     </form>
   )
-}
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
 }

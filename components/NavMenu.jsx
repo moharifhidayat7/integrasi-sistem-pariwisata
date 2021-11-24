@@ -30,6 +30,7 @@ import {
   Card,
   KnownVehicleIcon,
   GroupedBarChartIcon,
+  DriveTimeIcon,
   LogOutIcon,
   KeyIcon,
 } from 'evergreen-ui'
@@ -62,6 +63,11 @@ const NavMenu = () => {
           icon={<ShopIcon color='#F9FAFC' />}
           text='UMKM'
           href='/admin/umkm'
+        />
+        <CustomItem
+          icon={<DriveTimeIcon color='#F9FAFC' />}
+          text='Travel'
+          href='/admin/travel'
         />
         <CustomItem
           icon={<UserIcon color='#F9FAFC' />}

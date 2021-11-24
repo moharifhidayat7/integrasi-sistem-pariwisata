@@ -9,7 +9,7 @@ import * as time from 'd3-time'
 import { timeFormat } from 'd3-time-format'
 import useSWR from 'swr'
 import { useState } from 'react'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import _ from 'lodash'
 
 const CustomSymbol = ({ size, color, borderWidth, borderColor }) => (
@@ -29,15 +29,11 @@ const CustomSymbol = ({ size, color, borderWidth, borderColor }) => (
     />
   </g>
 )
-const Pengunjung = ({ session }) => {
+const Pengunjung = () => {
   const router = useRouter()
-
+  const { data: session, status } = useSession()
   const getPengunjung = async (url) => {
-    const json = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
+    const json = await fetch(url).then((res) => res.json())
     const d = json.map((j) => ({ x: j.created_at.slice(0, 10), y: j.people }))
 
     return _.chain(d)
@@ -141,18 +137,3 @@ const Pengunjung = ({ session }) => {
 }
 
 export default Pengunjung
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}

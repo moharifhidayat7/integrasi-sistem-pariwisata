@@ -19,25 +19,31 @@
         position: relative;
         overflow: hidden;
       }
+      .penginapanItem {
+        height: 300px;
+        position: relative;
+        overflow: hidden;
+      }
       .umkmItem {
-        height: 180px;
+        height: 200px;
         position: relative;
         overflow: hidden;
       }
       .card-title {
         font-weight: 600;
         margin-bottom: 0.2rem;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        // text-overflow: ellipsis;
+        // overflow: hidden;
+        // white-space: nowrap;
         color: #262626 !important;
       }
       .umkm-card-title {
         font-weight: 500;
+        height: 4rem;
         margin-bottom: 0.2rem;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        // text-overflow: ellipsis;
+        // overflow: hidden;
+        // white-space: nowrap;
         color: #262626 !important;
       }
       .card-text {

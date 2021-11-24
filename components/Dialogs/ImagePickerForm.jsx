@@ -8,7 +8,7 @@ import style from './ImagePickerForm.module.scss'
 
 import _ from 'lodash'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 
 const ImageCheck = ({ checked = false, img, images, setImages }) => {
   const [check, setCheck] = useState(checked)
@@ -59,7 +59,7 @@ const ImagePickerForm = ({
   toastMessage = () => {},
 }) => {
   const [images, setImages] = useState([])
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   const onSubmit = () => {
     axios

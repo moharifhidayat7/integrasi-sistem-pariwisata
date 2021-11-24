@@ -10,10 +10,10 @@ import {
 import Content from '@components/Content'
 import Layout from '@components/Layouts/Admin'
 import ContentWrapper from '@components/Wrapper/ContentWrapper'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { useRef, useState } from 'react'
 import { clientAxios } from '@helpers/functions'
-const GantiPassword = ({ session }) => {
+const GantiPassword = () => {
   const {
     register,
     handleSubmit,
@@ -25,6 +25,7 @@ const GantiPassword = ({ session }) => {
   const [isLoading, setIsLoading] = useState(false)
   const currentPassword = useRef({})
   currentPassword.current = watch('newPassword', '')
+  const { data: session, status } = useSession()
 
   const toastMessage = () => {
     toaster.success('Data Berhasil di Edit', {
@@ -153,21 +154,3 @@ const GantiPassword = ({ session }) => {
 }
 
 export default GantiPassword
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: {
-      session,
-    },
-  }
-}

@@ -50,10 +50,10 @@ const Tambah = () => {
   const [postData, setPostData] = useState([])
   const { data: session, status } = useSession()
   return (
-    <Layout title='Tambah UMKM'>
+    <Layout title='Tambah Travel'>
       <Sukses isShown={success} setIsShown={setSuccess} data={successData} />
       <Content>
-        <Content.Header title='Tambah UMKM' />
+        <Content.Header title='Tambah Travel' />
         <Content.Body>
           <Pane className='d-flex justify-content-center'>
             <Pane
@@ -106,28 +106,28 @@ const Detail = (props) => {
         <TextInputField
           isInvalid={errors.objectName ? true : false}
           validationMessage={errors.objectName && 'Harus di isi!'}
-          label='Nama UMKM *'
-          placeholder='Nama UMKM'
+          label='Nama Travel *'
+          placeholder='Nama Travel'
           id='objectName'
           {...register('objectName', { required: true })}
         />
         <input
           type='text'
-          defaultValue='UMKM'
+          defaultValue='Travel'
           {...register('type', { required: true })}
           hidden
         />
         <TextInputField
           isInvalid={errors.objectAddress ? true : false}
           validationMessage={errors.objectAddress && 'Harus di isi!'}
-          label='Alamat UMKM *'
-          placeholder='Alamat UMKM'
+          label='Alamat Travel *'
+          placeholder='Alamat Travel'
           id='objectAddress'
           {...register('objectAddress', { required: true })}
         />
         <TextareaField
           label='Deskripsi'
-          placeholder='Deskripsi UMKM'
+          placeholder='Deskripsi Travel'
           id='description'
           {...register('description')}
         />

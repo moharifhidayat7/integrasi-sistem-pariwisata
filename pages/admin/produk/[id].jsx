@@ -38,9 +38,9 @@ import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
 import Image from 'next/image'
 import { formatRp, clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import Variasi from '@components/Dialogs/Variasi'
-const Edit = ({ session }) => {
+const Edit = () => {
   const router = useRouter()
   const { id: productId } = router.query
   const [activeStep, setActiveStep] = useState(1)
@@ -120,11 +120,7 @@ const Edit = ({ session }) => {
     formData.append('files.featured_image', image)
 
     clientAxios
-      .put('/products/' + productId, formData, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .put('/products/' + productId, formData)
       .then(function (response) {
         const path = router.pathname.split('/').slice(0, -1)
         router.push(path.join('/'))
@@ -142,12 +138,7 @@ const Edit = ({ session }) => {
   useEffect(() => {
     const getProduct = async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URI}/products/${productId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_API_URI}/products/${productId}`
       )
       setProduct(data)
       setValue('productName', data.name)
@@ -161,12 +152,7 @@ const Edit = ({ session }) => {
 
     const getUmkm = async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`
       )
       setUmkm(data)
     }
@@ -458,18 +444,3 @@ const Edit = ({ session }) => {
 }
 
 export default Edit
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}

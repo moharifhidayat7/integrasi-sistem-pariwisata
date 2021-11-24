@@ -1,37 +1,30 @@
-import useSWR from 'swr'
-import { useState } from 'react'
-import { formatRp } from '../../../src/helpers/functions'
+import { useEffect, useState } from 'react'
 import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
-import CardUMKM from '../../../components/Cards/Umkm'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import {
   Dialog,
   Button,
   Table,
-  Card,
   Pane,
-  Strong,
   EditIcon,
   IconButton,
-  Badge,
   TrashIcon,
   PlusIcon,
   ResetIcon,
   SelectMenu,
   SearchInput,
-  EyeOpenIcon,
   Text,
   Avatar,
   toaster,
 } from 'evergreen-ui'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
-import Link from 'next/link'
-import ControlledSwitch from '@components/ControlledSwitch'
 import UserForm from '@components/Dialogs/EditUserForm'
 import axios from 'axios'
-const User = ({ session, roles }) => {
+const User = () => {
+  const [roles, setRoles] = useState([])
+  const [data, setData] = useState([])
+  const { data: session, status } = useSession()
   const [value, setValue] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const [showUserForm, setShowUserForm] = useState(false)
@@ -50,17 +43,19 @@ const User = ({ session, roles }) => {
     })
   }
 
-  const getUser = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
-  // `${process.env.NEXT_PUBLIC_API_URI}/users?_limit=${limit}&_start=${start}&name_contains=${search}`
-  const { data, mutate, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/users?name_contains=${search}&_sort=role.id:desc,name:asc${squery}`,
-    getUser
-  )
+  const mutate = async () => {
+    await axios
+      .get(
+        process.env.NEXT_PUBLIC_API_URI +
+          '/users?name_contains=' +
+          search +
+          '&_sort=role.id:desc,name:asc' +
+          squery
+      )
+      .then((res) => {
+        setData(res.data)
+      })
+  }
 
   const onDelete = (id) => {
     axios
@@ -75,6 +70,35 @@ const User = ({ session, roles }) => {
       })
       .catch((error) => console.log(error))
   }
+
+  useEffect(() => {
+    const json = async () =>
+      await axios
+        .get(
+          process.env.NEXT_PUBLIC_API_URI +
+            '/users?name_contains=' +
+            search +
+            '&_sort=role.id:desc,name:asc' +
+            squery
+        )
+        .then((res) => {
+          setData(res.data)
+        })
+
+    json()
+  }, [squery, search])
+
+  useEffect(() => {
+    const getRoles = async () => {
+      await axios
+        .get(process.env.NEXT_PUBLIC_API_URI + '/users-permissions/roles')
+        .then((res) => {
+          setRoles(res.data.roles.filter((role) => role.id != 2))
+        })
+    }
+    getRoles()
+  }, [])
+
   return (
     <Layout title='User'>
       <Dialog
@@ -84,6 +108,7 @@ const User = ({ session, roles }) => {
         onCloseComplete={() => {
           setShowDelete(false)
         }}
+        overlayProps={{ zIndex: 2500 }}
         confirmLabel='Delete'
         onConfirm={() => onDelete(value.id)}
       >
@@ -119,18 +144,27 @@ const User = ({ session, roles }) => {
               >
                 <Text color='muted'>Filter</Text>
                 <SelectMenu
-                  title='Penjual ...'
-                  options={roles.map((role) => ({
-                    label: role.name,
-                    value: role.id,
-                  }))}
+                  title='Hak Akses ...'
+                  options={[
+                    { label: 'Semua', value: '' },
+                    ...roles.map((role) => ({
+                      label: role.name,
+                      value: role.id,
+                    })),
+                  ]}
                   selected={selectRole}
                   onSelect={(item) => {
-                    setSelectRole(item.label)
-                    setSquery('&role=' + item.value)
+                    if (item.value == '') {
+                      setSelectRole()
+                      setSearch('')
+                      setSquery('')
+                    } else {
+                      setSelectRole(item.label)
+                      setSquery('&role=' + item.value)
+                    }
                   }}
                 >
-                  <Button>{selectRole || 'Role ...'}</Button>
+                  <Button>{selectRole || 'Hak Akses ...'}</Button>
                 </SelectMenu>
                 <Button
                   iconBefore={ResetIcon}
@@ -199,29 +233,25 @@ const User = ({ session, roles }) => {
 
                           <Table.Cell className='d-block d-lg-flex justify-content-end align-items-center gap-1'>
                             {/* <Button iconBefore={ResetIcon}>Reset</Button> */}
-                            {user.id != session.id && (
-                              <>
-                                <Button
-                                  appearance='primary'
-                                  iconBefore={EditIcon}
-                                  onClick={() => {
-                                    setValue(user)
-                                    setShowUserForm(true)
-                                  }}
-                                >
-                                  Edit
-                                </Button>
-                                <IconButton
-                                  icon={TrashIcon}
-                                  intent='danger'
-                                  appearance='primary'
-                                  onClick={() => {
-                                    setValue(user)
-                                    setShowDelete(true)
-                                  }}
-                                />
-                              </>
-                            )}
+                            <Button
+                              appearance='primary'
+                              iconBefore={EditIcon}
+                              onClick={() => {
+                                setValue(user)
+                                setShowUserForm(true)
+                              }}
+                            >
+                              Edit
+                            </Button>
+                            <IconButton
+                              icon={TrashIcon}
+                              intent='danger'
+                              appearance='primary'
+                              onClick={() => {
+                                setValue(user)
+                                setShowDelete(true)
+                              }}
+                            />
                           </Table.Cell>
                         </Table.Row>
                       ))}
@@ -244,27 +274,3 @@ const User = ({ session, roles }) => {
 }
 
 export default User
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  const { data } = await axios.get(
-    `${process.env.API_URI}/users-permissions/roles`,
-    {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }
-  )
-  return {
-    props: { session, roles: data.roles.filter((role) => role.id != 2) },
-  }
-}

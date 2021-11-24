@@ -26,8 +26,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import ControlledSwitch from '@components/ControlledSwitch'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client'
-const Produk = ({session}) => {
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
+const Produk = ({ session }) => {
   const [value, setValue] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const router = useRouter()
@@ -42,12 +42,7 @@ const Produk = ({session}) => {
     })
   }
 
-  const getUser = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
+  const getUser = async (url) => await fetch(url).then((res) => res.json())
   const { data, mutate, error } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URI}/products?name_contains=${search}&_sort=created_at:desc${squery}`,
     getUser
@@ -55,12 +50,7 @@ const Produk = ({session}) => {
 
   const getPenjual = async () => {
     const json = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      }
+      `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`
     ).then((res) => res.json())
 
     setPenjual(json.map((j) => ({ label: j.name, value: j.id })))
@@ -68,11 +58,7 @@ const Produk = ({session}) => {
 
   const onDelete = (id) => {
     axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URI}/products/${id}`, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .delete(`${process.env.NEXT_PUBLIC_API_URI}/products/${id}`)
       .then((response) => {
         setShowDelete(false)
         mutate()
@@ -271,15 +257,6 @@ const Produk = ({session}) => {
 export default Produk
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
   return {
     props: { session },
   }
