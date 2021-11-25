@@ -1,4 +1,3 @@
-import useSWR, { useSWRConfig } from 'swr'
 import { useRouter } from 'next/router'
 import { useEffect, useState, useRef } from 'react'
 import Layout from '@components/Layouts/Admin'
@@ -6,6 +5,7 @@ import Content from '@components/Content'
 import Iframe from '@components/Iframe'
 import DetailForm from '@components/Dialogs/DetailForm'
 import PengelolaForm from '@components/Dialogs/PengelolaForm'
+import { formatRp } from '@helpers/functions'
 import {
   Pane,
   Heading,
@@ -35,11 +35,12 @@ import axios from 'axios'
 import Image from 'next/image'
 import _ from 'lodash'
 import { signIn, signOut, useSession, getSession } from 'next-auth/react'
+import KamarForm from '@components/Dialogs/KamarForm'
+import EditKamarForm from '@components/Dialogs/EditKamarForm'
 const PenginapanPage = () => {
   const router = useRouter()
   const { slug } = router.query
-  const { mutate } = useSWRConfig()
-
+  const [data, setData] = useState([])
   const [detailForm, setDetailForm] = useState(false)
   const [pengelolaForm, setPengelolaForm] = useState(false)
   const [kontakForm, setKontakForm] = useState(false)
@@ -48,6 +49,9 @@ const PenginapanPage = () => {
   const [galeriForm, setGaleriForm] = useState(false)
   const [imagePickerForm, setImagePickerForm] = useState(false)
   const [deleteDialog, setDeleteDialog] = useState(false)
+  const [kamarForm, setKamarForm] = useState(false)
+  const [editKamarForm, setEditKamarForm] = useState(false)
+  const [selectedKamar, setSelectedKamar] = useState([])
   const { data: session, status } = useSession()
   const [deleteDialogText, setDeleteDialogText] = useState(
     'Apakah anda yakin ingin menghapus item ini?'
@@ -61,32 +65,22 @@ const PenginapanPage = () => {
     })
   }
 
-  const getWisata = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
-
-  const { data, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`,
-    getWisata
-  )
+  const mutate = () => {
+    const json = async () =>
+      await axios
+        .get(process.env.NEXT_PUBLIC_API_URI + '/objects/' + slug)
+        .then((res) => {
+          setData(res.data)
+        })
+    json()
+  }
 
   const deleteFasilitas = (index) => {
     data.facility.splice(index, 1)
     axios
-      .put(
-        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
-        {
-          facility: data.facility,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
-      )
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        facility: data.facility,
+      })
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -97,13 +91,19 @@ const PenginapanPage = () => {
       })
   }
 
+  const deleteRoom = (id) => {
+    axios
+      .delete(process.env.NEXT_PUBLIC_API_URI + '/rooms/' + id)
+      .then((res) => {
+        setDeleteDialog(false)
+        toastMessage()
+        mutate()
+      })
+  }
+
   const deleteImage = (id) => {
     axios
-      .delete(process.env.NEXT_PUBLIC_API_URI + '/upload/files/' + id, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .delete(process.env.NEXT_PUBLIC_API_URI + '/upload/files/' + id)
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -119,17 +119,9 @@ const PenginapanPage = () => {
       .filter((ss) => ss.id != id)
       .map((sn) => sn.id)
     axios
-      .put(
-        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
-        {
-          slideshow: newSlide,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
-      )
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        slideshow: newSlide,
+      })
       .then(function (response) {
         setDeleteDialog(false)
         toastMessage()
@@ -153,19 +145,26 @@ const PenginapanPage = () => {
     }
 
     axios
-      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData)
       .then(function (response) {
         toastMessage()
-        mutate(`${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`)
+        mutate()
       })
       .catch(function (error) {
         console.log(error)
       })
   }
+
+  useEffect(() => {
+    if (!router.isReady) return
+    const json = async () =>
+      await axios
+        .get(process.env.NEXT_PUBLIC_API_URI + '/objects/' + router.query.slug)
+        .then((res) => {
+          setData(res.data)
+        })
+    json()
+  }, [router.isReady, router.query.slug])
 
   return (
     <Layout title={data && data.name}>
@@ -184,7 +183,7 @@ const PenginapanPage = () => {
       />
       <PengelolaForm
         data={data}
-        mutate={mutate(`${process.env.NEXT_PUBLIC_API_URI}/objects/${slug}`)}
+        mutate={mutate}
         toastMessage={toastMessage}
         isShown={pengelolaForm}
         setIsShown={setPengelolaForm}
@@ -223,6 +222,20 @@ const PenginapanPage = () => {
         toastMessage={toastMessage}
         isShown={imagePickerForm}
         setIsShown={setImagePickerForm}
+      />
+      <KamarForm
+        data={data}
+        mutate={mutate}
+        toastMessage={toastMessage}
+        isShown={kamarForm}
+        setIsShown={setKamarForm}
+      />
+      <EditKamarForm
+        data={selectedKamar}
+        mutate={mutate}
+        toastMessage={toastMessage}
+        isShown={editKamarForm}
+        setIsShown={setEditKamarForm}
       />
 
       <Content>
@@ -353,7 +366,7 @@ const PenginapanPage = () => {
                   </Button>
                 </Pane>
                 <Pane marginTop={12}>
-                  {data && (
+                  {data.contact && (
                     <Paragraph marginBottom={5}>
                       <Strong>{data.contact.name}</Strong>
                       <br />
@@ -394,7 +407,7 @@ const PenginapanPage = () => {
                 </Pane>
                 <Pane marginTop={12} overflowX='auto' whiteSpace='nowrap'>
                   <Pane>
-                    {data &&
+                    {data.slideshow &&
                       data.slideshow.map((item, index) => {
                         return (
                           <Pane
@@ -525,7 +538,7 @@ const PenginapanPage = () => {
                         className='d-inline-flex flex-wrap gap-1'
                         maxHeight={500}
                       >
-                        {data &&
+                        {data.images &&
                           data.images.map((item, index) => {
                             return (
                               <Pane
@@ -561,6 +574,130 @@ const PenginapanPage = () => {
                             )
                           })}
                       </Pane>
+                    </Pane>
+                  </Card>
+                  <Card
+                    elevation={1}
+                    backgroundColor='white'
+                    padding={20}
+                    marginBottom={12}
+                  >
+                    <Pane className='d-flex justify-content-between align-items-center'>
+                      <Heading is='h2' size={500}>
+                        Kamar
+                      </Heading>
+                      <Button
+                        appearance='primary'
+                        iconBefore={PlusIcon}
+                        onClick={() => setKamarForm(true)}
+                      >
+                        Tambah
+                      </Button>
+                    </Pane>
+                    <Pane marginTop={12}>
+                      {data.rooms &&
+                        data.rooms.map((room) => {
+                          return (
+                            <Pane
+                              key={room.id}
+                              className='row pb-3 pt-2'
+                              borderBottom='1px solid #eeeeee'
+                            >
+                              <Pane className='col-md-5'>
+                                <Pane
+                                  height='15rem'
+                                  position='relative'
+                                  borderRadius={4}
+                                  overflow='hidden'
+                                >
+                                  {room.gallery[0] ? (
+                                    <Image
+                                      alt={room.gallery[0].name}
+                                      src={
+                                        process.env.NEXT_PUBLIC_API_URI +
+                                        room.gallery[0].url
+                                      }
+                                      layout='fill'
+                                      objectFit='cover'
+                                    />
+                                  ) : (
+                                    <Image
+                                      alt='noImage'
+                                      src='https://via.placeholder.com/1000x600?text=Tidak-ada-foto'
+                                      layout='fill'
+                                      objectFit='cover'
+                                    />
+                                  )}
+                                </Pane>
+                                <Pane className='mt-2 d-flex'>
+                                  {room.gallery &&
+                                    room.gallery
+                                      .filter((g, i) => i != 0)
+                                      .map((im) => {
+                                        return (
+                                          <Pane
+                                            key={im.id}
+                                            className='col-3'
+                                            height='5rem'
+                                            position='relative'
+                                            borderRadius={4}
+                                            overflow='hidden'
+                                          >
+                                            <Image
+                                              alt={im.name}
+                                              src={
+                                                process.env
+                                                  .NEXT_PUBLIC_API_URI + im.url
+                                              }
+                                              layout='fill'
+                                              objectFit='cover'
+                                              className='p-1'
+                                            />{' '}
+                                          </Pane>
+                                        )
+                                      })}
+                                </Pane>
+                              </Pane>
+                              <Pane className='col-md-7'>
+                                <Heading
+                                  is='h3'
+                                  size={800}
+                                  className='pt-2 pb-2'
+                                >
+                                  {room.name}
+                                </Heading>
+                                <Strong color='muted'>Harga</Strong>
+                                <Pane className='mb-2'>
+                                  <Heading is='h4' color='#52BD95' size={700}>
+                                    {formatRp(room.price)}
+                                  </Heading>
+                                </Pane>
+                                <Button
+                                  type='button'
+                                  appearance='primary'
+                                  onClick={() => {
+                                    setSelectedKamar(room)
+                                    setEditKamarForm(true)
+                                  }}
+                                  className='me-1'
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  type='button'
+                                  appearance='primary'
+                                  intent='danger'
+                                  onClick={() => {
+                                    setOnDelete(() => () => deleteRoom(room.id))
+                                    setDeleteDialog(true)
+                                  }}
+                                >
+                                  Hapus
+                                </Button>
+                              </Pane>
+                            </Pane>
+                          )
+                        })}
                     </Pane>
                   </Card>
                 </Pane>

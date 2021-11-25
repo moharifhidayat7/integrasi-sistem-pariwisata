@@ -6,7 +6,19 @@
   background-color: #2b851a;
   color: #ffffff;
 }
-
+.activeNav {
+  background-color: transparent !important;
+  border: 1px solid #38b520 !important;
+  color: #38b520 !important;
+}
+.activeNav:hover {
+  background-color: #2b851a !important;
+  color: #ffffff !important;
+}
+.userNav {
+  color: #262626;
+  text-align: left;
+}
 .ispBtn-secondary {
   color: #262626;
   background-color: #e9e9e9;
@@ -55,7 +67,9 @@
 .singlePageTitle {
   padding-top: 1rem;
   padding-bottom: 1rem;
-  font-family: 'Poppins', sans-serif !important;
+  h1 {
+    font-family: 'Poppins', sans-serif !important;
+  }
 }
 .contentDetail {
   margin-top: 1rem;

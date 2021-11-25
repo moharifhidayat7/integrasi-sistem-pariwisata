@@ -1,9 +1,7 @@
-import useSWR from 'swr'
 import { useEffect, useState } from 'react'
-import { formatRp } from '../../../src/helpers/functions'
-import Layout from '../../../components/Layouts/Admin'
-import Content from '../../../components/Content'
-import CardUMKM from '../../../components/Cards/Umkm'
+import { formatRp } from '@helpers/functions'
+import Layout from '@components/Layouts/Admin'
+import Content from '@components/Content'
 import {
   Dialog,
   Button,
@@ -16,18 +14,12 @@ import {
   Badge,
   TrashIcon,
   PlusIcon,
-  ResetIcon,
-  SearchInput,
-  Text,
-  SelectMenu,
 } from 'evergreen-ui'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
-import ControlledSwitch from '@components/ControlledSwitch'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/react'
-const Produk = () => {
+const Pesanan = () => {
   const [data, setData] = useState([])
   const [value, setValue] = useState([])
   const [showDelete, setShowDelete] = useState(false)
@@ -48,7 +40,7 @@ const Produk = () => {
       await axios
         .get(
           process.env.NEXT_PUBLIC_API_URI +
-            `/products?name_contains=${search}&_sort=created_at:desc${squery}`
+            `/orders?id_contains=${search}&_sort=created_at:desc${squery}`
         )
         .then((res) => {
           setData(res.data)
@@ -57,33 +49,12 @@ const Produk = () => {
     json()
   }
 
-  const onDelete = (id) => {
-    axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URI}/products/${id}`)
-      .then((response) => {
-        setShowDelete(false)
-        mutate()
-      })
-      .catch((error) => console.log(error))
-  }
-
-  useEffect(() => {
-    const getPenjual = async () => {
-      const json = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM`
-      ).then((res) => res.json())
-
-      setPenjual(json.map((j) => ({ label: j.name, value: j.id })))
-    }
-    getPenjual()
-  }, [])
-
   useEffect(() => {
     const json = async () => {
       await axios
         .get(
           process.env.NEXT_PUBLIC_API_URI +
-            `/products?name_contains=${search}&_sort=created_at:desc${squery}`
+            `/orders?id_contains=${search}&_sort=created_at:desc${squery}`
         )
         .then((res) => {
           setData(res.data)
@@ -93,7 +64,7 @@ const Produk = () => {
   }, [search, squery])
 
   return (
-    <Layout title='Produk'>
+    <Layout title='Pesanan'>
       <Dialog
         isShown={showDelete}
         title={`Hapus "${value.name}"`}
@@ -116,19 +87,18 @@ const Produk = () => {
               onClick={() => router.push(`${router.asPath}/tambah`)}
               iconBefore={PlusIcon}
             >
-              Tambah Produk
+              Buat Pesanan
             </Button>
           }
         />
         <Content.Body>
           <Pane>
-            <Pane className='row' marginY={10}>
+            {/* <Pane className='row' marginY={10}>
               <Pane
                 className='col-md-9 col-sm-12 d-flex gap-2 justify-content-start align-items-center'
                 paddingY={5}
               >
                 <Text color='muted'>Filter</Text>
-                {/* <SingleSelectedItem name='Kategori ...' /> */}
                 <SelectMenu
                   title='Penjual ...'
                   options={[{ label: 'Semua', value: '' }, ...penjual]}
@@ -164,24 +134,24 @@ const Produk = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </Pane>
-            </Pane>
+            </Pane> */}
             <Pane overflowX='auto'>
               <Pane>
                 <Table overflowX='auto'>
                   <Table.Head borderRadius={4}>
-                    <Table.TextHeaderCell>Foto</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Nama Produk</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Kategori</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Penjual</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Harga</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Tampilkan</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>No.</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Pembeli</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Item</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Total</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Resi</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Bukti Transfer</Table.TextHeaderCell>
                     <Table.TextHeaderCell textAlign='center'>
                       Aksi
                     </Table.TextHeaderCell>
                   </Table.Head>
                   <Table.Body>
                     {data &&
-                      data.map((profile, index) => (
+                      data.map((order, index) => (
                         <Table.Row
                           key={index}
                           height='auto'
@@ -191,63 +161,17 @@ const Produk = () => {
                           className='shadow-sm'
                         >
                           <Table.Cell>
-                            <Pane
-                              width={80}
-                              height={80}
-                              position='relative'
-                              borderRadius={4}
-                              overflow='hidden'
-                            >
-                              <Image
-                                alt={profile.featured_image.name}
-                                src={
-                                  process.env.NEXT_PUBLIC_API_URI +
-                                  profile.featured_image.formats.thumbnail.url
-                                }
-                                layout='fill'
-                                objectFit='cover'
-                              />
-                            </Pane>
+                            <Strong>#222</Strong>
                           </Table.Cell>
                           <Table.TextCell>
-                            <Strong>{profile.name}</Strong>
+                            <Strong>asdsdsd</Strong>
                           </Table.TextCell>
-                          <Table.TextCell>
-                            {profile.category && (
-                              <Badge color='blue'>{profile.category}</Badge>
-                            )}
-                          </Table.TextCell>
-                          <Table.TextCell>
-                            {profile.object && (
-                              <Link href='#'>
-                                <a>
-                                  <Text color='blue500'>
-                                    {profile.object.name}
-                                  </Text>
-                                </a>
-                              </Link>
-                            )}
-                          </Table.TextCell>
-                          <Table.TextCell isNumber>
-                            {profile.prices != null &&
-                              profile.prices.map((ps, index) => (
-                                <Strong
-                                  color='green500'
-                                  key={index + ps.variation}
-                                >
-                                  {ps.variation} - {formatRp(ps.price)} <br />
-                                </Strong>
-                              ))}
-                          </Table.TextCell>
-                          <Table.TextCell>
-                            <ControlledSwitch
-                              id={profile.id}
-                              defaultCheck={profile.visible}
-                              mutate={mutate}
-                            />
-                          </Table.TextCell>
+                          <Table.TextCell>sdsd</Table.TextCell>
+                          <Table.TextCell>asdasd</Table.TextCell>
+                          <Table.TextCell isNumber>asdsadsd</Table.TextCell>
+                          <Table.TextCell>sdsd</Table.TextCell>
                           <Table.Cell className='d-flex justify-content-end align-items-center gap-1'>
-                            <Link href={`${router.asPath}/${profile.id}`}>
+                            <Link href={`${router.asPath}/${order.id}`}>
                               <a>
                                 <Button
                                   appearance='primary'
@@ -262,7 +186,7 @@ const Produk = () => {
                               intent='danger'
                               appearance='primary'
                               onClick={(e) => {
-                                setValue(profile)
+                                setValue(order)
                                 setShowDelete(true)
                               }}
                             />
@@ -281,4 +205,4 @@ const Produk = () => {
   )
 }
 
-export default Produk
+export default Pesanan

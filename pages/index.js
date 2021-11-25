@@ -4,14 +4,15 @@ import WisataList from '@components/WisataList'
 import PenginapanList from '@components/PenginapanList'
 import UMKMList from '@components/UMKMList'
 import axios from 'axios'
-
-export default function Home({ wisata, penginapan, umkm }) {
+import TravelList from '@components/TravelList'
+export default function Home({ wisata, penginapan, umkm, travel }) {
   return (
     <Layout>
       <Header />
       <WisataList wisata={wisata} />
       <PenginapanList penginapan={penginapan} />
       <UMKMList umkm={umkm} />
+      <TravelList travel={travel} />
     </Layout>
   )
 }
@@ -32,11 +33,14 @@ export async function getServerSideProps(context) {
 
   const umkm = data.filter((u) => u.type == 'UMKM')
 
+  const travel = data.filter((u) => u.type == 'Travel')
+
   return {
     props: {
       wisata,
       penginapan,
-      umkm,
+      umkm: umkm.filter((u) => u.logo != null || u.images.length > 0),
+      travel: travel.filter((u) => u.logo != null || u.images.length > 0),
     },
   }
 }

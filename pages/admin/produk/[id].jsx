@@ -1,22 +1,16 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import Layout from '../../../components/Layouts/Admin'
-import Content from '../../../components/Content'
-import StepWizard from 'react-step-wizard'
-import { useForm } from 'react-hook-form'
+import Layout from '@components/Layouts/Admin'
+import Content from '@components/Content'
 import { useDropzone } from 'react-dropzone'
 import _ from 'lodash'
 import axios from 'axios'
+import { useForm } from 'react-hook-form'
 import {
   Dialog,
   Pane,
   Text,
   Card,
   PlusIcon,
-  ManuallyEnteredDataIcon,
-  MediaIcon,
-  UserIcon,
-  ArrowRightIcon,
-  Heading,
   TextInputField,
   TextareaField,
   Button,
@@ -33,12 +27,8 @@ import {
   SmallCrossIcon,
   IconButton,
 } from 'evergreen-ui'
-import StepNav from '@components/StepNav'
-import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
-import Image from 'next/image'
 import { formatRp, clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
-import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import Variasi from '@components/Dialogs/Variasi'
 const Edit = () => {
   const router = useRouter()
@@ -136,15 +126,16 @@ const Edit = () => {
   }
 
   useEffect(() => {
+    if (!router.isReady) return
     const getProduct = async () => {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URI}/products/${productId}`
+        `${process.env.NEXT_PUBLIC_API_URI}/products/${router.query.id}`
       )
       setProduct(data)
       setValue('productName', data.name)
       setValue('description', data.description)
       setValue('category', data.category)
-      setValue('object', data.object.id)
+      setValue('object', data.object ? data.object.id : '')
       setVariasi(data.prices)
       setDataImage(data.images)
     }
@@ -157,7 +148,7 @@ const Edit = () => {
       setUmkm(data)
     }
     getUmkm()
-  }, [])
+  }, [router.isReady, router.query.id])
 
   return (
     <Layout title='Edit Produk'>

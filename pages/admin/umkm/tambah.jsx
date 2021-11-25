@@ -1,37 +1,21 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import Layout from '../../../components/Layouts/Admin'
-import Content from '../../../components/Content'
-import CardWisata from '../../../components/Cards/Wisata'
+import { useState, useEffect } from 'react'
+import Layout from '@components/Layouts/Admin'
+import Content from '@components/Content'
 import StepWizard from 'react-step-wizard'
-import HorizontalScroll from 'react-scroll-horizontal'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import { clientAxios, YouTubeGetID } from '@helpers/functions'
 import {
-  Dialog,
   Pane,
   Text,
   Card,
-  ManuallyEnteredDataIcon,
-  MediaIcon,
-  UserIcon,
-  ArrowRightIcon,
-  Heading,
   TextInputField,
   TextareaField,
   Button,
-  Strong,
-  Select,
-  Small,
   ResetIcon,
   AddIcon,
   FormField,
-  UploadIcon,
-  SearchInput,
-  Spinner,
-  FilePicker,
-  Avatar,
   SmallCrossIcon,
   IconButton,
 } from 'evergreen-ui'

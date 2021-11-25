@@ -17,21 +17,31 @@ import { useDropzone } from 'react-dropzone'
 import _ from 'lodash'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
-
-const GaleriForm = ({
+import { useForm } from 'react-hook-form'
+const KamarForm = ({
   isShown,
   setIsShown,
   mutate,
   data = [],
   toastMessage = () => {},
 }) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm()
   const [files, setFiles] = useState([])
   const { data: session, status } = useSession()
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     accept: 'image/*',
+    maxFiles: 5,
     noClick: true,
     onDrop: (acceptedFiles) => {
+      if (files.length == 5) {
+        return
+      }
       const allFiles = [
         ...acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -49,20 +59,24 @@ const GaleriForm = ({
     setFiles(newFiles)
   }
 
-  const uploadImage = () => {
+  const onSubmit = (postData) => {
     const formData = new FormData()
 
-    formData.append('ref', 'object')
-    formData.append('refId', data.id)
-    formData.append('field', 'images')
+    formData.append(
+      'data',
+      JSON.stringify({
+        object: data.id,
+        ...postData,
+      })
+    )
 
     for (let i = 0; i < files.length; i++) {
       const element = files[i]
-      formData.append('files', element)
+      formData.append('files.gallery', element)
     }
 
     axios
-      .post(process.env.NEXT_PUBLIC_API_URI + '/upload', formData)
+      .post(process.env.NEXT_PUBLIC_API_URI + '/rooms', formData)
       .then(function (response) {
         setFiles([])
         setIsShown(false)
@@ -78,12 +92,31 @@ const GaleriForm = ({
     <Pane>
       <Dialog
         isShown={isShown}
-        title='Upload Foto'
+        title='Tambah Kamar'
         onCloseComplete={() => setIsShown(false)}
         confirmLabel='Upload'
-        onConfirm={() => uploadImage()}
         overlayProps={{ zIndex: 2500 }}
+        onConfirm={handleSubmit(onSubmit)}
       >
+        <Pane>
+          <TextInputField
+            isInvalid={errors.name ? true : false}
+            validationMessage={errors.name && 'Harus di isi!'}
+            label='Nama Kamar *'
+            placeholder='Nama Kamar'
+            id='name'
+            {...register('name', { required: true })}
+          />
+          <TextInputField
+            isInvalid={errors.price ? true : false}
+            validationMessage={errors.price && 'Harus di isi!'}
+            label='Harga Kamar (per Malam) *'
+            placeholder='Harga Kamar'
+            id='name'
+            {...register('price', { required: true })}
+          />
+        </Pane>
+        <FormField label='Foto Kamar *' description='maksimal 5' />
         <Pane>
           <Card
             background='#E6E8F0'
@@ -147,4 +180,4 @@ const GaleriForm = ({
     </Pane>
   )
 }
-export default GaleriForm
+export default KamarForm

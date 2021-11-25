@@ -1,22 +1,12 @@
-import useSWR from 'swr'
-import { useState } from 'react'
-import Layout from '../../../components/Layouts/Admin'
-import Content from '../../../components/Content'
-import CardUMKM from '../../../components/Cards/Umkm'
-import {
-  Dialog,
-  Button,
-  PlusIcon,
-  Pane,
-  Text,
-  Heading,
-  Paragraph,
-  Spinner,
-} from 'evergreen-ui'
+import { useState, useEffect } from 'react'
+import Layout from '@components/Layouts/Admin'
+import Content from '@components/Content'
+import CardUMKM from '@components/Cards/Umkm'
+import { Dialog, Button, PlusIcon, Pane, Spinner } from 'evergreen-ui'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/react'
+import { useSession, getSession } from 'next-auth/react'
 const Data = ({ setShowDelete, setWisata, data }) => {
   const router = useRouter()
 
@@ -39,36 +29,46 @@ const Data = ({ setShowDelete, setWisata, data }) => {
 }
 
 const UMKM = () => {
+  const [data, setData] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const [wisata, setWisata] = useState([])
   const router = useRouter()
   const { data: session, status } = useSession()
 
-  const getWisata = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
-
-  const { data, mutate, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/objects?type=UMKM&_sort=created_at:desc`,
-    getWisata
-  )
+  const mutate = async () => {
+    await axios
+      .get(
+        process.env.NEXT_PUBLIC_API_URI +
+          '/objects?type=UMKM&_sort=created_at:desc'
+      )
+      .then((res) => {
+        setData(res.data)
+      })
+  }
 
   const onDelete = (id) => {
     axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`)
       .then((response) => {
         setShowDelete(false)
         mutate()
       })
       .catch((error) => console.log(error))
   }
+
+  useEffect(() => {
+    const json = async () => {
+      await axios
+        .get(
+          process.env.NEXT_PUBLIC_API_URI +
+            '/objects?type=UMKM&_sort=created_at:desc'
+        )
+        .then((res) => {
+          setData(res.data)
+        })
+    }
+    json()
+  }, [])
 
   return (
     <Layout title='UMKM'>
@@ -110,18 +110,3 @@ const UMKM = () => {
 }
 
 export default UMKM
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props: { session },
-  }
-}

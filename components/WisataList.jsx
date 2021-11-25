@@ -17,26 +17,30 @@ const WisataItem = ({ detail, style: customStyle }) => {
     <div style={customStyle}>
       <div style={{ width: '100%' }}>
         <div className='card wisataCard shadow-sm'>
-          <div className='wisataItem'>
-            <Image
-              alt={detail.featured_image.name}
-              src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
-              layout='fill'
-              objectFit='cover'
-            />
+          <div className='penginapanItem'>
+            <Link href={`/wisata/${detail.slug}`}>
+              <a>
+                <Image
+                  alt={detail.featured_image.name}
+                  src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
+                  layout='fill'
+                  objectFit='cover'
+                  className='p-2'
+                />
+              </a>
+            </Link>
           </div>
           <div className='card-body'>
             <Link href={`/wisata/${detail.slug}`}>
               <a>
-                <h5 className='card-title'>{detail.name}</h5>
+                <h4 className='umkm-card-title pb-2'>{detail.name}</h4>
               </a>
             </Link>
-            <div className='card-label'>{detail.type}</div>
-            <Link href={`/wisata/${detail.slug}`}>
+            {/* <Link href={`/wisata/${detail.slug}`}>
               <a role='button' className='btn btn-md ispBtn'>
                 Lihat Profil
               </a>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
@@ -140,8 +144,8 @@ const WisataList = ({ wisata }) => {
           >
             {wisata.map((item, index) => (
               <SplideSlide key={item.id}>
-                <WisataItemCard detail={item} />
-                {/* <WisataItem detail={item} /> */}
+                {/* <WisataItemCard detail={item} /> */}
+                <WisataItem detail={item} />
               </SplideSlide>
             ))}
           </Splide>

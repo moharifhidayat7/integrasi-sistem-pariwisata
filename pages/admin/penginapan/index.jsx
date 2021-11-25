@@ -1,8 +1,7 @@
-import useSWR from 'swr'
-import { useState } from 'react'
-import Layout from '../../../components/Layouts/Admin'
-import Content from '../../../components/Content'
-import CardWisata from '../../../components/Cards/Wisata'
+import { useState, useEffect } from 'react'
+import Layout from '@components/Layouts/Admin'
+import Content from '@components/Content'
+import CardWisata from '@components/Cards/Wisata'
 import {
   Dialog,
   Button,
@@ -16,7 +15,7 @@ import {
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
-import { signIn, signOut, useSession, getSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 const Data = ({ setShowDelete, setWisata, data }) => {
   const router = useRouter()
 
@@ -39,36 +38,48 @@ const Data = ({ setShowDelete, setWisata, data }) => {
 }
 
 const Penginapan = () => {
+  const [data, setData] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const [wisata, setWisata] = useState([])
   const router = useRouter()
   const { data: session, status } = useSession()
 
-  const getPenginapan = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
-
-  const { data, mutate, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/objects?type=Penginapan&_sort=created_at:desc`,
-    getPenginapan
-  )
+  const mutate = () => {
+    const json = async () =>
+      await axios
+        .get(
+          process.env.NEXT_PUBLIC_API_URI +
+            '/objects?type=Penginapan&_sort=created_at:desc'
+        )
+        .then((res) => {
+          setData(res.data)
+        })
+    json()
+  }
 
   const onDelete = (id) => {
     axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`)
       .then((response) => {
         setShowDelete(false)
         mutate()
       })
       .catch((error) => console.log(error))
   }
+
+  useEffect(() => {
+    if (!router.isReady) return
+    const json = async () =>
+      await axios
+        .get(
+          process.env.NEXT_PUBLIC_API_URI +
+            '/objects?type=Penginapan&_sort=created_at:desc'
+        )
+        .then((res) => {
+          setData(res.data)
+        })
+    json()
+  }, [router.isReady])
 
   return (
     <Layout title='Penginapan'>

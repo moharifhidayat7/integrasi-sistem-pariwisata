@@ -5,7 +5,8 @@ import Link from 'next/link'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/splide/dist/css/splide.min.css'
 import axios from 'axios'
-
+import { formatRp } from '@helpers/functions'
+import _ from 'lodash'
 const Item = ({ detail }) => {
   return (
     <div className='col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-5 mb-sm-4 itemRow'>
@@ -43,14 +44,16 @@ const Item = ({ detail }) => {
                 <h2 className='contentTitle'>{detail.name}</h2>
               </a>
             </Link>
-            <div className='contentPrice'>Mulai dari Rp. 250.000</div>
+            <div className='contentPrice'>
+              {formatRp(_.min(detail.rooms.map((r) => r.price)))}/Malam
+            </div>
             <div className='d-flex align-items-center'>
               <Link href={`/penginapan/${detail.slug}`}>
                 <a role='button' className='ispBtn contentBtn'>
                   Lihat Profil
                 </a>
               </Link>
-              <Link href={`/penginapan/${detail.slug}`}>
+              <Link href={`/penginapan/${detail.slug}#kamar`}>
                 <a role='button' className='btn ispBtn-primary contentBtn ms-2'>
                   Pesan Sekarang
                 </a>

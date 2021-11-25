@@ -11,27 +11,31 @@ const Item = ({ detail }) => {
     <div className='col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-5 mb-sm-4 itemRow'>
       <div className='border shadow rounded overflow-hidden'>
         <div>
-          {detail.logo ? (
-            <div className='penginapanFeaturedImage'>
-              <Image
-                alt={detail.logo.name}
-                src={`${process.env.NEXT_PUBLIC_API_URI}${detail.logo.url}`}
-                layout='fill'
-                objectFit='cover'
-                className='p-2'
-              />
-            </div>
-          ) : (
-            <div className='penginapanFeaturedImage'>
-              <Image
-                alt={detail.logo.name}
-                src={`${process.env.NEXT_PUBLIC_API_URI}${detail.images[0].url}`}
-                layout='fill'
-                objectFit='cover'
-                className='p-2'
-              />
-            </div>
-          )}
+          <Link href={`/umkm/${detail.slug}`}>
+            <a>
+              {detail.logo ? (
+                <div className='penginapanFeaturedImage'>
+                  <Image
+                    alt={detail.logo.name}
+                    src={`${process.env.NEXT_PUBLIC_API_URI}${detail.logo.url}`}
+                    layout='fill'
+                    objectFit='cover'
+                    className='p-2'
+                  />
+                </div>
+              ) : (
+                <div className='penginapanFeaturedImage'>
+                  <Image
+                    alt={detail.logo.name}
+                    src={`${process.env.NEXT_PUBLIC_API_URI}${detail.images[0].url}`}
+                    layout='fill'
+                    objectFit='cover'
+                    className='p-2'
+                  />
+                </div>
+              )}
+            </a>
+          </Link>
         </div>
         <div className='p-3'>
           <div className='penginapanContentDetail'>

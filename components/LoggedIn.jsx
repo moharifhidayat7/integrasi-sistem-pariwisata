@@ -51,7 +51,7 @@ const LoggedIn = () => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu as={CustomMenu}>
-        <Dropdown.Item eventKey='1' href='/user/profil'>
+        <Dropdown.Item eventKey='1' href='/akun/profil'>
           Profil
         </Dropdown.Item>
         <Dropdown.Item eventKey='2' href='/user/booking'>

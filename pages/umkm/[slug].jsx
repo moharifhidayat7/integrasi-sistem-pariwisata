@@ -11,6 +11,8 @@ import { Check, Check2, XSquare } from 'react-bootstrap-icons'
 import { useState } from 'react'
 import SingleMenu from '@components/SingleMenu'
 import router, { useRouter } from 'next/router'
+import { formatRp } from '@helpers/functions'
+import _ from 'lodash'
 const DetailWisata = ({ data }) => {
   const [isShown, setIsShown] = useState(false)
   const [image, setImage] = useState([])
@@ -45,16 +47,46 @@ const DetailWisata = ({ data }) => {
       </Overlay>
       <LayoutContent>
         <div className='container'>
-          <div className='singlePageTitle'>
-            <h1>{data.name}</h1>
+          <div className='d-flex justify-content-between align-items-center pb-3 border-bottom'>
+            <div>
+              {data.logo && (
+                <div
+                  style={{
+                    height: '6rem',
+                    width: '6rem',
+                    position: 'relative',
+                    marginRight: '10px',
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                  }}
+                >
+                  <Image
+                    alt={data.logo.name}
+                    src={process.env.NEXT_PUBLIC_API_URI + data.logo.url}
+                    layout='fill'
+                    objectFit='contain'
+                  />
+                </div>
+              )}
+              <div className='singlePageTitle d-inline-block align-middle'>
+                <h1>{data.name}</h1>
+                <span className='text-muted'>{data.address}</span>
+              </div>
+            </div>
+            <div>
+              <Link href='#'>
+                <a className='btn ispBtn-primary'>Belanja di Marketplace</a>
+              </Link>
+            </div>
           </div>
+
           <div>
             <SingleMenu
               router={router}
               menu={[
                 { href: '#profil', text: 'Profil' },
                 { href: '#kontak', text: 'Kontak' },
-                { href: '#fasilitas', text: 'Fasilitas' },
+                { href: '#produk', text: 'Produk' },
                 { href: '#galeri', text: 'Galeri' },
               ]}
             />
@@ -130,28 +162,67 @@ const DetailWisata = ({ data }) => {
               </div>
             </div>
             <div className='row'>
-              <div className='col-8 mt-3'>
-                <h2 id='fasilitas' className='mb-4 sectionTitle'>
-                  Fasilitas
+              <div className='col-12'>
+                <h2 id='produk' className='mb-4 mt-4 sectionTitle'>
+                  Produk
                 </h2>
-                <div className='fasilitas row gap-2'>
-                  {data.facility
-                    ? data.facility.map((fac) => {
-                        return (
-                          <div className='fasilitasItem col-md-5' key={fac}>
-                            <Check2
-                              color='#38b520'
-                              size={40}
-                              className='fasilitasIcon'
+                <div className='produk row g-2'>
+                  {data.products.length > 0 &&
+                    data.products.slice(0, 8).map((room) => (
+                      <div className='col-lg-3 col-md-4 col-sm-6' key={room.id}>
+                        <div className='card'>
+                          <div
+                            style={{ height: '15rem', position: 'relative' }}
+                          >
+                            <Image
+                              src={
+                                process.env.NEXT_PUBLIC_API_URI +
+                                room.featured_image.url
+                              }
+                              alt={room.featured_image.name}
+                              layout='fill'
+                              objectFit='cover'
+                              className='rounded'
                             />
-                            <span className='ms-3'>{fac}</span>
                           </div>
-                        )
-                      })
-                    : '-'}
+                          <div className='card-body'>
+                            <h5 className='card-title'>{room.name}</h5>
+                            {/* <p className='card-text'>
+                          Some quick example text to build on the card title and
+                          make up the bulk of the cards content.
+                        </p> */}
+                            <div className='d-flex justify-content-between align-items-center'>
+                              <span
+                                style={{ color: '#38b520', fontSize: '1.2rem' }}
+                              >
+                                {formatRp(
+                                  _.min(room.prices.map((p) => p.price))
+                                )}
+                              </span>
+                              <Link href='#'>
+                                <a className='btn ispBtn-primary'>Beli</a>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                <div className='text-center mt-3'>
+                  {data.products.length >= 8 && (
+                    <Link href='#'>
+                      <a
+                        role='button'
+                        className='btn rounded-pill ms-auto px-3 mb-2 mb-lg-0 ispBtn-secondary'
+                      >
+                        Lainnya
+                      </a>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
+
             <div className='row'>
               <div className='mt-4 '>
                 <h2 id='galeri' className='sectionTitle'>

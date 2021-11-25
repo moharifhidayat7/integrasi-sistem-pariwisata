@@ -31,17 +31,9 @@ function FasilitasForm({
         ? [...data.facility, postData.fasilitas]
         : [postData.fasilitas]
     axios
-      .put(
-        process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id,
-        {
-          facility: facility,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        }
-      )
+      .put(process.env.NEXT_PUBLIC_API_URI + '/objects/' + data.id, {
+        facility: facility,
+      })
       .then(function (response) {
         reset()
         setIsShown(false)
@@ -68,8 +60,8 @@ function FasilitasForm({
             <TextInputField
               isInvalid={errors.fasilitas ? true : false}
               validationMessage={errors.fasilitas && 'Harus di isi!'}
-              label='Nama Fasilitas *'
-              placeholder='Tempat Parkir, Toilet Umum, dll.'
+              label='Fasilitas *'
+              placeholder='Tempat Parkir, Toilet Umum, Wifi, dll.'
               id='fasilitas'
               {...register('fasilitas', { required: true })}
             />

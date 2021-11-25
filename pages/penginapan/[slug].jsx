@@ -11,6 +11,7 @@ import { Check, Check2, XSquare } from 'react-bootstrap-icons'
 import { useState } from 'react'
 import SingleMenu from '@components/SingleMenu'
 import router, { useRouter } from 'next/router'
+import { formatRp } from '@helpers/functions'
 const DetailWisata = ({ data }) => {
   const [isShown, setIsShown] = useState(false)
   const [image, setImage] = useState([])
@@ -55,6 +56,7 @@ const DetailWisata = ({ data }) => {
                 { href: '#profil', text: 'Profil' },
                 { href: '#kontak', text: 'Kontak' },
                 { href: '#fasilitas', text: 'Fasilitas' },
+                { href: '#kamar', text: 'Kamar' },
                 { href: '#galeri', text: 'Galeri' },
               ]}
             />
@@ -151,7 +153,55 @@ const DetailWisata = ({ data }) => {
                     : '-'}
                 </div>
               </div>
+              <div className='col-12'>
+                <h2 id='kamar' className='mb-4 mt-4 sectionTitle'>
+                  Kamar
+                </h2>
+                <div className='kamar row g-2'>
+                  {data.rooms.length > 0 &&
+                    data.rooms.map((room) => (
+                      <div className='col-lg-6 col-sm-12' key={room.id}>
+                        <div className='card'>
+                          <div
+                            style={{ height: '20rem', position: 'relative' }}
+                          >
+                            <Image
+                              src={
+                                process.env.NEXT_PUBLIC_API_URI +
+                                room.gallery[0].url
+                              }
+                              alt={room.gallery[0].name}
+                              layout='fill'
+                              objectFit='cover'
+                              className='rounded'
+                            />
+                          </div>
+                          <div className='card-body'>
+                            <h5 className='card-title'>{room.name}</h5>
+                            {/* <p className='card-text'>
+                          Some quick example text to build on the card title and
+                          make up the bulk of the cards content.
+                        </p> */}
+                            <div className='d-flex justify-content-between align-items-center'>
+                              <span
+                                style={{ color: '#38b520', fontSize: '1.3rem' }}
+                              >
+                                {formatRp(room.price)}/Malam
+                              </span>
+                              <Link href='#'>
+                                <a className='btn ispBtn-primary'>
+                                  Pesan Sekarang
+                                </a>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
             </div>
+
             <div className='row'>
               <div className='mt-4 '>
                 <h2 id='galeri' className='sectionTitle'>

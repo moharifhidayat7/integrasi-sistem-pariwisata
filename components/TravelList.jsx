@@ -17,7 +17,7 @@ const WisataItem = ({ detail, style: customStyle }) => {
       <div style={{ width: '100%' }}>
         <div className='card wisataCard shadow-sm'>
           <div className='umkmItem'>
-            <Link href={`/umkm/${detail.slug}`}>
+            <Link href={`/travel/${detail.slug}`}>
               <a>
                 <Image
                   alt={detail.logo ? detail.logo.name : detail.images[0].name}
@@ -32,7 +32,7 @@ const WisataItem = ({ detail, style: customStyle }) => {
             </Link>
           </div>
           <div className='card-body'>
-            <Link href={`/umkm/${detail.slug}`}>
+            <Link href={`/travel/${detail.slug}`}>
               <a>
                 <h4 className='umkm-card-title'>{detail.name}</h4>
               </a>
@@ -44,14 +44,14 @@ const WisataItem = ({ detail, style: customStyle }) => {
   )
 }
 
-const UMKMList = ({ umkm }) => {
+const Travel = ({ travel }) => {
   return (
     <div className={`${style.wisataList}`}>
       <div className='container'>
         <div className='mb-3 dataRow'>
           <div className='d-flex justify-content-between align-items-center slideHead'>
-            <h1>UMKM</h1>
-            <Link href='/umkm'>
+            <h1>Travel</h1>
+            <Link href='/travel'>
               <a role='button' className='btn btn-lg ispBtn-secondary'>
                 Lihat Lainnya <ArrowRight />
               </a>
@@ -105,7 +105,7 @@ const UMKMList = ({ umkm }) => {
               </div>
             )}
           >
-            {umkm.map((item, index) => (
+            {travel.map((item, index) => (
               <SplideSlide key={item.id}>
                 <WisataItem detail={item} />
               </SplideSlide>
@@ -117,4 +117,4 @@ const UMKMList = ({ umkm }) => {
   )
 }
 
-export default UMKMList
+export default Travel

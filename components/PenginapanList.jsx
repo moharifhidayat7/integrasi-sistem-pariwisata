@@ -17,16 +17,20 @@ const WisataItem = ({ detail, style: customStyle }) => {
       <div style={{ width: '100%' }}>
         <div className='card wisataCard shadow-sm'>
           <div className='penginapanItem'>
-            <Image
-              alt={detail.featured_image.name}
-              src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
-              layout='fill'
-              objectFit='cover'
-              className='p-2'
-            />
+            <Link href={`/penginapan/${detail.slug}`}>
+              <a>
+                <Image
+                  alt={detail.featured_image.name}
+                  src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
+                  layout='fill'
+                  objectFit='cover'
+                  className='p-2'
+                />
+              </a>
+            </Link>
           </div>
           <div className='card-body'>
-            <Link href={`/wisata/${detail.slug}`}>
+            <Link href={`/penginapan/${detail.slug}`}>
               <a>
                 <h4 className='umkm-card-title pb-2'>{detail.name}</h4>
               </a>

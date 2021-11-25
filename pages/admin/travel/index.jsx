@@ -1,5 +1,4 @@
-import useSWR from 'swr'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
 import CardTravel from '../../../components/Cards/Umkm'
@@ -39,36 +38,47 @@ const Data = ({ setShowDelete, setWisata, data }) => {
 }
 
 const Travel = () => {
+  const [data, setData] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const [wisata, setWisata] = useState([])
   const router = useRouter()
   const { data: session, status } = useSession()
 
-  const getWisata = async (url) =>
-    await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${session.jwt}`,
-      },
-    }).then((res) => res.json())
-
-  const { data, mutate, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URI}/objects?type=Travel&_sort=created_at:desc`,
-    getWisata
-  )
+  const mutate = () => {
+    const json = async () => {
+      await axios
+        .get(
+          `${process.env.NEXT_PUBLIC_API_URI}/objects?type=Travel&_sort=created_at:desc`
+        )
+        .then((res) => {
+          setData(res.data)
+        })
+    }
+    json()
+  }
 
   const onDelete = (id) => {
     axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`, {
-        headers: {
-          Authorization: `Bearer ${session.jwt}`,
-        },
-      })
+      .delete(`${process.env.NEXT_PUBLIC_API_URI}/objects/${id}`)
       .then((response) => {
         setShowDelete(false)
         mutate()
       })
       .catch((error) => console.log(error))
   }
+
+  useEffect(() => {
+    const json = async () => {
+      await axios
+        .get(
+          `${process.env.NEXT_PUBLIC_API_URI}/objects?type=Travel&_sort=created_at:desc`
+        )
+        .then((res) => {
+          setData(res.data)
+        })
+    }
+    json()
+  }, [])
 
   return (
     <Layout title='Travel'>
