@@ -162,7 +162,7 @@ const Index = () => {
                       key={room.id}
                     >
                       <div className='card'>
-                        <div style={{ height: '12rem', position: 'relative' }}>
+                        <div style={{ height: '15rem', position: 'relative' }}>
                           <Link href={'/produk/' + room.id}>
                             <a>
                               <Image
@@ -208,7 +208,7 @@ const Index = () => {
                               {formatRp(_.min(room.prices.map((p) => p.price)))}
                             </span>
                             <Link href='#'>
-                              <a className='btn ispBtn-primary'>Beli</a>
+                              <a className='btn ispBtn-primary px-3'>Beli</a>
                             </Link>
                           </div>
                         </div>
