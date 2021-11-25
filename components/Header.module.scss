@@ -2,6 +2,13 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins/_breakpoints';
 
+.mHead {
+  -webkit-transition: all 0.5s 0s ease;
+  -moz-transition: all 0.5s 0s ease;
+  -o-transition: all 0.5s 0s ease;
+  transition: all 0.5s 0s ease;
+}
+
 @include media-breakpoint-down(sm) {
   .headerH {
     height: 200px;

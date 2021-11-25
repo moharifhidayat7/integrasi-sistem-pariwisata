@@ -47,7 +47,7 @@ const ClientLoginForm = () => {
     })
 
     if (login.ok) {
-      router.replace('/')
+      router.reload()
     }
 
     if (login.error) {

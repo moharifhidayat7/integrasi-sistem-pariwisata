@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import style from './Navbar.module.scss'
 import { signIn, signOut, useSession, getSession } from 'next-auth/react'
@@ -6,7 +6,6 @@ import LoggedIn from './LoggedIn'
 
 const Navbar = () => {
   const { data: session, status } = useSession()
-
   const [show, setShow] = useState(false)
   const toggleShow = (e) => {
     e.preventDefault()
@@ -72,9 +71,33 @@ const Navbar = () => {
             </li>
           </ul>
           {session != null ? (
-            <div className='ms-auto px-3 mb-2 mb-lg-0'>
-              <LoggedIn />
-            </div>
+            session.role.name == 'Super Admin' ? (
+              <>
+                <Link href='/admin'>
+                  <a
+                    role='button'
+                    className='btn rounded-pill ms-auto px-3 mb-2 mb-lg-0 ispBtn-secondary'
+                  >
+                    <span className='small'>Halaman Admin</span>
+                  </a>
+                </Link>
+
+                <Link href='#'>
+                  <a
+                    className='ms-2'
+                    onClick={() =>
+                      signOut({ redirect: true, callbackUrl: '/' })
+                    }
+                  >
+                    Logout
+                  </a>
+                </Link>
+              </>
+            ) : (
+              <div className='ms-auto px-3 mb-2 mb-lg-0'>
+                <LoggedIn />
+              </div>
+            )
           ) : (
             <>
               <Link href='/login'>

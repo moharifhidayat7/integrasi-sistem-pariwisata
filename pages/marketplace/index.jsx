@@ -173,7 +173,7 @@ const Index = () => {
                                 alt={room.featured_image.name}
                                 layout='fill'
                                 objectFit='cover'
-                                className='rounded'
+                                className='rounded p-2'
                               />
                             </a>
                           </Link>

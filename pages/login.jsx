@@ -23,7 +23,7 @@ export async function getServerSideProps(context) {
     }
     return {
       redirect: {
-        destination: '/akun/profil',
+        destination: '/',
         permanent: false,
       },
     }
