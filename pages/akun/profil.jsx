@@ -48,7 +48,9 @@ const Profil = () => {
           setData(res.data)
           setValue('name', res.data.name)
           setValue('email', res.data.email)
-          setValue('address', res.data.address)
+          setValue('address.line1', res.data.address.line1)
+          setValue('address.city', res.data.address.city)
+          setValue('address.postcode', res.data.address.postcode)
           setValue('phone', res.data.phone)
         })
     }
@@ -101,9 +103,33 @@ const Profil = () => {
           <input
             type='text'
             className='form-control'
-            id='address'
+            id='address.line1'
             placeholder='1234 Main St'
-            {...register('address')}
+            {...register('address.line1')}
+          />
+        </div>
+        <div className='col-6'>
+          <label htmlFor='address' className='form-label'>
+            Kota
+          </label>
+          <input
+            type='text'
+            className='form-control'
+            id='address.city'
+            placeholder='Kota'
+            {...register('address.city')}
+          />
+        </div>
+        <div className='col-6'>
+          <label htmlFor='address' className='form-label'>
+            Kode Post
+          </label>
+          <input
+            type='text'
+            className='form-control'
+            id='address.postcode'
+            placeholder='Kode Pos'
+            {...register('address.postcode')}
           />
         </div>
 

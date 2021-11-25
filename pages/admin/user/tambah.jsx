@@ -91,9 +91,27 @@ const Tambah = () => {
                   <TextInputField
                     label='Alamat'
                     placeholder='Alamat'
-                    id='address'
-                    {...register('address')}
+                    id='address.line1'
+                    {...register('address.line1')}
                   />
+                  <Pane className='row'>
+                    <Pane className='col-6'>
+                      <TextInputField
+                        label='Kota'
+                        placeholder='Kota'
+                        id='address.city'
+                        {...register('address.city')}
+                      />
+                    </Pane>
+                    <Pane className='col-6'>
+                      <TextInputField
+                        label='Kode Pos'
+                        placeholder='Kode Pos'
+                        id='address.postcode'
+                        {...register('address.postcode')}
+                      />
+                    </Pane>
+                  </Pane>
                   <Pane className='row'>
                     <Pane className='col-6'>
                       <TextInputField

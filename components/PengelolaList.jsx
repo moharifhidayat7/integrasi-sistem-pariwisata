@@ -3,12 +3,20 @@ import { useState } from 'react'
 const PengelolaList = ({ user, active, setActive }) => {
   const [bg, setBg] = useState('#EDEFF5')
 
+  const toggleActive = (user) => {
+    if (active.id == user.id) {
+      setActive()
+    } else {
+      setActive(user)
+    }
+  }
+
   return (
     <Pane
       padding={12}
       onMouseEnter={() => setBg('#a3e6cd')}
       onMouseLeave={() => setBg('#EDEFF5')}
-      onClick={() => setActive(user)}
+      onClick={() => toggleActive(user)}
       backgroundColor={active.id == user.id ? '#a3e6cd' : bg}
       borderRadius={4}
       cursor='pointer'

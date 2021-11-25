@@ -98,6 +98,8 @@ const Edit = () => {
 
     if (data.object != 'pokdarwis') {
       json.object = data.object
+    } else {
+      json.object == {}
     }
 
     formData.append('data', JSON.stringify(json))
@@ -135,7 +137,9 @@ const Edit = () => {
       setValue('productName', data.name)
       setValue('description', data.description)
       setValue('category', data.category)
-      setValue('object', data.object ? data.object.id : '')
+      if (data.object) {
+        setValue('object', data.object ? data.object.id : '')
+      }
       setVariasi(data.prices)
       setDataImage(data.images)
     }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 const Akun = ({ children }) => {
   const router = useRouter()
   return (
-    <Layout title='Akun Saya'>
+    <Layout title='Akun Saya' withFooter={false}>
       <LayoutContent>
         <div className='container'>
           <div className='contentPageTitle'>
@@ -14,7 +14,7 @@ const Akun = ({ children }) => {
 
           <div className='d-flex align-items-start'>
             <div
-              className='nav flex-column nav-pills me-3 col-3'
+              className='nav flex-column nav-pills card p-3 col-3'
               id='v-pills-tab'
               role='tablist'
               aria-orientation='vertical'
@@ -24,7 +24,7 @@ const Akun = ({ children }) => {
               <UserNav href={'/akun/pesanan'} text='Pesanan' />
               <UserNav href={'/akun/ganti-password'} text='Ganti Password' />
             </div>
-            <div className='tab-content col-9' id='v-pills-tabContent'>
+            <div className='tab-content col-9 px-5' id='v-pills-tabContent'>
               <div
                 className='tab-pane fade show active'
                 id='v-pills-home'

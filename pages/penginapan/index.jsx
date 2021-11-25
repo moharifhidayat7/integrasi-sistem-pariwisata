@@ -12,7 +12,7 @@ const Item = ({ detail }) => {
     <div className='col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-5 mb-sm-4 itemRow'>
       <div className='border shadow rounded overflow-hidden'>
         <div>
-          <Splide options={{}}>
+          <Splide options={{ arrows: false }}>
             <SplideSlide>
               <div className='penginapanFeaturedImage'>
                 <Image

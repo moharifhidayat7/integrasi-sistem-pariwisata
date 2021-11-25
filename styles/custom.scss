@@ -141,6 +141,13 @@
   margin-bottom: 1rem;
 }
 
+.productLink {
+  color: #262626;
+}
+.productLink:hover {
+  color: #38b520;
+}
+
 .singleMenu a {
   font-weight: 400;
   color: #262626;
@@ -159,7 +166,11 @@
   position: relative;
   height: 30rem;
 }
-
+.list-group-item.active {
+  color: white;
+  background-color: #38b520;
+  border: #38b520;
+}
 .kontakSingle {
   background-color: #e9e9e9;
 }
@@ -171,4 +182,19 @@
 .sectionTitle {
   font-size: 1.3rem;
   font-family: 'Poppins', sans-serif !important;
+}
+.dropdown-item:active {
+  background-color: #38b520 !important;
+}
+.menuItem {
+  background-color: #474d66 !important;
+}
+.menuItem:hover {
+  background-color: #696f8c !important;
+}
+.menuItemActive {
+  background-color: #696f8c !important;
+  * {
+    color: #52bd95 !important;
+  }
 }

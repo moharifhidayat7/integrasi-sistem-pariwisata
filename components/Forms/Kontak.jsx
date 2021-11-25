@@ -28,12 +28,11 @@ const Kontak = (props) => {
           <TextInputField
             isInvalid={errors.email ? true : false}
             validationMessage={errors.email && errors.email.message}
-            label='Email *'
+            label='Email'
             type='email'
             placeholder='Email'
             id='email'
             {...register('email', {
-              required: 'Harus di Isi!',
               validate: (value) =>
                 value.includes('@') || 'Masukkan email yang valid!',
             })}
@@ -55,7 +54,7 @@ const Kontak = (props) => {
         {...props}
         postData={props.postData}
         setPostData={props.setPostData}
-        withSkip={true}
+        withSkip={false}
         errors={errors}
         handleSubmit={handleSubmit}
       />

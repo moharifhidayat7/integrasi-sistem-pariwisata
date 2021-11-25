@@ -1,7 +1,14 @@
-import Layout from '@components/Layouts/Admin'
-
-const index = () => {
-  return <Layout title='Dashboard'>Masuk sebagai</Layout>
+const Index = () => {
+  return <></>
 }
 
-export default index
+export default Index
+
+export async function getServerSideProps(context) {
+  return {
+    redirect: {
+      destination: '/admin/dashboard',
+      permanent: false,
+    },
+  }
+}

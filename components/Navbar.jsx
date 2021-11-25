@@ -66,7 +66,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link href='/umkm'>
+              <Link href='/marketplace'>
                 <a className='nav-link me-lg-2'>Marketplace</a>
               </Link>
             </li>

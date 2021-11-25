@@ -4,6 +4,7 @@ import { clientAxios } from '@helpers/functions'
 
 import Link from 'next/link'
 import style from './Login.module.scss'
+import router, { useRouter } from 'next/router'
 
 const ClientRegisterForm = () => {
   const {
@@ -13,7 +14,7 @@ const ClientRegisterForm = () => {
     formState: { errors },
   } = useForm()
   const [isLoading, setIsLoading] = useState(false)
-
+  const router = useRouter()
   const password = useRef({})
   password.current = watch('password', '')
 
@@ -37,9 +38,7 @@ const ClientRegisterForm = () => {
         .then((response) => {
           // Handle success.
           setIsLoading(false)
-          console.log('Well done!')
-          console.log('User profile', response.data.user)
-          console.log('User token', response.data.jwt)
+          router.push('/login')
         })
         .catch((error) => {
           // Handle error.

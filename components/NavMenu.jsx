@@ -47,7 +47,7 @@ const NavMenu = () => {
         <CustomItem
           icon={<DashboardIcon color='#F9FAFC' />}
           text='Dashboard'
-          href='/admin'
+          href='/admin/dashboard'
         />
         <CustomItem
           icon={<MountainIcon color='#F9FAFC' />}

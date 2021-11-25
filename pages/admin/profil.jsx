@@ -13,7 +13,7 @@ import ContentWrapper from '@components/Wrapper/ContentWrapper'
 import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { clientAxios } from '@helpers/functions'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { Profiler, useEffect, useState } from 'react'
 
 const Profil = ({ profil }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -62,7 +62,18 @@ const Profil = ({ profil }) => {
 
   useEffect(() => {
     setValue('name', profil.name)
-    setValue('address', profil.address)
+    if (profil.address) {
+      if (profil.address.line1) {
+        setValue('address.line1', profil.address.line1)
+      }
+      if (profil.address.city) {
+        setValue('address.city', profil.address.city)
+      }
+      if (profil.address.postcode) {
+        setValue('address.postcode', profil.address.postcode)
+      }
+    }
+
     setValue('email', profil.email)
     setValue('phone', profil.phone)
   }, [])
@@ -99,9 +110,27 @@ const Profil = ({ profil }) => {
                       <TextInputField
                         label='Alamat'
                         placeholder='Alamat'
-                        id='address'
-                        {...register('address')}
+                        id='address.line1'
+                        {...register('address.line1')}
                       />
+                      <Pane className='row'>
+                        <Pane className='col-6'>
+                          <TextInputField
+                            label='Kota'
+                            placeholder='Kota'
+                            id='address.city'
+                            {...register('address.city')}
+                          />
+                        </Pane>
+                        <Pane className='col-6'>
+                          <TextInputField
+                            label='Kode Pos'
+                            placeholder='Kode Pos'
+                            id='address.postcode'
+                            {...register('address.postcode')}
+                          />
+                        </Pane>
+                      </Pane>
                       <Pane className='row'>
                         <Pane className='col-6'>
                           <TextInputField

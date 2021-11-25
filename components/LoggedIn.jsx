@@ -1,5 +1,6 @@
 import { Dropdown, FormControl } from 'react-bootstrap'
 import React, { useState, Children, forwardRef } from 'react'
+import { signOut } from 'next-auth/react'
 // The forwardRef is important!!
 // Dropdown needs access to the DOM node in order to position the Menu
 const CustomToggle = forwardRef(({ children, onClick }, ref) => (
@@ -61,7 +62,11 @@ const LoggedIn = () => {
           Pesanan
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item eventKey='4' href='/logout'>
+        <Dropdown.Item
+          eventKey='4'
+          href='#'
+          onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
+        >
           Logout
         </Dropdown.Item>
       </Dropdown.Menu>
