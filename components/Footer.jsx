@@ -18,7 +18,7 @@ const Footer = () => {
           >
             <Image
               alt='Logo STIKOM PGRI Banyuwangi'
-              src='/Logo_Stikom%20fix.PNG'
+              src='/Logo_Stikom%20fix.png'
               layout='fill'
               objectFit='contain'
               objectPosition='center bottom'
@@ -30,7 +30,7 @@ const Footer = () => {
           >
             <Image
               alt='Logo STIKOM PGRI Banyuwangi'
-              src='/Logo_Pokdarwis%20fix.PNG'
+              src='/Logo_Pokdarwis%20fix.png'
               layout='fill'
               objectFit='contain'
               objectPosition='center bottom'
@@ -42,7 +42,7 @@ const Footer = () => {
           >
             <Image
               alt='Logo STIKOM PGRI Banyuwangi'
-              src='/Logo_Kedaireka%20fix.PNG'
+              src='/Logo_Kedaireka%20fix.png'
               layout='fill'
               objectFit='contain'
               objectPosition='center bottom'
