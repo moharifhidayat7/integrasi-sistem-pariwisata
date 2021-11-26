@@ -56,7 +56,7 @@ const CartDropdown = () => {
         <Cart />
       </Dropdown.Toggle>
 
-      <Dropdown.Menu as={CustomMenu}>
+      <Dropdown.Menu as={CustomMenu} className='mt-4'>
         <div style={{ overflowY: 'auto', maxHeight: '20rem' }}>
           {keranjang &&
             keranjang.map((item, index) => {
