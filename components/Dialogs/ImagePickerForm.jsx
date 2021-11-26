@@ -29,7 +29,7 @@ const ImageCheck = ({ checked = false, img, images, setImages }) => {
       width={150}
       height={130}
       borderRadius={4}
-      backgroundImage={`url(${process.env.NEXT_PUBLIC_API_URI}${img.formats.thumbnail.url})`}
+      backgroundImage={`url(${process.env.NEXT_PUBLIC_API_URI}${img.url})`}
       backgroundSize='cover'
       backgroundPosition='center'
       backgroundRepeat='no-repeat'
