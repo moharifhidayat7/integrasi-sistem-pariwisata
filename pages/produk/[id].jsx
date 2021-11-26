@@ -43,7 +43,7 @@ const Index = ({ data }) => {
         })
     }
     json()
-  })
+  }, [])
 
   useEffect(() => {
     setCurVar()

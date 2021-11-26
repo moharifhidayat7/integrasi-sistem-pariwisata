@@ -41,6 +41,7 @@ export default class ThumbnailsExample extends React.Component {
           className='rounded p-3'
           layout='fill'
           objectFit='contain'
+          objectPosition='center center'
         />
       </SplideSlide>
     ))
@@ -53,6 +54,7 @@ export default class ThumbnailsExample extends React.Component {
           alt={slide.alt}
           layout='fill'
           objectFit='cover'
+          objectPosition='center center'
         />
       </SplideSlide>
     ))
