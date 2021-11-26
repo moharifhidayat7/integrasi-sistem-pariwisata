@@ -198,3 +198,37 @@
     color: #52bd95 !important;
   }
 }
+.imgTh {
+  border: 1px none;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+.impTh:hover {
+  border: 1px solid #38b520;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+.btnVar {
+  border-color: #38b520;
+  color: #38b520;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+.btnVar:hover {
+  color: white;
+  background-color: #38b520;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+.btnVarActive {
+  background-color: #38b520;
+  color: white;
+}
