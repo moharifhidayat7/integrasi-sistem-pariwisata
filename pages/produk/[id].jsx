@@ -60,12 +60,18 @@ const Index = ({ data }) => {
                 images={[
                   {
                     src:
-                      process.env.NEXT_PUBLIC_API_URI + data.featured_image.url,
+                      process.env.NEXT_PUBLIC_API_URI +
+                      data.featured_image.formats.medium
+                        ? data.featured_image.formats.medium.url
+                        : data.featured_image.url,
                     alt: data.featured_image.name,
                   },
                   ...data.images.map((im) => {
                     return {
-                      src: process.env.NEXT_PUBLIC_API_URI + im.url,
+                      src:
+                        process.env.NEXT_PUBLIC_API_URI + im.formats.thumbnail
+                          ? im.formats.thumbnail.url
+                          : im.url,
                       alt: im.name,
                     }
                   }),
@@ -157,7 +163,9 @@ const Index = ({ data }) => {
                               <Image
                                 src={
                                   process.env.NEXT_PUBLIC_API_URI +
-                                  room.featured_image.url
+                                  room.featured_image.formats.thumbnail
+                                    ? room.featured_image.formats.thumbnail.url
+                                    : room.featured_image.url
                                 }
                                 alt={room.featured_image.name}
                                 layout='fill'

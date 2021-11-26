@@ -202,7 +202,10 @@ const Produk = () => {
                                 alt={profile.featured_image.name}
                                 src={
                                   process.env.NEXT_PUBLIC_API_URI +
-                                  profile.featured_image.url
+                                  profile.featured_image.formats.thumbnail
+                                    ? profile.featured_image.formats.thumbnail
+                                        .url
+                                    : profile.featured_image.url
                                 }
                                 layout='fill'
                                 objectFit='cover'

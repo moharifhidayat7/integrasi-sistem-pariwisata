@@ -388,7 +388,13 @@ const WisataPage = () => {
                             borderRadius={4}
                             className='d-inline-block me-1 col-6 col-lg-3 col-sm-3 col-xg-2'
                             style={{
-                              backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URI}${item.url})`,
+                              backgroundImage: `url(${
+                                process.env.NEXT_PUBLIC_API_URI
+                              }${
+                                item.formats.thumbnail
+                                  ? item.formats.thumbnail.url
+                                  : item.url
+                              })`,
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
                               backgroundRepeat: 'no-repeat',
@@ -468,7 +474,13 @@ const WisataPage = () => {
                                 height={150}
                                 borderRadius={4}
                                 style={{
-                                  backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URI}${item.url})`,
+                                  backgroundImage: `url(${
+                                    process.env.NEXT_PUBLIC_API_URI
+                                  }${
+                                    item.formats.thumbnail
+                                      ? item.formats.thumbnail.url
+                                      : item.url
+                                  })`,
                                   backgroundSize: 'cover',
                                   backgroundPosition: 'center',
                                   backgroundRepeat: 'no-repeat',

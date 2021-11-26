@@ -44,7 +44,10 @@ const Wisata = ({ data, setShowDelete, setWisata }) => {
             }`}
             src={`${
               data.featured_image
-                ? process.env.NEXT_PUBLIC_API_URI + data.featured_image.url
+                ? process.env.NEXT_PUBLIC_API_URI +
+                  data.featured_image.formats.thumbnail
+                  ? data.featured_image.formats.thumbnail.url
+                  : data.featured_image.url
                 : 'https://via.placeholder.com/300x180?text=Tidak+ada+foto'
             }`}
             layout='fill'

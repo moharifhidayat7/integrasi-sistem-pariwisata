@@ -7,7 +7,13 @@ const SingleMenu = ({ menu, router }) => {
       {menu.map((m) => {
         return (
           <Link href={m.href} key={m.href}>
-            <a className={_.includes(router.asPath, m.href) ? 'active' : ''}>
+            <a
+              className={
+                _.includes(router.asPath, m.href)
+                  ? 'active'
+                  : ''
+              }
+            >
               {m.text}
             </a>
           </Link>

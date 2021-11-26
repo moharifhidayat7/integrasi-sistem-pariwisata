@@ -250,7 +250,9 @@ const PenginapanPage = () => {
                         alt={data.featured_image.name}
                         src={
                           process.env.NEXT_PUBLIC_API_URI +
-                          data.featured_image.url
+                          data.featured_image.formats.thumbnail
+                            ? data.featured_image.formats.thumbnail.url
+                            : data.featured_image.url
                         }
                         layout='fill'
                         objectFit='cover'
@@ -416,7 +418,13 @@ const PenginapanPage = () => {
                             borderRadius={4}
                             className='d-inline-block me-1 col-6 col-lg-3 col-sm-3 col-xg-2'
                             style={{
-                              backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URI}${item.url})`,
+                              backgroundImage: `url(${
+                                process.env.NEXT_PUBLIC_API_URI
+                              }${
+                                item.formats.medium
+                                  ? item.formats.medium.url
+                                  : item.url
+                              })`,
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
                               backgroundRepeat: 'no-repeat',
@@ -647,7 +655,10 @@ const PenginapanPage = () => {
                                               alt={im.name}
                                               src={
                                                 process.env
-                                                  .NEXT_PUBLIC_API_URI + im.url
+                                                  .NEXT_PUBLIC_API_URI +
+                                                im.formats.thumbnail
+                                                  ? im.formats.thumbnail.url
+                                                  : im.url
                                               }
                                               layout='fill'
                                               objectFit='cover'
