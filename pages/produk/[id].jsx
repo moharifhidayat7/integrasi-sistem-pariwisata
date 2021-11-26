@@ -139,7 +139,9 @@ const Index = ({ data }) => {
           <div className='row mt-5'>
             {related.length > 1 && (
               <>
-                <h4 className='mb-4'>Produk "{data.category}" lainnya</h4>
+                <h4 className='mb-4'>
+                  Produk &quot;{data.category}&quot; lainnya
+                </h4>
 
                 {related
                   .filter((d) => (d.visible == true) & (d.id != data.id))
