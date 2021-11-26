@@ -124,9 +124,8 @@ const DetailWisata = ({ data }) => {
                   </h3>
                   <div>
                     <strong>{data.contact.name}</strong> <br />
-                    {data.contact.email
-                      ? 'Email : ' + data.contact.email + '<br />'
-                      : ''}
+                    {data.contact.email ? 'Email : ' + data.contact.email : ''}
+                    <br />
                     {data.contact.phone
                       ? 'No. Telp : ' + data.contact.phone
                       : ''}
