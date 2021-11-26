@@ -122,7 +122,7 @@ const Index = () => {
                     active={active}
                     setActive={setActive}
                     onClick={() => {
-                      byCategory('Perkebuanan')
+                      byCategory('Perkebunan')
                     }}
                   />
                   <Cat
