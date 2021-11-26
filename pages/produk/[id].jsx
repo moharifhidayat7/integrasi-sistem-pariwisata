@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Layout from '@components/Layout'
 import LayoutContent from '@components/Layouts/ClientContent'
 import Link from 'next/link'
@@ -9,6 +9,8 @@ import _ from 'lodash'
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import ProdukSlider from '@components/ProdukSlider'
 import { useRouter } from 'next/router'
+import { GlobalContext } from '@components/Contexts/KeranjangContext'
+import { useSession, getSession } from 'next-auth/react'
 const Variasi = ({ data, vari, set }) => {
   return (
     <button
@@ -25,10 +27,16 @@ const Variasi = ({ data, vari, set }) => {
 
 const Index = ({ data }) => {
   const router = useRouter()
+  const { data: session, status } = useSession()
+  const { addItemToList } = useContext(GlobalContext)
   const { id } = router.query
   const [related, setRelated] = useState([])
   const [curVar, setCurVar] = useState()
   const [qty, setQty] = useState(1)
+
+  const handleAdd = (item) => {
+    addItemToList(item)
+  }
 
   useEffect(() => {
     const json = async () => {
@@ -129,7 +137,18 @@ const Index = ({ data }) => {
                   />
                 </div>
                 <div className='d-inline-block'>
-                  <a role='button' className='btn btn-lg ispBtn-primary'>
+                  <a
+                    role='button'
+                    className='btn btn-lg ispBtn-primary'
+                    onClick={() =>
+                      handleAdd({
+                        qty: parseInt(qty),
+                        variation: curVar != null ? curVar : data.prices[0],
+                        product: data,
+                        users_permissions_user: session.id,
+                      })
+                    }
+                  >
                     Masukkan Keranjang
                   </a>
                 </div>
@@ -217,6 +236,7 @@ export default Index
 
 export async function getServerSideProps(context) {
   const id = context.params.id
+  const session = await getSession(context)
 
   const data = await axios
     .get(process.env.API_URI + '/products/' + id)
@@ -225,6 +245,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       data,
+      session,
     },
   }
 }

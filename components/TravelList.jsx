@@ -16,9 +16,9 @@ const WisataItem = ({ detail, style: customStyle }) => {
     <div style={customStyle}>
       <div style={{ width: '100%' }}>
         <div className='card wisataCard shadow-sm'>
-          <div className='umkmItem'>
-            <Link href={`/travel/${detail.slug}`}>
-              <a>
+          <Link href={`/travel/${detail.slug}`}>
+            <a>
+              <div className='umkmItem'>
                 <Image
                   alt={detail.logo ? detail.logo.name : detail.images[0].name}
                   src={`${process.env.NEXT_PUBLIC_API_URI}${
@@ -28,9 +28,9 @@ const WisataItem = ({ detail, style: customStyle }) => {
                   objectFit='cover'
                   className='p-2'
                 />
-              </a>
-            </Link>
-          </div>
+              </div>
+            </a>
+          </Link>
           <div className='card-body'>
             <Link href={`/travel/${detail.slug}`}>
               <a>

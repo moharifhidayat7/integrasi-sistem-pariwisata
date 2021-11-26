@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import axios from 'axios'
-const { NEXT_PUBLIC_API_URI } = process.env
+const { API_URI } = process.env
 
 const options = {
   providers: [
@@ -12,7 +12,7 @@ const options = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const { data } = await axios.post(NEXT_PUBLIC_API_URI + '/auth/local', {
+        const { data } = await axios.post(API_URI + '/auth/local', {
           identifier: credentials.email,
           password: credentials.password,
         })

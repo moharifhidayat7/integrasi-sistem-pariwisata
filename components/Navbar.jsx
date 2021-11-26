@@ -3,6 +3,8 @@ import Link from 'next/link'
 import style from './Navbar.module.scss'
 import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import LoggedIn from './LoggedIn'
+import Cart from './Cart'
+import CartDropdown from './CartDropdown'
 
 const Navbar = () => {
   const { data: session, status } = useSession()
@@ -70,9 +72,10 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
+          <CartDropdown />
           {session != null ? (
             session.role.name == 'Super Admin' ? (
-              <>
+              <div className='ms-3'>
                 <Link href='/admin'>
                   <a
                     role='button'
@@ -92,14 +95,14 @@ const Navbar = () => {
                     Logout
                   </a>
                 </Link>
-              </>
+              </div>
             ) : (
-              <div className='ms-auto px-3 mb-2 mb-lg-0'>
+              <div className='ms-3 px-3 mb-2 mb-lg-0'>
                 <LoggedIn />
               </div>
             )
           ) : (
-            <>
+            <div className='ms-3'>
               <Link href='/login'>
                 <a
                   role='button'
@@ -116,7 +119,7 @@ const Navbar = () => {
                   <span className='small'>Daftar</span>
                 </a>
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>

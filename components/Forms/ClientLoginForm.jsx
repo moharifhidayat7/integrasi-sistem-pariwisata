@@ -46,7 +46,7 @@ const ClientLoginForm = () => {
     })
     // callbackUrl: '/',
 
-    if (login.ok) {
+    if (!login.error && login.ok) {
       router.reload()
     }
 

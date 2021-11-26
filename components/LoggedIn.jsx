@@ -65,7 +65,7 @@ const LoggedIn = () => {
         <Dropdown.Item
           eventKey='4'
           href='#'
-          onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
+          onClick={() => signOut({ redirect: false, callbackUrl: '/' })}
         >
           Logout
         </Dropdown.Item>
