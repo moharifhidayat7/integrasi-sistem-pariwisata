@@ -35,6 +35,9 @@ const Index = ({ data }) => {
   const [qty, setQty] = useState(1)
 
   const handleAdd = (item) => {
+    if (session != null) {
+      item.users_permissions_user = session.id
+    }
     addItemToList(item)
   }
 
@@ -145,7 +148,6 @@ const Index = ({ data }) => {
                         qty: parseInt(qty),
                         variation: curVar != null ? curVar : data.prices[0],
                         product: data,
-                        users_permissions_user: session.id,
                       })
                     }
                   >
