@@ -168,9 +168,7 @@ const Index = () => {
                               <Image
                                 src={
                                   process.env.NEXT_PUBLIC_API_URI +
-                                  room.featured_image.formats.thumbnail
-                                    ? room.featured_image.formats.thumbnail.url
-                                    : room.featured_image.url
+                                  room.featured_image.url
                                 }
                                 alt={room.featured_image.name}
                                 layout='fill'

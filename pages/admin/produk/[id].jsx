@@ -215,13 +215,7 @@ const Edit = () => {
                             <Pane
                               width='100%'
                               height='100%'
-                              backgroundImage={`url(${
-                                process.env.NEXT_PUBLIC_API_URI
-                              }${
-                                product.featured_image.formats.thumbnail
-                                  ? product.featured_image.formats.thumbnail.url
-                                  : product.featured_image.url
-                              })`}
+                              backgroundImage={`url(${process.env.NEXT_PUBLIC_API_URI}${product.featured_image.url})`}
                               backgroundRepeat='no-repeat'
                               backgroundSize='cover'
                               backgroundPosition='center'
@@ -254,10 +248,7 @@ const Edit = () => {
                                 height='100%'
                                 style={{
                                   backgroundImage: `url('${
-                                    process.env.NEXT_PUBLIC_API_URI +
-                                    file.formats.thumbnail
-                                      ? file.formats.thumbnail.url
-                                      : file.url
+                                    process.env.NEXT_PUBLIC_API_URI + file.url
                                   }')`,
                                   backgroundSize: 'cover',
                                   backgroundPosition: 'center',

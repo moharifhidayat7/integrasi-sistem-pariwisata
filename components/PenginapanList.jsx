@@ -21,11 +21,7 @@ const WisataItem = ({ detail, style: customStyle }) => {
               <a>
                 <Image
                   alt={detail.featured_image.name}
-                  src={`${process.env.NEXT_PUBLIC_API_URI}${
-                    detail.featured_image.formats.thumbnail
-                      ? detail.featured_image.formats.thumbnail.url
-                      : detail.featured_image.url
-                  }`}
+                  src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
                   layout='fill'
                   objectFit='cover'
                   className='p-2'

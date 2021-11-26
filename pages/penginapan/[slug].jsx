@@ -71,12 +71,7 @@ const DetailWisata = ({ data }) => {
                         <div className='slideshowSingle rounded overflow-hidden'>
                           <Image
                             alt={slide.name}
-                            src={
-                              process.env.NEXT_PUBLIC_API_URI +
-                              slide.formats.medium
-                                ? slide.formats.medium.url
-                                : slide.url
-                            }
+                            src={process.env.NEXT_PUBLIC_API_URI + slide.url}
                             layout='fill'
                             objectFit='cover'
                           />
@@ -95,12 +90,7 @@ const DetailWisata = ({ data }) => {
                         <div className='slideshowSingle rounded overflow-hidden'>
                           <Image
                             alt={slide.name}
-                            src={
-                              process.env.NEXT_PUBLIC_API_URI +
-                              slide.formats.medium
-                                ? slide.formats.medium.url
-                                : slide.url
-                            }
+                            src={process.env.NEXT_PUBLIC_API_URI + slide.url}
                             layout='fill'
                             objectFit='cover'
                           />
@@ -242,12 +232,7 @@ const DetailWisata = ({ data }) => {
                           <Image
                             className='rounded'
                             alt={img.name}
-                            src={
-                              process.env.NEXT_PUBLIC_API_URI +
-                              img.formats.thumbnail
-                                ? img.formats.thumbnail.url
-                                : img.url
-                            }
+                            src={process.env.NEXT_PUBLIC_API_URI + img.url}
                             layout='fill'
                             objectFit='cover'
                           />

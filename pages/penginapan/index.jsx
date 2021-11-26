@@ -17,11 +17,7 @@ const Item = ({ detail }) => {
               <div className='penginapanFeaturedImage'>
                 <Image
                   alt={detail.featured_image.name}
-                  src={`${process.env.NEXT_PUBLIC_API_URI}${
-                    detail.featured_image.formats.thumbnail
-                      ? detail.featured_image.formats.thumbnail.url
-                      : detail.featured_image.url
-                  }`}
+                  src={`${process.env.NEXT_PUBLIC_API_URI}${detail.featured_image.url}`}
                   layout='fill'
                   objectFit='cover'
                 />
@@ -32,9 +28,7 @@ const Item = ({ detail }) => {
                 <div className='wisataFeaturedImage'>
                   <Image
                     alt={img.name}
-                    src={`${process.env.NEXT_PUBLIC_API_URI}${
-                      img.formats.medium ? img.formats.medium.url : img.url
-                    }`}
+                    src={`${process.env.NEXT_PUBLIC_API_URI}${img.url}`}
                     layout='fill'
                     objectFit='cover'
                   />
