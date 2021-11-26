@@ -72,6 +72,7 @@ const DetailWisata = ({ data }) => {
                             src={process.env.NEXT_PUBLIC_API_URI + slide.url}
                             layout='fill'
                             objectFit='cover'
+                            objectPosition='center center'
                           />
                         </div>
                       </SplideSlide>
@@ -91,6 +92,7 @@ const DetailWisata = ({ data }) => {
                             src={process.env.NEXT_PUBLIC_API_URI + slide.url}
                             layout='fill'
                             objectFit='cover'
+                            objectPosition='center center'
                           />
                         </div>
                       </SplideSlide>

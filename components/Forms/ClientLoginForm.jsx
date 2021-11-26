@@ -43,8 +43,8 @@ const ClientLoginForm = () => {
       redirect: false,
       email: formData.email,
       password: formData.password,
-      callbackUrl: '/',
     })
+    // callbackUrl: '/',
 
     if (login.ok) {
       router.reload()
