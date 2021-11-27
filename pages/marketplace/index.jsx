@@ -30,7 +30,7 @@ const Index = () => {
   const [active, setActive] = useState('Semua')
   const [search, setSearch] = useState('')
   const { data: session, status } = useSession()
-  const { keranjang, addItemToList } = useContext(GlobalContext)
+  const { addItemToList } = useContext(GlobalContext)
 
   const byCategory = async (kat) => {
     await axios

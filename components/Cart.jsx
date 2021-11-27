@@ -16,9 +16,12 @@ const Cart = () => {
   }, [keranjang])
 
   useEffect(() => {
-    // if (session == null) {
-    const ker = JSON.parse(localStorage.getItem('keranjang'))
-    setKeranjang(ker)
+    if (localStorage.getItem('keranjang') != null) {
+      const ker = JSON.parse(localStorage.getItem('keranjang'))
+
+      setKeranjang(ker)
+    }
+
     // if (ker.length > 0) {
     //   console.log(ker)
     //   setKeranjang(ker)

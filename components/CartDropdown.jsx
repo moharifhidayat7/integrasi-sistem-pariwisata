@@ -59,7 +59,8 @@ const CartDropdown = () => {
 
       <Dropdown.Menu as={CustomMenu} className='mt-4'>
         <div style={{ overflowY: 'auto', maxHeight: '20rem' }}>
-          {keranjang &&
+          {keranjang != null &&
+            keranjang.length > 0 &&
             keranjang.map((item, index) => {
               return (
                 <a
