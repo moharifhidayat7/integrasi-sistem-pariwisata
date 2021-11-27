@@ -23,13 +23,17 @@ const AppReducer = (state, action) => {
           (item) => item.product.id !== action.payload.product.id
         ),
       }
+    case 'SET_KERANJANG':
+      return {
+        keranjang: action.payload,
+      }
     default:
       return state
   }
 }
 
 const initialState = {
-  keranjang: [],
+  keranjang: null,
 }
 
 export const GlobalContext = createContext(initialState)

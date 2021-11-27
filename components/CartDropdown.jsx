@@ -5,6 +5,7 @@ import { GlobalContext } from './Contexts/KeranjangContext'
 import Cart from './Cart'
 import { formatRp } from '@helpers/functions'
 import _ from 'lodash'
+import Link from 'next/link'
 import { Trash } from 'react-bootstrap-icons'
 // The forwardRef is important!!
 // Dropdown needs access to the DOM node in order to position the Menu
@@ -95,9 +96,11 @@ const CartDropdown = () => {
             </strong>
           </div>
           <div>
-            <a role='button' href='#' className='btn ispBtn-primary px-5'>
-              Bayar
-            </a>
+            <Link href='/marketplace/bayar'>
+              <a role='button' className='btn ispBtn-primary px-5'>
+                Bayar
+              </a>
+            </Link>
           </div>
         </div>
       </Dropdown.Menu>

@@ -8,16 +8,27 @@ import axios from 'axios'
 import Iframe from '@components/Iframe'
 import { Button, Overlay } from 'evergreen-ui'
 import { Check, Check2, XSquare } from 'react-bootstrap-icons'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import SingleMenu from '@components/SingleMenu'
 import router, { useRouter } from 'next/router'
 import { formatRp } from '@helpers/functions'
 import _ from 'lodash'
+import { useSession, getSession } from 'next-auth/react'
+import { GlobalContext } from '@components/Contexts/KeranjangContext'
 const DetailWisata = ({ data }) => {
   const [isShown, setIsShown] = useState(false)
   const [image, setImage] = useState([])
   const [imgLimit, setImgLimit] = useState(4)
   const router = useRouter()
+  const { data: session, status } = useSession()
+  const { keranjang, addItemToList } = useContext(GlobalContext)
+
+  const handleAdd = (item) => {
+    if (session != null) {
+      item.users_permissions_user = session.id
+    }
+    addItemToList(item)
+  }
   return (
     <Layout title={data.name}>
       <Overlay
@@ -173,27 +184,38 @@ const DetailWisata = ({ data }) => {
                     data.products.slice(0, 8).map((room) => (
                       <div className='col-lg-3 col-md-4 col-sm-6' key={room.id}>
                         <div className='card'>
-                          <div
-                            style={{ height: '15rem', position: 'relative' }}
-                          >
-                            <Image
-                              src={
-                                process.env.NEXT_PUBLIC_API_URI +
-                                room.featured_image.url
-                              }
-                              alt={room.featured_image.name}
-                              layout='fill'
-                              objectFit='cover'
-                              className='rounded'
-                            />
-                          </div>
+                          <Link href={'/produk/' + room.id}>
+                            <a>
+                              <div
+                                style={{
+                                  height: '15rem',
+                                  position: 'relative',
+                                }}
+                              >
+                                <Image
+                                  src={
+                                    process.env.NEXT_PUBLIC_API_URI +
+                                    room.featured_image.url
+                                  }
+                                  alt={room.featured_image.name}
+                                  layout='fill'
+                                  objectFit='cover'
+                                  className='rounded'
+                                />
+                              </div>
+                            </a>
+                          </Link>
                           <div className='card-body'>
-                            <h5 className='card-title'>{room.name}</h5>
+                            <Link href={'/produk/' + room.id}>
+                              <a className='productLink'>
+                                <h5 className='card-title'>{room.name}</h5>
+                              </a>
+                            </Link>
                             {/* <p className='card-text'>
                           Some quick example text to build on the card title and
                           make up the bulk of the cards content.
                         </p> */}
-                            <div className='d-flex justify-content-between align-items-center'>
+                            <div className='border-top pt-2 d-flex flex-column gap-2'>
                               <span
                                 style={{ color: '#38b520', fontSize: '1.2rem' }}
                               >
@@ -201,9 +223,20 @@ const DetailWisata = ({ data }) => {
                                   _.min(room.prices.map((p) => p.price))
                                 )}
                               </span>
-                              <Link href='#'>
-                                <a className='btn ispBtn-primary'>Beli</a>
-                              </Link>
+
+                              <button
+                                type='button'
+                                className='btn ispBtn-primary'
+                                onClick={() =>
+                                  handleAdd({
+                                    qty: 1,
+                                    variation: room.prices[0],
+                                    product: room,
+                                  })
+                                }
+                              >
+                                Masukkan Keranjang
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -286,11 +319,13 @@ const DetailWisata = ({ data }) => {
 export default DetailWisata
 
 export async function getServerSideProps(context) {
+  const session = await getSession(context)
   const { slug } = context.params
   const { data } = await axios.get(`${process.env.API_URI}/objects/${slug}`)
   return {
     props: {
       data,
+      session,
     },
   }
 }

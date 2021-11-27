@@ -172,9 +172,11 @@ const Index = ({ data }) => {
                       key={room.id}
                     >
                       <div className='card'>
-                        <div style={{ height: '15rem', position: 'relative' }}>
-                          <Link href={'/produk/' + room.id}>
-                            <a>
+                        <Link href={'/produk/' + room.id}>
+                          <a>
+                            <div
+                              style={{ height: '15rem', position: 'relative' }}
+                            >
                               <Image
                                 src={
                                   process.env.NEXT_PUBLIC_API_URI +
@@ -185,9 +187,9 @@ const Index = ({ data }) => {
                                 objectFit='cover'
                                 className='rounded p-2'
                               />
-                            </a>
-                          </Link>
-                        </div>
+                            </div>
+                          </a>
+                        </Link>
                         <div className='card-body'>
                           <Link href={'/produk/' + room.id}>
                             <a className='productLink'>
@@ -204,6 +206,7 @@ const Index = ({ data }) => {
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                             }}
+                            className='border-bottom pb-2'
                           >
                             <Link href='#'>
                               <a>
@@ -211,15 +214,25 @@ const Index = ({ data }) => {
                               </a>
                             </Link>
                           </p>
-                          <div className='d-flex justify-content-between align-items-center'>
+                          <div className='d-flex flex-column gap-2'>
                             <span
                               style={{ color: '#38b520', fontSize: '1.2rem' }}
                             >
                               {formatRp(_.min(room.prices.map((p) => p.price)))}
                             </span>
-                            <Link href='#'>
-                              <a className='btn ispBtn-primary px-3'>Beli</a>
-                            </Link>
+                            <button
+                              type='button'
+                              className='btn ispBtn-primary px-4'
+                              onClick={() =>
+                                handleAdd({
+                                  qty: 1,
+                                  variation: room.prices[0],
+                                  product: room,
+                                })
+                              }
+                            >
+                              Masukkan Keranjang
+                            </button>
                           </div>
                         </div>
                       </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Layout from '@components/Layout'
 import LayoutContent from '@components/Layouts/ClientContent'
 import Link from 'next/link'
@@ -6,7 +6,8 @@ import Image from 'next/image'
 import axios from 'axios'
 import { formatRp } from '@helpers/functions'
 import _ from 'lodash'
-
+import { useSession, getSession } from 'next-auth/react'
+import { GlobalContext } from '@components/Contexts/KeranjangContext'
 const Cat = ({ onClick, text, active, setActive }) => {
   return (
     <button
@@ -28,6 +29,8 @@ const Index = () => {
   const [data, setData] = useState([])
   const [active, setActive] = useState('Semua')
   const [search, setSearch] = useState('')
+  const { data: session, status } = useSession()
+  const { keranjang, addItemToList } = useContext(GlobalContext)
 
   const byCategory = async (kat) => {
     await axios
@@ -43,6 +46,13 @@ const Index = () => {
       .then((res) => {
         setData(res.data)
       })
+  }
+
+  const handleAdd = (item) => {
+    if (session != null) {
+      item.users_permissions_user = session.id
+    }
+    addItemToList(item)
   }
 
   useEffect(() => {
@@ -201,15 +211,26 @@ const Index = () => {
                               </a>
                             </Link>
                           </p>
-                          <div className='d-flex justify-content-between align-items-center'>
+                          <div className='d-flex flex-column gap-2'>
                             <span
                               style={{ color: '#38b520', fontSize: '1.2rem' }}
                             >
                               {formatRp(_.min(room.prices.map((p) => p.price)))}
                             </span>
-                            <Link href='#'>
-                              <a className='btn ispBtn-primary px-3'>Beli</a>
-                            </Link>
+
+                            <button
+                              type='button'
+                              className='btn ispBtn-primary px-3'
+                              onClick={() =>
+                                handleAdd({
+                                  qty: 1,
+                                  variation: room.prices[0],
+                                  product: room,
+                                })
+                              }
+                            >
+                              Masukkan Keranjang
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -224,3 +245,9 @@ const Index = () => {
 }
 
 export default Index
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+    props: { session },
+  }
+}
