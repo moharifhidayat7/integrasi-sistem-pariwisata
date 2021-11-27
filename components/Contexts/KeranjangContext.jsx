@@ -4,13 +4,19 @@ const AppReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_ITEM':
       if (action.payload != null) {
-        return {
-          keranjang: [
-            action.payload,
-            ...state.keranjang.filter((k) => {
-              return k != null && k.product.id != action.payload.product.id
-            }),
-          ],
+        if (state.keranjang != null) {
+          return {
+            keranjang: [
+              action.payload,
+              ...state.keranjang.filter((k) => {
+                return k != null && k.product.id != action.payload.product.id
+              }),
+            ],
+          }
+        } else {
+          return {
+            keranjang: [action.payload],
+          }
         }
       }
 
