@@ -22,11 +22,12 @@ const Bayar = () => {
               <h4 className='d-flex justify-content-between align-items-center mb-3'>
                 <span className='text-primary'>Keranjang</span>
                 <span className='badge bg-primary rounded-pill'>
-                  {keranjang.length}
+                  {keranjang != null && keranjang.length}
                 </span>
               </h4>
               <div className='list-group mb-3'>
-                {keranjang.length > 0 &&
+                {keranjang != null &&
+                  keranjang.length > 0 &&
                   keranjang.map((item, index) => {
                     return (
                       <a
