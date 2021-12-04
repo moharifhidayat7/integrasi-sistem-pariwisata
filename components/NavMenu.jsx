@@ -75,7 +75,7 @@ const NavMenu = () => {
           href='/admin/user'
         />
       </Menu.Group>
-      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
+      {/* <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
         <CustomItem
           icon={<BookIcon color='#F9FAFC' />}
           text='Paket Wisata'
@@ -87,7 +87,7 @@ const NavMenu = () => {
           text='Bookingan'
           href='/admin/booking'
         />
-      </Menu.Group>
+      </Menu.Group> */}
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Marketplace</span>}>
         <CustomItem
           icon={<BoxIcon color='#F9FAFC' />}
@@ -117,7 +117,7 @@ const NavMenu = () => {
           text='Pengunjung'
           href='/admin/pengunjung'
         />
-        <CustomItem
+        {/* <CustomItem
           icon={<KnownVehicleIcon color='#F9FAFC' />}
           text='Parkir'
           href='/admin/parkir'
@@ -126,7 +126,7 @@ const NavMenu = () => {
           icon={<ChartIcon color='#F9FAFC' />}
           text='Keuangan'
           href='/admin/keuangan'
-        />
+        /> */}
       </Menu.Group>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Akun</span>}>
         <CustomItem

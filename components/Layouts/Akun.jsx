@@ -21,7 +21,7 @@ const Akun = ({ children, title }) => {
                 aria-orientation='vertical'
               >
                 <UserNav href={'/akun/profil'} text='Profil' />
-                <UserNav href={'/akun/booking'} text='Bookingan' />
+                {/* <UserNav href={'/akun/booking'} text='Bookingan' /> */}
                 <UserNav href={'/akun/pesanan'} text='Pesanan' />
                 <UserNav href={'/akun/ganti-password'} text='Ganti Password' />
                 <UserNav href={'/logout'} text='Keluar' />

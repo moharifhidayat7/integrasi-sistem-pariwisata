@@ -30,7 +30,7 @@ const Tambah = () => {
   return (
     <Layout title='Tambah Paket Wisata'>
       <Head>
-        <meta charset='utf-8' />
+        <meta charSet='utf-8' />
       </Head>
       <Sukses isShown={success} setIsShown={setSuccess} data={successData} />
       <Content>

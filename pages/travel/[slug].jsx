@@ -8,15 +8,27 @@ import axios from 'axios'
 import Iframe from '@components/Iframe'
 import { Button, Overlay } from 'evergreen-ui'
 import { Check, Check2, XSquare } from 'react-bootstrap-icons'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import SingleMenu from '@components/SingleMenu'
 import router, { useRouter } from 'next/router'
 import { formatRp } from '@helpers/functions'
+import _ from 'lodash'
+import { useSession, getSession } from 'next-auth/react'
+import { GlobalContext } from '@components/Contexts/KeranjangContext'
 const DetailWisata = ({ data }) => {
   const [isShown, setIsShown] = useState(false)
   const [image, setImage] = useState([])
   const [imgLimit, setImgLimit] = useState(4)
   const router = useRouter()
+  const { data: session, status } = useSession()
+  const { keranjang, addItemToList } = useContext(GlobalContext)
+
+  const handleAdd = (item) => {
+    if (session != null) {
+      item.users_permissions_user = session.id
+    }
+    addItemToList(item)
+  }
   return (
     <Layout title={data.name}>
       <Overlay
@@ -46,17 +58,42 @@ const DetailWisata = ({ data }) => {
       </Overlay>
       <LayoutContent>
         <div className='container'>
-          <div className='singlePageTitle'>
-            <h1>{data.name}</h1>
+          <div className='d-flex justify-content-between align-items-center pb-3 border-bottom'>
+            <div>
+              {data.logo && (
+                <div
+                  style={{
+                    height: '6rem',
+                    width: '6rem',
+                    position: 'relative',
+                    marginRight: '10px',
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                  }}
+                >
+                  <Image
+                    alt={data.logo.name}
+                    src={process.env.NEXT_PUBLIC_API_URI + data.logo.url}
+                    layout='fill'
+                    objectFit='contain'
+                  />
+                </div>
+              )}
+              <div className='singlePageTitle d-inline-block align-middle'>
+                <h1>{data.name}</h1>
+                <span className='text-muted'>{data.address}</span>
+              </div>
+            </div>
+            <div></div>
           </div>
+
           <div>
             <SingleMenu
               router={router}
               menu={[
                 { href: '#profil', text: 'Profil' },
                 { href: '#kontak', text: 'Kontak' },
-                { href: '#fasilitas', text: 'Fasilitas' },
-                { href: '#kamar', text: 'Kamar' },
+                { href: '#paketwisata', text: 'Paket Wisata' },
                 { href: '#galeri', text: 'Galeri' },
               ]}
             />
@@ -134,72 +171,22 @@ const DetailWisata = ({ data }) => {
               </div>
             </div>
             <div className='row'>
-              <div className='col-8 mt-3'>
-                <h2 id='fasilitas' className='mb-4 sectionTitle'>
-                  Fasilitas
-                </h2>
-                <div className='fasilitas row gap-2'>
-                  {data.facility
-                    ? data.facility.map((fac) => {
-                        return (
-                          <div className='fasilitasItem col-md-5' key={fac}>
-                            <Check2
-                              color='#38b520'
-                              size={40}
-                              className='fasilitasIcon'
-                            />
-                            <span className='ms-3'>{fac}</span>
-                          </div>
-                        )
-                      })
-                    : '-'}
-                </div>
-              </div>
               <div className='col-12'>
-                <h2 id='kamar' className='mb-4 mt-4 sectionTitle'>
-                  Kamar
+                <h2 id='paketwisata' className='mb-4 mt-4 sectionTitle'>
+                  Paket Wisata
                 </h2>
-                <div className='kamar row g-2'>
-                  {data.rooms.length > 0 &&
-                    data.rooms.map((room) => (
-                      <div className='col-lg-6 col-sm-12' key={room.id}>
-                        <div className='card'>
-                          <div
-                            style={{ height: '20rem', position: 'relative' }}
-                          >
-                            <Image
-                              src={
-                                process.env.NEXT_PUBLIC_API_URI +
-                                room.gallery[0].url
-                              }
-                              alt={room.gallery[0].name}
-                              layout='fill'
-                              objectFit='cover'
-                              className='rounded'
-                            />
-                          </div>
-                          <div className='card-body'>
-                            <h5 className='card-title'>{room.name}</h5>
-                            {/* <p className='card-text'>
-                          Some quick example text to build on the card title and
-                          make up the bulk of the cards content.
-                        </p> */}
-                            <div className='d-flex justify-content-between align-items-center'>
-                              <span
-                                style={{ color: '#38b520', fontSize: '1.3rem' }}
-                              >
-                                {formatRp(room.price)}/Malam
-                              </span>
-                              {/* <Link href='#'>
-                                <a className='btn ispBtn-primary'>
-                                  Pesan Sekarang
-                                </a>
-                              </Link> */}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                <div className='produk row g-2'></div>
+                <div className='text-center mt-3'>
+                  {data.products.length >= 8 && (
+                    <Link href='#'>
+                      <a
+                        role='button'
+                        className='btn rounded-pill ms-auto px-3 mb-2 mb-lg-0 ispBtn-secondary'
+                      >
+                        Lainnya
+                      </a>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -265,11 +252,13 @@ const DetailWisata = ({ data }) => {
 export default DetailWisata
 
 export async function getServerSideProps(context) {
+  const session = await getSession(context)
   const { slug } = context.params
   const { data } = await axios.get(`${process.env.API_URI}/objects/${slug}`)
   return {
     props: {
       data,
+      session,
     },
   }
 }
