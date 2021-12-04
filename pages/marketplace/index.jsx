@@ -168,7 +168,7 @@ const Index = () => {
                   .filter((d) => d.visible == true)
                   .map((room) => (
                     <div
-                      className='col-lg-4 col-xl-4 col-md-6 col-sm-12 col-6'
+                      className='col-lg-4 col-xl-4 col-md-6 col-sm-12 col-12'
                       key={room.id}
                     >
                       <div className='card'>
@@ -205,11 +205,13 @@ const Index = () => {
                               textOverflow: 'ellipsis',
                             }}
                           >
-                            <Link href='#'>
-                              <a>
-                                {room.object ? room.object.name : 'Pokdarwis'}
-                              </a>
-                            </Link>
+                            {room.object ? (
+                              <Link href={'/umkm/' + room.object.slug}>
+                                <a>{room.object.name}</a>
+                              </Link>
+                            ) : (
+                              <span>Pokdarwis Gombengsari</span>
+                            )}
                           </p>
                           <div className='d-flex flex-column gap-2'>
                             <span
@@ -217,20 +219,14 @@ const Index = () => {
                             >
                               {formatRp(_.min(room.prices.map((p) => p.price)))}
                             </span>
-
-                            <button
-                              type='button'
-                              className='btn ispBtn-primary px-3'
-                              onClick={() =>
-                                handleAdd({
-                                  qty: 1,
-                                  variation: room.prices[0],
-                                  product: room,
-                                })
-                              }
-                            >
-                              Masukkan Keranjang
-                            </button>
+                            <Link href={'/produk/' + room.id}>
+                              <a
+                                role='button'
+                                className='btn ispBtn-primary px-3'
+                              >
+                                Beli
+                              </a>
+                            </Link>
                           </div>
                         </div>
                       </div>

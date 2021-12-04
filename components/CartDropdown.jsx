@@ -49,12 +49,12 @@ const CustomMenu = forwardRef(
 )
 
 CustomMenu.displayName = 'CustomMenu'
-const CartDropdown = () => {
+const CartDropdown = ({ className }) => {
   const { keranjang, removeItemFromList } = useContext(GlobalContext)
   return (
     <Dropdown align='end' className='ms-auto'>
       <Dropdown.Toggle as={CustomToggle} id='dropdown-custom-components'>
-        <Cart />
+        <Cart className={className} />
       </Dropdown.Toggle>
 
       <Dropdown.Menu as={CustomMenu} className='mt-4'>
@@ -97,11 +97,13 @@ const CartDropdown = () => {
             </strong>
           </div>
           <div>
-            <Link href='/marketplace/bayar'>
-              <a role='button' className='btn ispBtn-primary px-5'>
-                Bayar
-              </a>
-            </Link>
+            {keranjang != null && keranjang.length > 0 && (
+              <Link href='/marketplace/bayar'>
+                <a role='button' className='btn ispBtn-primary px-5'>
+                  Bayar
+                </a>
+              </Link>
+            )}
           </div>
         </div>
       </Dropdown.Menu>

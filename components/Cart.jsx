@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import { GlobalContext } from './Contexts/KeranjangContext'
 
-const Cart = () => {
+const Cart = ({ className = '' }) => {
   const [show, setShow] = useState(false)
   const { data: session, status } = useSession()
   const { keranjang, setKeranjang, addItemToList } = useContext(GlobalContext)
@@ -41,14 +41,18 @@ const Cart = () => {
   }, [])
 
   return (
-    <div className='ms-auto position-relative'>
+    <div className={'ms-auto position-relative ' + className}>
       <Cart4
         size={'2rem'}
-        className='position-relative keranjang'
+        className={'position-relative keranjang '}
         onClick={() => setShow(!show)}
       />
       {keranjang != null && (
-        <span className='position-absolute translate-middle badge rounded-pill bg-danger'>
+        <span
+          className={
+            'position-absolute translate-middle badge rounded-pill bg-danger'
+          }
+        >
           {keranjang.length}
           <span className='visually-hidden'>Keranjang</span>
         </span>

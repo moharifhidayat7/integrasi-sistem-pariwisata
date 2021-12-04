@@ -55,10 +55,10 @@ const LoggedIn = () => {
         <Dropdown.Item eventKey='1' href='/akun/profil'>
           Profil
         </Dropdown.Item>
-        <Dropdown.Item eventKey='2' href='/user/booking'>
+        <Dropdown.Item eventKey='2' href='/akun/booking'>
           Booking
         </Dropdown.Item>
-        <Dropdown.Item eventKey='3' href='/user/pesanan'>
+        <Dropdown.Item eventKey='3' href='/akun/pesanan'>
           Pesanan
         </Dropdown.Item>
         <Dropdown.Divider />

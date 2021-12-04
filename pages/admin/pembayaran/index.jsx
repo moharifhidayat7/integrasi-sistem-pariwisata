@@ -8,6 +8,7 @@ import {
   Text,
   IconButton,
   Heading,
+  TextInput,
   toaster,
   SmallCrossIcon,
 } from 'evergreen-ui'
@@ -92,6 +93,22 @@ const Profil = () => {
         .then((res) => {
           setData(res.data)
           setValue('fee', res.data.fee)
+          if (res.data.BRI) {
+            setValue('BRI.name', res.data.BRI.name)
+            setValue('BRI.rek', res.data.BRI.rek)
+          }
+          if (res.data.BNI) {
+            setValue('BNI.name', res.data.BNI.name)
+            setValue('BNI.rek', res.data.BNI.rek)
+          }
+          if (res.data.MANDIRI) {
+            setValue('MANDIRI.name', res.data.MANDIRI.name)
+            setValue('MANDIRI.rek', res.data.MANDIRI.rek)
+          }
+          if (res.data.BCA) {
+            setValue('BCA.name', res.data.BCA.name)
+            setValue('BCA.rek', res.data.BCA.rek)
+          }
           if (res.data.qr) {
             setFeaturedImage(process.env.NEXT_PUBLIC_API_URI + res.data.qr.url)
           }
@@ -173,6 +190,54 @@ const Profil = () => {
                               onClick={resetImage}
                             />
                           )}
+                        </Pane>
+                      </FormField>
+                      <FormField label='BRI' marginBottom={24}>
+                        <Pane className='d-flex gap-1'>
+                          <TextInput
+                            placeholder='Atas Nama...'
+                            {...register('BRI.name')}
+                          />
+                          <TextInput
+                            placeholder='Nomor Rekening...'
+                            {...register('BRI.rek')}
+                          />
+                        </Pane>
+                      </FormField>
+                      <FormField label='BNI' marginBottom={24}>
+                        <Pane className='d-flex gap-1'>
+                          <TextInput
+                            placeholder='Atas Nama...'
+                            {...register('BNI.name')}
+                          />
+                          <TextInput
+                            placeholder='Nomor Rekening...'
+                            {...register('BNI.rek')}
+                          />
+                        </Pane>
+                      </FormField>
+                      <FormField label='BCA' marginBottom={24}>
+                        <Pane className='d-flex gap-1'>
+                          <TextInput
+                            placeholder='Atas Nama...'
+                            {...register('BCA.name')}
+                          />
+                          <TextInput
+                            placeholder='Nomor Rekening...'
+                            {...register('BCA.rek')}
+                          />
+                        </Pane>
+                      </FormField>
+                      <FormField label='MANDIRI' marginBottom={24}>
+                        <Pane className='d-flex gap-1'>
+                          <TextInput
+                            placeholder='Atas Nama...'
+                            {...register('MANDIRI.name')}
+                          />
+                          <TextInput
+                            placeholder='Nomor Rekening...'
+                            {...register('MANDIRI.rek')}
+                          />
                         </Pane>
                       </FormField>
                       <Pane className='d-flex justify-content-end'>

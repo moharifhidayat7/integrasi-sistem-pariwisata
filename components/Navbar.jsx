@@ -5,7 +5,7 @@ import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import LoggedIn from './LoggedIn'
 import Cart from './Cart'
 import CartDropdown from './CartDropdown'
-
+import { List } from 'react-bootstrap-icons'
 const Navbar = () => {
   const { data: session, status } = useSession()
   const [show, setShow] = useState(false)
@@ -26,13 +26,14 @@ const Navbar = () => {
           <Link href='/'>
             <a className='navbar-brand fw-bold'>Rumah Digital Gombengsari</a>
           </Link>
-          <div>
+          <div className='d-flex align-items-center'>
+            <CartDropdown className='d-lg-none'/>
             <button
-              className='navbar-toggler d-lg-none'
+              className='navbar-toggler d-lg-none ms-2'
               type='button'
               onClick={toggleShow}
             >
-              Menu
+              <List size={24} />
             </button>
           </div>
         </div>
@@ -72,7 +73,7 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <CartDropdown />
+          <CartDropdown className='d-none d-lg-block' />
           {session != null ? (
             session.role.name == 'Super Admin' ? (
               <div className='ms-3'>

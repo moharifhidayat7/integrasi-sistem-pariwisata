@@ -168,7 +168,7 @@ const Index = ({ data }) => {
                   .filter((d) => (d.visible == true) & (d.id != data.id))
                   .map((room) => (
                     <div
-                      className='col-lg-3 col-xl-3 col-md-4 col-sm-12 col-6'
+                      className='col-lg-3 col-xl-3 col-md-4 col-sm-12 col-12'
                       key={room.id}
                     >
                       <div className='card'>
@@ -220,19 +220,14 @@ const Index = ({ data }) => {
                             >
                               {formatRp(_.min(room.prices.map((p) => p.price)))}
                             </span>
-                            <button
-                              type='button'
-                              className='btn ispBtn-primary px-4'
-                              onClick={() =>
-                                handleAdd({
-                                  qty: 1,
-                                  variation: room.prices[0],
-                                  product: room,
-                                })
-                              }
-                            >
-                              Masukkan Keranjang
-                            </button>
+                            <Link href={'/produk/' + room.id}>
+                              <a
+                                role='button'
+                                className='btn ispBtn-primary px-3'
+                              >
+                                Beli
+                              </a>
+                            </Link>
                           </div>
                         </div>
                       </div>

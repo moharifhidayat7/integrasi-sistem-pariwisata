@@ -91,7 +91,7 @@ const PenginapanList = ({ penginapan }) => {
                   style={{
                     position: 'absolute',
                     top: '50%',
-                    left: '-30px',
+                    left: 0,
                     transform: 'translateY(-50%)',
                   }}
                 />
@@ -101,7 +101,7 @@ const PenginapanList = ({ penginapan }) => {
                   style={{
                     position: 'absolute',
                     top: '50%',
-                    right: '-30px',
+                    right: 0,
                     transform: 'translateY(-50%)',
                   }}
                 />

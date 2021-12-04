@@ -47,32 +47,12 @@ const NavMenu = () => {
         <CustomItem
           icon={<DashboardIcon color='#F9FAFC' />}
           text='Dashboard'
-          href='/admin/dashboard'
+          href='/pengelola/dashboard'
         />
         <CustomItem
           icon={<MountainIcon color='#F9FAFC' />}
           text='Wisata'
           href='/admin/wisata'
-        />
-        <CustomItem
-          icon={<HomeIcon color='#F9FAFC' />}
-          text='Penginapan'
-          href='/admin/penginapan'
-        />
-        <CustomItem
-          icon={<ShopIcon color='#F9FAFC' />}
-          text='UMKM'
-          href='/admin/umkm'
-        />
-        <CustomItem
-          icon={<DriveTimeIcon color='#F9FAFC' />}
-          text='Travel'
-          href='/admin/travel'
-        />
-        <CustomItem
-          icon={<UserIcon color='#F9FAFC' />}
-          text='User'
-          href='/admin/user'
         />
       </Menu.Group>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
@@ -110,23 +90,6 @@ const NavMenu = () => {
           text='Manajemen Keuangan'
           href='/admin/pembayaran'
         /> */}
-      </Menu.Group>
-      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Laporan</span>}>
-        <CustomItem
-          icon={<GroupedBarChartIcon color='#F9FAFC' />}
-          text='Pengunjung'
-          href='/admin/pengunjung'
-        />
-        <CustomItem
-          icon={<KnownVehicleIcon color='#F9FAFC' />}
-          text='Parkir'
-          href='/admin/parkir'
-        />
-        <CustomItem
-          icon={<ChartIcon color='#F9FAFC' />}
-          text='Keuangan'
-          href='/admin/keuangan'
-        />
       </Menu.Group>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Akun</span>}>
         <CustomItem

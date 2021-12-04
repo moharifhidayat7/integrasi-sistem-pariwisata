@@ -57,7 +57,7 @@ const Profil = () => {
     json()
   }, [])
   return (
-    <Layout>
+    <Layout title='Profil'>
       <form className='row g-3' onSubmit={handleSubmit(onSubmit)}>
         <div className='col-md-12'>
           <label htmlFor='name' className='form-label text-left'>

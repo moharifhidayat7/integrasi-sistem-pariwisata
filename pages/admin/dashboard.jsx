@@ -12,7 +12,7 @@ const index = () => {
               Dashboard
             </Heading>
             <Pane>
-              <Card
+              {/* <Card
                 elevation={1}
                 float='left'
                 className='col-3 bg-white'
@@ -24,7 +24,7 @@ const index = () => {
               >
                 <Text>Penjualan Produk</Text>
                 <Text size={300}>100</Text>
-              </Card>
+              </Card> */}
             </Pane>
           </Pane>
         </Content.Body>

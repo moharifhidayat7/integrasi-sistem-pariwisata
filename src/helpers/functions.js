@@ -24,3 +24,10 @@ export function isValidEmail(email) {
 export const clientAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URI,
 })
+
+export const rajaOngkir = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_RAJAONGKIR_URL,
+  headers: {
+    key: process.env.NEXT_PUBLIC_RAJAONGKIR_KEY,
+  },
+})
