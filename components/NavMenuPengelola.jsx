@@ -45,7 +45,7 @@ const NavMenu = () => {
 
   return (
     <Menu>
-      <CustomItem
+      {/* <CustomItem
         className='menuLogin'
         text={
           <div style={{ paddingTop: 20 }}>
@@ -55,7 +55,7 @@ const NavMenu = () => {
           </div>
         }
         href='/pengelola/profil'
-      />
+      /> */}
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Menu Utama</span>}>
         <CustomItem
           icon={<DashboardIcon color='#F9FAFC' />}
