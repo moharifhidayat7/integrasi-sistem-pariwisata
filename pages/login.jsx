@@ -21,6 +21,14 @@ export async function getServerSideProps(context) {
         },
       }
     }
+    if (session.role.id === 3) {
+      return {
+        redirect: {
+          destination: '/pengelola',
+          permanent: false,
+        },
+      }
+    }
     return {
       redirect: {
         destination: '/',

@@ -37,25 +37,38 @@ import {
 import CustomItem from './Customs/MenuItem'
 import SignOutMenu from '@components/Customs/SignOutMenu'
 import { useSession, getSession } from 'next-auth/react'
-
+import { useRouter } from 'next/router'
+import _ from 'lodash'
 const NavMenu = () => {
   const { data: session, status } = useSession()
+  const router = useRouter()
 
   return (
     <Menu>
+      <CustomItem
+        className='menuLogin'
+        text={
+          <div style={{ paddingTop: 20 }}>
+            <small>Login Sebagai {session.role.name}</small>
+            <br />
+            <span>{session.user.name}</span>
+          </div>
+        }
+        href='/pengelola/profil'
+      />
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Menu Utama</span>}>
         <CustomItem
           icon={<DashboardIcon color='#F9FAFC' />}
           text='Dashboard'
           href='/pengelola/dashboard'
         />
-        <CustomItem
+        {/* <CustomItem
           icon={<MountainIcon color='#F9FAFC' />}
           text='Wisata'
           href='/admin/wisata'
-        />
+        /> */}
       </Menu.Group>
-      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
+      {/* <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
         <CustomItem
           icon={<BookIcon color='#F9FAFC' />}
           text='Paket Wisata'
@@ -67,14 +80,22 @@ const NavMenu = () => {
           text='Bookingan'
           href='/admin/booking'
         />
-      </Menu.Group>
-      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Marketplace</span>}>
-        <CustomItem
-          icon={<BoxIcon color='#F9FAFC' />}
-          text='Produk'
-          href='/admin/produk'
-        />
-        <CustomItem
+      </Menu.Group> */}
+      {_.includes(router.asPath, '/kelola/umkm/') ? (
+        <Menu.Group
+          title={<span style={{ color: '#E6E8F0' }}>Marketplace</span>}
+        >
+          <CustomItem
+            icon={<BoxIcon color='#F9FAFC' />}
+            text='Produk'
+            href={'/kelola/umkm/' + router.query.slug + '/produk'}
+          />
+        </Menu.Group>
+      ) : (
+        ''
+      )}
+
+      {/* <CustomItem
           icon={<ShoppingCartIcon color='#F9FAFC' />}
           // badge={<Badge color='yellow'>5</Badge>}
           text='Pesanan'
@@ -84,23 +105,22 @@ const NavMenu = () => {
           icon={<CreditCardIcon color='#F9FAFC' />}
           text='Metode Pembayaran'
           href='/admin/pembayaran'
-        />
-        {/* <CustomItem
+        /> */}
+      {/* <CustomItem
           icon={<BankAccountIcon color='#F9FAFC' />}
           text='Manajemen Keuangan'
           href='/admin/pembayaran'
         /> */}
-      </Menu.Group>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Akun</span>}>
         <CustomItem
           icon={<InfoSignIcon color='#F9FAFC' />}
           text='Edit Profil'
-          href='/admin/profil'
+          href='/pengelola/profil'
         />
         <CustomItem
           icon={<KeyIcon color='#F9FAFC' />}
           text='Ganti Password'
-          href='/admin/ganti-password'
+          href='/pengelola/ganti-password'
         />
         <SignOutMenu icon={<LogOutIcon color='#F9FAFC' />} text='Keluar' />
       </Menu.Group>
