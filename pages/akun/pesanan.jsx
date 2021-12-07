@@ -53,16 +53,20 @@ const Pesanan = () => {
                     Total :{' '}
                     <span style={{ color: '#38b520' }}>
                       {formatRp(
-                        _.sumBy(order.items, (k) => k.qty * k.variation.price) +
-                          order.ongkir +
-                          order.fee
+                        _.sumBy(
+                          order.items,
+                          (k) => k.qty * (k.variation.price + k.varitaion.fee)
+                        ) + order.ongkir
                       )}
                     </span>
                   </span>
                 </div>
                 <span>Resi : {order.resi}</span>
                 <br />
-                <span>Status : {order.status}</span>
+                <span>
+                  Status : {order.status == 'unpaid' && 'Belum Dibayar'}{' '}
+                  {order.status == 'sent' && 'Sedang Dikirim'}
+                </span>
               </a>
             </Link>
           )

@@ -190,11 +190,11 @@ const DetailWisata = ({ data }) => {
                               >
                                 {formatRp(room.price)}/Malam
                               </span>
-                              {/* <Link href='#'>
+                              <Link href={'/booking/' + room.id}>
                                 <a className='btn ispBtn-primary'>
                                   Pesan Sekarang
                                 </a>
-                              </Link> */}
+                              </Link>
                             </div>
                           </div>
                         </div>

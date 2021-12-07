@@ -63,8 +63,8 @@ const PengelolaForm = ({
           />
           <Pane
             className='d-flex flex-column gap-1'
-            maxHeight={300}
-            overflowY='auto'
+            // maxHeight={300}
+            // overflowY='auto'
             marginBottom={20}
             marginTop={12}
           >

@@ -6,7 +6,7 @@ const Bayar = () => {
   return (
     <Layout title='Terima Kasih' withFooter={false}>
       <LayoutContent>
-        <div className='container'>
+        <div className='container pb-5'>
           <div className='contentPageTitle'>
             <h1>Terima Kasih</h1>
           </div>

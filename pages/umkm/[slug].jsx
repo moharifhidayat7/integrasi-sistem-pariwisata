@@ -85,7 +85,7 @@ const DetailWisata = ({ data }) => {
               </div>
             </div>
             <div>
-              <Link href='#'>
+              <Link href='/marketplace'>
                 <a className='btn ispBtn-primary'>Belanja di Marketplace</a>
               </Link>
             </div>
@@ -220,18 +220,18 @@ const DetailWisata = ({ data }) => {
                                 style={{ color: '#38b520', fontSize: '1.2rem' }}
                               >
                                 {formatRp(
-                                  _.min(room.prices.map((p) => p.price+p.fee))
+                                  _.min(room.prices.map((p) => p.price + p.fee))
                                 )}
                               </span>
 
                               <Link href={'/produk/' + room.id}>
-                              <a
-                                role='button'
-                                className='btn ispBtn-primary px-3'
-                              >
-                                Beli
-                              </a>
-                            </Link>
+                                <a
+                                  role='button'
+                                  className='btn ispBtn-primary px-3'
+                                >
+                                  Beli
+                                </a>
+                              </Link>
                             </div>
                           </div>
                         </div>

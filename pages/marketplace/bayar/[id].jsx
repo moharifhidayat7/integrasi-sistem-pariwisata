@@ -62,7 +62,7 @@ const Bayar = ({ order, payment }) => {
   return (
     <Layout title='Pembayaran' withFooter={false}>
       <LayoutContent>
-        <div className='container'>
+        <div className='container pb-5'>
           <div className='contentPageTitle'>
             <h1>
               {order.konfirmasi != null ? 'Status Pesanan' : 'Pembayaran'}
@@ -239,6 +239,17 @@ const Bayar = ({ order, payment }) => {
                               objectFit='contain'
                             />
                           </div>
+                        </div>
+                        <div className='ms-2'>
+                          <strong>SEKRETARIAT POKDARWIS GOMBENGSARI</strong>
+                          <br />
+                          <br />
+                          Cara bayar dengan QRIS : <br />
+                          1. Buka aplikasi E-Wallet berlogo QRIS
+                          <br />
+                          2. Scan & Cek
+                          <br />
+                          3. Bayar
                         </div>
                       </div>
                     </>

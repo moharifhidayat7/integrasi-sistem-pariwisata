@@ -136,7 +136,7 @@ const Bayar = ({ kota }) => {
   return (
     <Layout title='Bayar' withFooter={false}>
       <LayoutContent>
-        <div className='container'>
+        <div className='container pb-5'>
           <div className='contentPageTitle'>
             <h1>Pembayaran</h1>
           </div>

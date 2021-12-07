@@ -57,7 +57,7 @@ const index = ({ data }) => {
           <div className='contentPageTitle'>
             <h1>Travel</h1>
           </div>
-          <div className='row g-3'>
+          <div className='row g-3' style={{ minHeight: '50vh' }}>
             {data.map((item) => (
               <Item key={item.id} detail={item} />
             ))}

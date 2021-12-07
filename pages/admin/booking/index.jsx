@@ -28,7 +28,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'axios'
-import Konfirmasi from '@components/Dialogs/Konfirmasi'
+import Konfirmasi from '@components/Dialogs/KonfirmasiBooking'
 
 const Pesanan = () => {
   const [data, setData] = useState([])
@@ -55,7 +55,7 @@ const Pesanan = () => {
       await axios
         .get(
           process.env.NEXT_PUBLIC_API_URI +
-            `/orders?id_contains=${search}&_sort=status:desc${squery}`
+            `/bookings?id_contains=${search}&_sort=status:desc${squery}`
         )
         .then((res) => {
           setData(res.data)
@@ -69,7 +69,7 @@ const Pesanan = () => {
       await axios
         .get(
           process.env.NEXT_PUBLIC_API_URI +
-            `/orders?id_contains=${search}&_sort=status:desc${squery}`
+            `/bookings?id_contains=${search}&_sort=status:desc${squery}`
         )
         .then((res) => {
           setData(res.data)
@@ -80,7 +80,7 @@ const Pesanan = () => {
 
   const onDelete = async (e) => {
     axios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/orders/' + e, {
+      .put(process.env.NEXT_PUBLIC_API_URI + '/bookings/' + e, {
         status: 'canceled',
       })
       .then(function (response) {
@@ -104,7 +104,7 @@ const Pesanan = () => {
       />
       <Dialog
         isShown={showDelete}
-        title={`Batalkan Pesanan "#${rowData.id}"`}
+        title={`Batalkan Bookingan "#${rowData.id}"`}
         intent='danger'
         onCloseComplete={() => {
           setShowDelete(false)
@@ -141,7 +141,7 @@ const Pesanan = () => {
       </Overlay>
       <Content>
         <Content.Header
-          title='Pesanan'
+          title='Bookingan'
           // button={
           //   <Button
           //     appearance='primary'
@@ -191,7 +191,7 @@ const Pesanan = () => {
               <Pane className='col-md-3 col-sm-12' paddingY={5}>
                 <SearchInput
                   width='100%'
-                  placeholder='Cari No. Pesanan ...'
+                  placeholder='Cari No. Booking ...'
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -208,13 +208,10 @@ const Pesanan = () => {
                     >
                       No.
                     </Table.TextHeaderCell>
-                    <Table.TextHeaderCell>User</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>
-                      Alamat Pengiriman
-                    </Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Item</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Detail</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Check In</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Check Out</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Total</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Resi</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Bukti Transfer</Table.TextHeaderCell>
                     <Table.TextHeaderCell textAlign='center'>
                       Aksi
@@ -239,42 +236,36 @@ const Pesanan = () => {
                             <Strong>#{order.id}</Strong>
                           </Table.Cell>
                           <Table.TextCell>
-                            <Strong>{order.users_permissions_user.name}</Strong>
-                          </Table.TextCell>
-                          <Table.TextCell>
                             <Strong>{order.name}</Strong>
                             <br />
-                            {order.address.line1}
+                            {order.email}
                             <br />
-                            {order.address.city}
-                            <br />
-                            {order.address.postcode}
+                            {order.phone}
                           </Table.TextCell>
                           <Table.TextCell>
-                            {order.items.map((it, index) => {
-                              return (
-                                <span
-                                  key={
-                                    'order' + order.id + it.variation.variation
-                                  }
-                                >
-                                  {it.qty} x {it.product.name} (
-                                  {it.variation.variation}) <br />
-                                </span>
-                              )
+                            {new Date(order.checkin).toLocaleString('id-ID', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                              hour12: false,
                             })}
                           </Table.TextCell>
-                          <Table.TextCell isNumber>
+                          <Table.TextCell>
+                            {new Date(order.checkout).toLocaleString('id-ID', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                              hour12: false,
+                            })}
+                          </Table.TextCell>
+                          <Table.TextCell>
                             {formatRp(
-                              _.sumBy(
-                                order.items,
-                                (k) => k.qty * k.variation.price
-                              ) +
-                                order.ongkir +
-                                order.fee
+                              ((new Date(order.checkout) -
+                                new Date(order.checkin)) /
+                                (1000 * 3600 * 24)) *
+                                order.room.price
                             )}
                           </Table.TextCell>
-                          <Table.TextCell>{order.resi}</Table.TextCell>
                           <Table.TextCell>
                             {order.konfirmasi != null && (
                               <Button
@@ -288,7 +279,48 @@ const Pesanan = () => {
                               </Button>
                             )}
                           </Table.TextCell>
-                          <Table.Cell className='d-flex justify-content-end align-items-center gap-1'></Table.Cell>
+                          <Table.Cell className='d-flex justify-content-end align-items-center gap-1'>
+                            {(order.status != 'sent') &
+                            (order.status != 'success') &
+                            (order.status != 'canceled') ? (
+                              <>
+                                {/* <Button
+                                  onClick={() => {
+                                    setKonfirmasi(true)
+                                    setRowData(order)
+                                  }}
+                                >
+                                  Lihat Item
+                                </Button> */}
+                                <Button
+                                  appearance='primary'
+                                  intent='success'
+                                  onClick={() => {
+                                    setKonfirmasi(true)
+                                    setRowData(order)
+                                  }}
+                                >
+                                  Konfirmasi
+                                </Button>
+                                <Button
+                                  appearance='primary'
+                                  intent='danger'
+                                  onClick={() => {
+                                    setShowDelete(true)
+                                    setRowData(order)
+                                  }}
+                                >
+                                  Batalkan
+                                </Button>
+                              </>
+                            ) : (
+                              <Text>
+                                {order.status == 'success'
+                                  ? 'Sukses'
+                                  : order.status}
+                              </Text>
+                            )}
+                          </Table.Cell>
                         </Table.Row>
                       ))}
                   </Table.Body>

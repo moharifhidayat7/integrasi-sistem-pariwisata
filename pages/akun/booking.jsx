@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { clientAxios } from '@helpers/functions'
 import { useSession, getSession } from 'next-auth/react'
+import { formatRp } from '@helpers/functions'
 const Profil = () => {
   const {
     register,
@@ -16,6 +17,7 @@ const Profil = () => {
   const [data, setData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const { data: session, status } = useSession()
+  const [booking, setBooking] = useState([])
 
   clientAxios.interceptors.request.use(
     function (config) {
@@ -26,105 +28,100 @@ const Profil = () => {
       return Promise.reject(error)
     }
   )
-
-  const onSubmit = (postData) => {
-    clientAxios
-      .put(process.env.NEXT_PUBLIC_API_URI + '/users/' + data.id, postData)
-      .then((res) => {
-        setIsLoading(false)
-        alert('Edit Profil Berhasil')
-      })
-  }
+  // const getObj = async (id) => {
+  //   const k = await axios
+  //     .get(process.env.NEXT_PUBLIC_API_URI + '/rooms?id=' + id)
+  //     .then((res) => res.data)
+  //   return k
+  // }
 
   useEffect(() => {
     const json = async () => {
       await axios
-        .get(process.env.NEXT_PUBLIC_API_URI + '/users/me', {
-          headers: {
-            Authorization: `Bearer ${session.jwt}`,
-          },
-        })
+        .get(
+          process.env.NEXT_PUBLIC_API_URI +
+            '/bookings?users_permissions_user=' +
+            session.id
+        )
         .then((res) => {
-          setData(res.data)
-          setValue('name', res.data.name)
-          setValue('email', res.data.email)
-          setValue('address', res.data.address)
-          setValue('phone', res.data.phone)
+          setBooking(res.data)
         })
     }
     json()
   }, [])
   return (
     <Layout title='Booking'>
-      {/* <form className='row g-3' onSubmit={handleSubmit(onSubmit)}>
-        <div className='col-md-12'>
-          <label htmlFor='name' className='form-label text-left'>
-            Nama
-          </label>
-          <input
-            type='text'
-            className='form-control'
-            id='name'
-            placeholder='Nama lengkap'
-            {...register('name', { required: true })}
-          />
-        </div>
-        <div className='col-md-6'>
-          <label htmlFor='email' className='form-label text-left'>
-            Email
-          </label>
-          <input
-            type='email'
-            className='form-control'
-            id='email'
-            placeholder='name@example.com'
-            disabled
-            {...register('email')}
-          />
-        </div>
-        <div className='col-md-6'>
-          <label htmlFor='phone' className='form-label text-left'>
-            Nomor Telepon
-          </label>
-          <input
-            type='phome'
-            className='form-control'
-            id='phone'
-            placeholder='0xxxxxxxxx'
-            {...register('phone')}
-          />
-        </div>
-        <div className='col-12'>
-          <label htmlFor='address' className='form-label'>
-            Alamat
-          </label>
-          <input
-            type='text'
-            className='form-control'
-            id='address'
-            placeholder='1234 Main St'
-            {...register('address')}
-          />
-        </div>
-
-        <div className='d-flex justify-content-end'>
-          <button
-            type='submit'
-            className='btn ispBtn-primary mb-3 p-2'
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span
-                className='spinner-border spinner-border-sm me-2'
-                role='status'
-                aria-hidden='true'
-              />
-            ) : (
-              'Submit'
-            )}
-          </button>
-        </div>
-      </form> */}
+      <div className='list-group'>
+        {booking.map((order, index) => {
+          return (
+            <Link href={'/booking/bayar/' + order.id} key={order.id}>
+              <a
+                className='list-group-item list-group-item-action'
+                aria-current='true'
+              >
+                <div className='d-flex w-100 justify-content-between'>
+                  <h5 className='mb-1'>Booking #{order.id}</h5>
+                  {/* <small>
+                    {new Date(order.created_at).toLocaleString('id-ID', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour12: false,
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </small> */}
+                  <span style={{ color: '#38b520' }}>
+                    {formatRp(
+                      ((new Date(order.checkout) - new Date(order.checkin)) /
+                        (1000 * 3600 * 24)) *
+                        order.room.price
+                    )}
+                  </span>
+                </div>
+                {/* <div className='d-flex justify-content-between'>
+                  <span></span>
+                  <span>
+                    Total :{' '}
+                    
+                  </span>
+                </div> */}
+                {/* <span>
+                  Penginapan : {JSON.stringify(getObj(order.room.id))}
+                </span> */}
+                <span>
+                  Check In :{' '}
+                  {new Date(order.checkin).toLocaleString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour12: false,
+                  })}
+                </span>
+                <br />
+                <span>
+                  Check Out :{' '}
+                  {new Date(order.checkout).toLocaleString('id-ID', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour12: false,
+                  })}
+                </span>
+                <br />
+                <span>
+                  Status : {order.status == 'unpaid' && 'Belum Dibayar'}
+                  {order.status == 'paid' && 'Sudah Dibayar'}
+                  {order.status == 'waiting' && 'Menunggu Konfirmasi'}
+                  {order.status == 'success' && 'Sukses'}
+                  {order.status == 'canceled' && 'Dibatalkan'}
+                </span>
+              </a>
+            </Link>
+          )
+        })}
+      </div>
     </Layout>
   )
 }

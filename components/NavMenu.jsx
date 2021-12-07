@@ -75,19 +75,19 @@ const NavMenu = () => {
           href='/admin/user'
         />
       </Menu.Group>
-      {/* <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Travel</span>}>
-        <CustomItem
+      <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Booking</span>}>
+        {/* <CustomItem
           icon={<BookIcon color='#F9FAFC' />}
           text='Paket Wisata'
           href='/admin/paket-wisata'
-        />
+        /> */}
         <CustomItem
           icon={<CalendarIcon color='#F9FAFC' />}
           // badge={<Badge color='yellow'>5</Badge>}
           text='Bookingan'
           href='/admin/booking'
         />
-      </Menu.Group> */}
+      </Menu.Group>
       <Menu.Group title={<span style={{ color: '#E6E8F0' }}>Marketplace</span>}>
         <CustomItem
           icon={<BoxIcon color='#F9FAFC' />}
