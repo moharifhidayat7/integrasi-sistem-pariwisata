@@ -196,7 +196,7 @@ const Bayar = ({ kota }) => {
                     {formatRp(
                       _.sumBy(
                         keranjang,
-                        (k) => k.qty * (k.variation.price + k.variation.price)
+                        (k) => k.qty * (k.variation.price + k.variation.fee)
                       ) + active.cost[0].value
                     )}
                   </strong>
