@@ -202,7 +202,7 @@ const Pesanan = () => {
                 <Table overflowX='auto'>
                   <Table.Head borderRadius={4}>
                     <Table.TextHeaderCell
-                      flexBasis={100}
+                      flexBasis={50}
                       flexShrink={0}
                       flexGrow={0}
                     >
@@ -214,6 +214,7 @@ const Pesanan = () => {
                     </Table.TextHeaderCell>
                     <Table.TextHeaderCell>Item</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Total</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Admin</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Resi</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Bukti Transfer</Table.TextHeaderCell>
                     <Table.TextHeaderCell textAlign='center'>
@@ -232,7 +233,7 @@ const Pesanan = () => {
                           className='shadow-sm'
                         >
                           <Table.Cell
-                            flexBasis={100}
+                            flexBasis={50}
                             flexShrink={0}
                             flexGrow={0}
                           >
@@ -250,7 +251,7 @@ const Pesanan = () => {
                             <br />
                             {order.address.postcode}
                           </Table.TextCell>
-                          <Table.TextCell>
+                          <Table.TextCell overflow='none'>
                             {order.items.map((it, index) => {
                               return (
                                 <span
@@ -258,8 +259,15 @@ const Pesanan = () => {
                                     'order' + order.id + it.variation.variation
                                   }
                                 >
-                                  {it.qty} x {it.product.name} (
-                                  {it.variation.variation}) <br />
+                                  {it.qty} x{' '}
+                                  <a
+                                    href={'/produk/' + it.product.id}
+                                    target='_blank'
+                                    rel='noreferrer'
+                                  >
+                                    {it.product.name}
+                                  </a>{' '}
+                                  ({it.variation.variation}) <br />
                                 </span>
                               )
                             })}
@@ -268,12 +276,20 @@ const Pesanan = () => {
                             {formatRp(
                               _.sumBy(
                                 order.items,
-                                (k) => k.qty * k.variation.price
-                              ) +
-                                order.ongkir +
-                                order.fee
+                                (k) =>
+                                  k.qty * (k.variation.price + k.variation.fee)
+                              ) + order.ongkir
                             )}
                           </Table.TextCell>
+                          <Table.TextCell isNumber>
+                            {formatRp(
+                              _.sumBy(
+                                order.items,
+                                (k) => k.qty * k.variation.fee
+                              )
+                            )}
+                          </Table.TextCell>
+
                           <Table.TextCell>{order.resi}</Table.TextCell>
                           <Table.TextCell>
                             {order.konfirmasi != null && (

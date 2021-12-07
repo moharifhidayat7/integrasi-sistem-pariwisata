@@ -87,13 +87,16 @@ const Index = ({ data }) => {
               <div className='p-3 border-bottom'>
                 <h2>{data.name}</h2>
                 {curVar != null ? (
-                  <h1 style={{ color: '#38b520' }}>{formatRp(curVar.price)}</h1>
+                  <h1 style={{ color: '#38b520' }}>
+                    {formatRp(curVar.price + curVar.fee)}
+                  </h1>
                 ) : (
                   <h1 style={{ color: '#38b520' }}>
-                    {formatRp(_.min(data.prices.map((p) => p.price)))}{' '}
-                    {_.max(data.prices.map((p) => p.price)) !=
-                    _.min(data.prices.map((p) => p.price))
-                      ? ' - ' + formatRp(_.max(data.prices.map((p) => p.price)))
+                    {formatRp(_.min(data.prices.map((p) => p.price + p.fee)))}{' '}
+                    {_.max(data.prices.map((p) => p.price + p.fee)) !=
+                    _.min(data.prices.map((p) => p.price + p.fee))
+                      ? ' - ' +
+                        formatRp(_.max(data.prices.map((p) => p.price + p.fee)))
                       : ''}
                   </h1>
                 )}
@@ -218,7 +221,9 @@ const Index = ({ data }) => {
                             <span
                               style={{ color: '#38b520', fontSize: '1.2rem' }}
                             >
-                              {formatRp(_.min(room.prices.map((p) => p.price)))}
+                              {formatRp(
+                                _.min(room.prices.map((p) => p.price + p.fee))
+                              )}
                             </span>
                             <Link href={'/produk/' + room.id}>
                               <a

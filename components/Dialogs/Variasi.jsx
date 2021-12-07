@@ -1,9 +1,17 @@
 import { useState } from 'react'
 import { Dialog, Pane, TextInputField } from 'evergreen-ui'
-const Variasi = ({ isShown, setIsShown, variasi, setVariasi }) => {
-  const [vari, setVari] = useState('')
-  const [prs, setPrs] = useState(0)
-
+const Variasi = ({
+  isShown,
+  setIsShown,
+  variasi,
+  setVariasi,
+  vari,
+  setVari,
+  prs,
+  setPrs,
+  fee,
+  setFee,
+}) => {
   return (
     <Dialog
       isShown={isShown}
@@ -12,9 +20,10 @@ const Variasi = ({ isShown, setIsShown, variasi, setVariasi }) => {
       confirmLabel='Tambah'
       overlayProps={{ zIndex: 2500 }}
       onConfirm={() => {
-        setVariasi([...variasi, { variation: vari, price: prs }])
+        setVariasi([...variasi, { variation: vari, price: prs, fee: fee }])
         setVari()
         setPrs()
+        setFee()
         setIsShown(false)
       }}
     >
@@ -24,6 +33,12 @@ const Variasi = ({ isShown, setIsShown, variasi, setVariasi }) => {
           placeholder='Berat, Tipe, Model, dll'
           value={vari}
           onChange={(e) => setVari(e.target.value)}
+        />
+        <TextInputField
+          label='Biaya Admin *'
+          placeholder='fee'
+          value={fee}
+          onChange={(e) => setFee(parseInt(e.target.value))}
         />
         <TextInputField
           label='Harga *'

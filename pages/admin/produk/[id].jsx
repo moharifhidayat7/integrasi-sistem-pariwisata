@@ -23,6 +23,7 @@ import {
   SearchInput,
   FilePicker,
   Avatar,
+  EditIcon,
   Select,
   SmallCrossIcon,
   IconButton,
@@ -30,6 +31,7 @@ import {
 import { formatRp, clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
 import Variasi from '@components/Dialogs/Variasi'
+import EditVariasi from '@components/Dialogs/VariasiEdit'
 const Edit = () => {
   const router = useRouter()
   const { id: productId } = router.query
@@ -44,6 +46,11 @@ const Edit = () => {
   const [variasi, setVariasi] = useState([])
   const featuredImageRef = useRef(null)
   const [dataImage, setDataImage] = useState([])
+  const [row, setRow] = useState([])
+  const [vari, setVari] = useState('')
+  const [prs, setPrs] = useState(0)
+  const [fee, setFee] = useState(0)
+  const [EditVariasiForm, setEditVariasiForm] = useState(false)
   const {
     register,
     handleSubmit,
@@ -161,6 +168,25 @@ const Edit = () => {
         setIsShown={setVariasiForm}
         variasi={variasi}
         setVariasi={setVariasi}
+        vari={vari}
+        setVari={setVari}
+        prs={prs}
+        setPrs={setPrs}
+        fee={fee}
+        setFee={setFee}
+      />
+      <EditVariasi
+        isShown={EditVariasiForm}
+        setIsShown={setEditVariasiForm}
+        variasi={variasi}
+        row={row}
+        setVariasi={setVariasi}
+        vari={vari}
+        setVari={setVari}
+        prs={prs}
+        setPrs={setPrs}
+        fee={fee}
+        setFee={setFee}
       />
       <Content>
         <Content.Header title='Edit Produk' />
@@ -378,17 +404,39 @@ const Edit = () => {
                     <Table.Body>
                       <Table.Head>
                         <Table.TextCell>Variasi</Table.TextCell>
-                        <Table.TextCell>Harga</Table.TextCell>
+                        <Table.TextCell>Biaya Admin</Table.TextCell>
+                        <Table.TextCell>Harga Produk</Table.TextCell>
+                        <Table.TextCell>Total</Table.TextCell>
+                        <Table.TextCell></Table.TextCell>
                       </Table.Head>
                       <Table.Body>
                         {variasi != null &&
                           variasi.map((v, index) => (
                             <Table.Row key={v.variation + index} height={40}>
                               <Table.TextCell>{v.variation}</Table.TextCell>
+                              <Table.TextCell>{formatRp(v.fee)}</Table.TextCell>
                               <Table.TextCell>
                                 {formatRp(v.price)}
                               </Table.TextCell>
+                              <Table.TextCell>
+                                {formatRp(v.price + v.fee)}
+                              </Table.TextCell>
                               <div className='float-right d-flex align-items-center'>
+                                <IconButton
+                                  type='button'
+                                  icon={EditIcon}
+                                  appearance='primary'
+                                  intent='default'
+                                  className='me-1'
+                                  size='small'
+                                  onClick={() => {
+                                    setRow(index)
+                                    setVari(v.variation)
+                                    setPrs(v.price)
+                                    setFee(v.fee)
+                                    setEditVariasiForm(true)
+                                  }}
+                                />
                                 <IconButton
                                   icon={SmallCrossIcon}
                                   appearance='primary'
@@ -408,7 +456,12 @@ const Edit = () => {
                           <Table.TextCell textAlign='center'>
                             <Button
                               iconBefore={PlusIcon}
-                              onClick={() => setVariasiForm(true)}
+                              onClick={() => {
+                                setVari()
+                                setPrs()
+                                setFee()
+                                setVariasiForm(true)
+                              }}
                               type='button'
                             >
                               Tambah Variasi

@@ -80,10 +80,14 @@ const CartDropdown = ({ className }) => {
                   </div>
                   <p className='mb-1'>
                     {item.qty} x {item.variation.variation}
-                    {` (${formatRp(item.variation.price)})`}
+                    {` (${formatRp(
+                      item.variation.price + item.variation.fee
+                    )})`}
                   </p>
                   <small style={{ color: '#38b520' }}>
-                    {formatRp(item.variation.price * item.qty)}
+                    {formatRp(
+                      (item.variation.price + item.variation.fee) * item.qty
+                    )}
                   </small>
                 </a>
               )
@@ -93,7 +97,12 @@ const CartDropdown = ({ className }) => {
           <div>
             <strong>Total : </strong>{' '}
             <strong style={{ color: '#38b520' }}>
-              {formatRp(_.sumBy(keranjang, (k) => k.qty * k.variation.price))}
+              {formatRp(
+                _.sumBy(
+                  keranjang,
+                  (k) => k.qty * (k.variation.price + k.variation.fee)
+                )
+              )}
             </strong>
           </div>
           <div>

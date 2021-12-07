@@ -170,10 +170,15 @@ const Bayar = ({ kota }) => {
                         </div>
                         <p className='mb-1'>
                           {item.qty} x {item.variation.variation}
-                          {` (${formatRp(item.variation.price)})`}
+                          {` (${formatRp(
+                            item.variation.price + item.variation.fee
+                          )})`}
                         </p>
                         <small style={{ color: '#38b520' }}>
-                          {formatRp(item.variation.price * item.qty)}
+                          {formatRp(
+                            (item.variation.price + item.variation.fee) *
+                              item.qty
+                          )}
                         </small>
                       </a>
                     )
@@ -186,18 +191,13 @@ const Bayar = ({ kota }) => {
                   </strong>
                 </li>
                 <li className='list-group-item d-flex justify-content-between'>
-                  <span>Biaya Admin :</span>
-                  <strong style={{ color: '#38b520' }}>
-                    {payment.fee && formatRp(payment.fee)}
-                  </strong>
-                </li>
-                <li className='list-group-item d-flex justify-content-between'>
                   <span>Total :</span>
                   <strong style={{ color: '#38b520' }}>
                     {formatRp(
-                      _.sumBy(keranjang, (k) => k.qty * k.variation.price) +
-                        active.cost[0].value +
-                        payment.fee
+                      _.sumBy(
+                        keranjang,
+                        (k) => k.qty * (k.variation.price + k.variation.price)
+                      ) + active.cost[0].value
                     )}
                   </strong>
                 </li>

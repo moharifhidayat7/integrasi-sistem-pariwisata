@@ -21,6 +21,7 @@ import {
   Heading,
   TextInputField,
   TextareaField,
+  EditIcon,
   Button,
   Strong,
   Small,
@@ -39,7 +40,8 @@ import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
 import Image from 'next/image'
 import { formatRp, clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
-import Variasi from '@components/Dialogs/Variasi'
+import Variasi from '@components/Dialogs/VariasiUser'
+import EditVariasi from '@components/Dialogs/VariasiEditUser'
 const Tambah = ({ session }) => {
   const router = useRouter()
   const [activeStep, setActiveStep] = useState(1)
@@ -51,7 +53,11 @@ const Tambah = ({ session }) => {
   const [variasiForm, setVariasiForm] = useState(false)
   const [variasi, setVariasi] = useState([])
   const featuredImageRef = useRef(null)
-
+  const [row, setRow] = useState([])
+  const [vari, setVari] = useState('')
+  const [prs, setPrs] = useState(0)
+  const [fee, setFee] = useState(0)
+  const [EditVariasiForm, setEditVariasiForm] = useState(false)
   const {
     register,
     handleSubmit,
@@ -107,6 +113,7 @@ const Tambah = ({ session }) => {
       prices: variasi,
       category: data.category,
       object: um,
+      visible: false,
     }
 
     formData.append('data', JSON.stringify(json))
@@ -136,6 +143,25 @@ const Tambah = ({ session }) => {
         setIsShown={setVariasiForm}
         variasi={variasi}
         setVariasi={setVariasi}
+        vari={vari}
+        setVari={setVari}
+        prs={prs}
+        setPrs={setPrs}
+        fee={fee}
+        setFee={setFee}
+      />
+      <EditVariasi
+        isShown={EditVariasiForm}
+        setIsShown={setEditVariasiForm}
+        variasi={variasi}
+        row={row}
+        setVariasi={setVariasi}
+        vari={vari}
+        setVari={setVari}
+        prs={prs}
+        setPrs={setPrs}
+        fee={fee}
+        setFee={setFee}
       />
       <Content>
         <Content.Header title='Tambah Produk' />
@@ -301,9 +327,25 @@ const Tambah = ({ session }) => {
                             <Table.TextCell>{formatRp(v.price)}</Table.TextCell>
                             <div className='float-right d-flex align-items-center'>
                               <IconButton
+                                icon={EditIcon}
+                                appearance='primary'
+                                intent='default'
+                                className='me-1'
+                                type='button'
+                                size='small'
+                                onClick={() => {
+                                  setRow(index)
+                                  setVari(v.variation)
+                                  setPrs(v.price)
+                                  setFee(v.fee)
+                                  setEditVariasiForm(true)
+                                }}
+                              />
+                              <IconButton
                                 icon={SmallCrossIcon}
                                 appearance='primary'
                                 intent='danger'
+                                type='button'
                                 size='small'
                                 onClick={() =>
                                   setVariasi(

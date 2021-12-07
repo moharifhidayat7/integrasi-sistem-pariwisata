@@ -33,6 +33,7 @@ import {
   Avatar,
   SmallCrossIcon,
   IconButton,
+  EditIcon,
 } from 'evergreen-ui'
 import StepNav from '@components/StepNav'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
@@ -40,6 +41,7 @@ import Image from 'next/image'
 import { formatRp, clientAxios } from '@helpers/functions'
 import { useRouter } from 'next/router'
 import Variasi from '@components/Dialogs/Variasi'
+import EditVariasi from '@components/Dialogs/VariasiEdit'
 const Tambah = ({ session }) => {
   const router = useRouter()
   const [activeStep, setActiveStep] = useState(1)
@@ -51,6 +53,11 @@ const Tambah = ({ session }) => {
   const [variasiForm, setVariasiForm] = useState(false)
   const [variasi, setVariasi] = useState([])
   const featuredImageRef = useRef(null)
+  const [row, setRow] = useState([])
+  const [vari, setVari] = useState('')
+  const [prs, setPrs] = useState(0)
+  const [fee, setFee] = useState(0)
+  const [EditVariasiForm, setEditVariasiForm] = useState(false)
 
   const {
     register,
@@ -144,6 +151,25 @@ const Tambah = ({ session }) => {
         setIsShown={setVariasiForm}
         variasi={variasi}
         setVariasi={setVariasi}
+        vari={vari}
+        setVari={setVari}
+        prs={prs}
+        setPrs={setPrs}
+        fee={fee}
+        setFee={setFee}
+      />
+      <EditVariasi
+        isShown={EditVariasiForm}
+        setIsShown={setEditVariasiForm}
+        variasi={variasi}
+        row={row}
+        setVariasi={setVariasi}
+        vari={vari}
+        setVari={setVari}
+        prs={prs}
+        setPrs={setPrs}
+        fee={fee}
+        setFee={setFee}
       />
       <Content>
         <Content.Header title='Tambah Produk' />
@@ -310,26 +336,49 @@ const Tambah = ({ session }) => {
                     <Table.Body>
                       <Table.Head>
                         <Table.TextCell>Variasi</Table.TextCell>
-                        <Table.TextCell>Harga</Table.TextCell>
+                        <Table.TextCell>Biaya Admin</Table.TextCell>
+                        <Table.TextCell>Harga Produk</Table.TextCell>
+                        <Table.TextCell>Total</Table.TextCell>
+                        <Table.TextCell></Table.TextCell>
                       </Table.Head>
                       <Table.Body>
                         {variasi.map((v, index) => (
                           <Table.Row key={v.variation + index} height={40}>
                             <Table.TextCell>{v.variation}</Table.TextCell>
+                            <Table.TextCell>{formatRp(v.fee)}</Table.TextCell>
                             <Table.TextCell>{formatRp(v.price)}</Table.TextCell>
-                            <div className='float-right d-flex align-items-center'>
-                              <IconButton
-                                icon={SmallCrossIcon}
-                                appearance='primary'
-                                intent='danger'
-                                size='small'
-                                onClick={() =>
-                                  setVariasi(
-                                    variasi.filter((v, i) => i != index)
-                                  )
-                                }
-                              />
-                            </div>
+                            <Table.TextCell>
+                              {formatRp(v.price + v.fee)}
+                            </Table.TextCell>
+                            <Table.Cell>
+                              <div className='float-right d-flex align-items-center'>
+                                <IconButton
+                                  icon={EditIcon}
+                                  appearance='primary'
+                                  intent='default'
+                                  className='me-1'
+                                  size='small'
+                                  onClick={() => {
+                                    setRow(index)
+                                    setVari(v.variation)
+                                    setPrs(v.price)
+                                    setFee(v.fee)
+                                    setEditVariasiForm(true)
+                                  }}
+                                />
+                                <IconButton
+                                  icon={SmallCrossIcon}
+                                  appearance='primary'
+                                  intent='danger'
+                                  size='small'
+                                  onClick={() =>
+                                    setVariasi(
+                                      variasi.filter((v, i) => i != index)
+                                    )
+                                  }
+                                />
+                              </div>
+                            </Table.Cell>
                           </Table.Row>
                         ))}
 
@@ -337,7 +386,12 @@ const Tambah = ({ session }) => {
                           <Table.TextCell textAlign='center'>
                             <Button
                               iconBefore={PlusIcon}
-                              onClick={() => setVariasiForm(true)}
+                              onClick={() => {
+                                setVari()
+                                setPrs()
+                                setFee()
+                                setVariasiForm(true)
+                              }}
                               type='button'
                             >
                               Tambah Variasi

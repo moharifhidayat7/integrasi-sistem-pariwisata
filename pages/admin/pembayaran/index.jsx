@@ -92,7 +92,7 @@ const Profil = () => {
         .get(process.env.NEXT_PUBLIC_API_URI + '/payment')
         .then((res) => {
           setData(res.data)
-          setValue('fee', res.data.fee)
+          // setValue('fee', res.data.fee)
           if (res.data.BRI) {
             setValue('BRI.name', res.data.BRI.name)
             setValue('BRI.rek', res.data.BRI.rek)
@@ -138,14 +138,14 @@ const Profil = () => {
                   </Pane>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <Pane>
-                      <TextInputField
+                      {/* <TextInputField
                         isInvalid={errors.name ? true : false}
                         validationMessage={errors.name && 'Harus di isi!'}
                         label='Biaya Admin *'
                         placeholder='Biaya Admin'
                         id='fee'
                         {...register('fee', { required: true })}
-                      />
+                      /> */}
 
                       <FormField label='Kode QRIS *' marginBottom={24}>
                         <input

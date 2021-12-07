@@ -90,10 +90,15 @@ const Bayar = ({ order, payment }) => {
                         </div>
                         <p className='mb-1'>
                           {item.qty} x {item.variation.variation}
-                          {` (${formatRp(item.variation.price)})`}
+                          {` (${formatRp(
+                            item.variation.price + item.variation.fee
+                          )})`}
                         </p>
                         <small style={{ color: '#38b520' }}>
-                          {formatRp(item.variation.price * item.qty)}
+                          {formatRp(
+                            (item.variation.price + item.variation.fee) *
+                              item.qty
+                          )}
                         </small>
                       </a>
                     )
@@ -105,18 +110,13 @@ const Bayar = ({ order, payment }) => {
                   </strong>
                 </li>
                 <li className='list-group-item d-flex justify-content-between'>
-                  <span>Biaya Admin :</span>
-                  <strong style={{ color: '#38b520' }}>
-                    {formatRp(order.fee)}
-                  </strong>
-                </li>
-                <li className='list-group-item d-flex justify-content-between'>
                   <span>Total :</span>
                   <strong style={{ color: '#38b520' }}>
                     {formatRp(
-                      _.sumBy(order.items, (k) => k.qty * k.variation.price) +
-                        order.ongkir +
-                        order.fee
+                      _.sumBy(
+                        order.items,
+                        (k) => k.qty * (k.variation.price + k.variation.fee)
+                      ) + order.ongkir
                     )}
                   </strong>
                 </li>
@@ -139,6 +139,8 @@ const Bayar = ({ order, payment }) => {
                   )}
                 </button>
               ) : order.status == 'success' ? (
+                ''
+              ) : order.status == 'canceled' ? (
                 ''
               ) : (
                 <div>
@@ -370,6 +372,8 @@ const Bayar = ({ order, payment }) => {
                 'Pembayaran Sudah di Konfirmasi, Barang akan segera dikirim'
               ) : order.status == 'success' ? (
                 'Pesanan Sudah di Terima'
+              ) : order.status == 'canceled' ? (
+                'Pesanan dibatalkan. Silahkan lakukan pemesanan ulang!'
               ) : (
                 'Pesanan Sedang Menunggu Konfirmasi Admin'
               )}

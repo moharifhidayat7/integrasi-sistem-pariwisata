@@ -169,12 +169,36 @@ const Produk = () => {
               <Pane>
                 <Table overflowX='auto'>
                   <Table.Head borderRadius={4}>
-                    <Table.TextHeaderCell>Foto</Table.TextHeaderCell>
+                    <Table.TextHeaderCell
+                      flexBasis={100}
+                      flexShrink={0}
+                      flexGrow={0}
+                    >
+                      Foto
+                    </Table.TextHeaderCell>
                     <Table.TextHeaderCell>Nama Produk</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Kategori</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Penjual</Table.TextHeaderCell>
+                    <Table.TextHeaderCell
+                      flexBasis={150}
+                      flexShrink={0}
+                      flexGrow={0}
+                    >
+                      Kategori
+                    </Table.TextHeaderCell>
+                    <Table.TextHeaderCell
+                      flexBasis={150}
+                      flexShrink={0}
+                      flexGrow={0}
+                    >
+                      Penjual
+                    </Table.TextHeaderCell>
                     <Table.TextHeaderCell>Harga</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Tampilkan</Table.TextHeaderCell>
+                    <Table.TextHeaderCell
+                      flexBasis={80}
+                      flexShrink={0}
+                      flexGrow={0}
+                    >
+                      Tampilkan
+                    </Table.TextHeaderCell>
                     <Table.TextHeaderCell textAlign='center'>
                       Aksi
                     </Table.TextHeaderCell>
@@ -190,7 +214,11 @@ const Produk = () => {
                           borderRadius={4}
                           className='shadow-sm'
                         >
-                          <Table.Cell>
+                          <Table.Cell
+                            flexBasis={100}
+                            flexShrink={0}
+                            flexGrow={0}
+                          >
                             <Pane
                               width={80}
                               height={80}
@@ -212,12 +240,20 @@ const Produk = () => {
                           <Table.TextCell>
                             <Strong>{profile.name}</Strong>
                           </Table.TextCell>
-                          <Table.TextCell>
+                          <Table.TextCell
+                            flexBasis={150}
+                            flexShrink={0}
+                            flexGrow={0}
+                          >
                             {profile.category && (
                               <Badge color='blue'>{profile.category}</Badge>
                             )}
                           </Table.TextCell>
-                          <Table.TextCell>
+                          <Table.TextCell
+                            flexBasis={150}
+                            flexShrink={0}
+                            flexGrow={0}
+                          >
                             {profile.object && (
                               <Link href='#'>
                                 <a>
@@ -235,11 +271,16 @@ const Produk = () => {
                                   color='green500'
                                   key={index + ps.variation}
                                 >
-                                  {ps.variation} - {formatRp(ps.price)} <br />
+                                  {ps.variation} - {formatRp(ps.price + ps.fee)}{' '}
+                                  <br />
                                 </Strong>
                               ))}
                           </Table.TextCell>
-                          <Table.TextCell>
+                          <Table.TextCell
+                            flexBasis={80}
+                            flexShrink={0}
+                            flexGrow={0}
+                          >
                             <ControlledSwitch
                               id={profile.id}
                               defaultCheck={profile.visible}
