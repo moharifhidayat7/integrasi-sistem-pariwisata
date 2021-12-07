@@ -35,13 +35,13 @@ const Bayar = ({ kota }) => {
       setValue('phone', userData.phone)
       setValue('line1', userData.address.line1)
       setValue('postcode', userData.address.postcode)
-      setValue(
-        'city',
-        kota.filter(
-          (f) =>
-            f.city_name.toLowerCase() == userData.address.city.toLowerCase()
-        )[0].city_id
-      )
+      const es = kota.filter(
+        (f) => f.city_name.toLowerCase() == userData.address.city.toLowerCase()
+      )[0].city_id
+      if (typeof es == 'undefined') {
+      } else {
+        setValue('city', es)
+      }
     } else {
       reset()
     }
