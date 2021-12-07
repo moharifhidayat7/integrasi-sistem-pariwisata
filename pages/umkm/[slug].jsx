@@ -220,23 +220,18 @@ const DetailWisata = ({ data }) => {
                                 style={{ color: '#38b520', fontSize: '1.2rem' }}
                               >
                                 {formatRp(
-                                  _.min(room.prices.map((p) => p.price))
+                                  _.min(room.prices.map((p) => p.price+p.fee))
                                 )}
                               </span>
 
-                              <button
-                                type='button'
-                                className='btn ispBtn-primary'
-                                onClick={() =>
-                                  handleAdd({
-                                    qty: 1,
-                                    variation: room.prices[0],
-                                    product: room,
-                                  })
-                                }
+                              <Link href={'/produk/' + room.id}>
+                              <a
+                                role='button'
+                                className='btn ispBtn-primary px-3'
                               >
-                                Masukkan Keranjang
-                              </button>
+                                Beli
+                              </a>
+                            </Link>
                             </div>
                           </div>
                         </div>
