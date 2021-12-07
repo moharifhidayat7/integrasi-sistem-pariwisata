@@ -21,9 +21,9 @@ const Navbar = () => {
     >
       <div className='container-fluid px-sm-5'>
         <div
-          className={`d-flex justify-content-between align-items-center ${style.menuRes}`}
+          className={`d-flex justify-content-none justify-content-sm-between align-items-center ${style.menuRes}`}
         >
-          <div className='text-wrap tsm'>
+          <div className='text-wrap d-none d-sm-block'>
           <Link href='/'>
             <a className='navbar-brand fw-bold'>Rumah Digital Gombengsari</a>
           </Link>
