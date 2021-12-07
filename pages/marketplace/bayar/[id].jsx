@@ -361,7 +361,7 @@ const Bayar = ({ order, payment }) => {
                   Pesanan anda sedang dikirim dengan No. Resi {order.resi} (JNE){' '}
                   <br />
                   <a
-                    href='https://rajaongkir.com/'
+                    href='https://cekresi.com/'
                     target='_blank'
                     rel='noreferrer'
                   >
