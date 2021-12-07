@@ -23,7 +23,7 @@ const Navbar = () => {
         <div
           className={`d-flex justify-content-between align-items-center ${style.menuRes}`}
         >
-          <div className='text-wrap'>
+          <div className='text-wrap tsm'>
           <Link href='/'>
             <a className='navbar-brand fw-bold'>Rumah Digital Gombengsari</a>
           </Link>
