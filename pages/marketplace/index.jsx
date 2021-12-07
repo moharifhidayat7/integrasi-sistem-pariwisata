@@ -218,7 +218,7 @@ const Index = () => {
                               style={{ color: '#38b520', fontSize: '1.2rem' }}
                             >
                               {formatRp(
-                                _.min(room.prices.map((p) => p.price + p.fee))
+                                _.min(room.prices.map((p) => (p.price + p.fee)))
                               )}
                             </span>
                             <Link href={'/produk/' + room.id}>
