@@ -21,7 +21,7 @@ const Navbar = () => {
     >
       <div className='container-fluid px-sm-5'>
         <div
-          className={`d-flex justify-content-none justify-content-sm-between align-items-center ${style.menuRes}`}
+          className={`d-flex justify-content-center justify-content-sm-between align-items-center ${style.menuRes}`}
         >
           <div className='text-wrap d-none d-sm-block'>
           <Link href='/'>
@@ -31,7 +31,7 @@ const Navbar = () => {
           <div className='d-flex align-items-center'>
             <CartDropdown className='d-lg-none'/>
             <button
-              className='navbar-toggler d-lg-none ms-2'
+              className='navbar-toggler d-lg-none ms-4 ms-sm-2'
               type='button'
               onClick={toggleShow}
             >
