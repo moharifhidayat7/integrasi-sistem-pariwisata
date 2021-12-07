@@ -244,7 +244,11 @@ const Pesanan = ({ object }) => {
                             {order.phone}
                           </Table.TextCell>
                           <Table.TextCell>
-                            {object.filter((o) => o.id == order.room.object)}
+                            {
+                              object.filter((o) => o.id == order.room.object)[0]
+                                .name
+                            }
+                            ({order.room.name})
                           </Table.TextCell>
                           <Table.TextCell>
                             {new Date(order.checkin).toLocaleString('id-ID', {
