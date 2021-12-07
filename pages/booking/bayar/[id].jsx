@@ -120,7 +120,11 @@ const Bayar = ({ booking, object, payment }) => {
                 </div>
               </div> */}
               <div className='mt-3 d-flex flex-column'>
-                <div className='form-group'>Upload Bukti Pembayaran</div>
+                {booking.status == 'success' ? (
+                  ''
+                ) : (
+                  <div className='form-group'>Upload Bukti Pembayaran</div>
+                )}
 
                 <div className='form-group pt-2'>
                   {booking.konfirmasi == null ? (

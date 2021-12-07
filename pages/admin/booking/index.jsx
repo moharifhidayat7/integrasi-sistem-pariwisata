@@ -30,7 +30,7 @@ import Link from 'next/link'
 import axios from 'axios'
 import Konfirmasi from '@components/Dialogs/KonfirmasiBooking'
 
-const Pesanan = () => {
+const Pesanan = ({ object }) => {
   const [data, setData] = useState([])
   const [value, setValue] = useState([])
   const [showDelete, setShowDelete] = useState(false)
@@ -209,6 +209,7 @@ const Pesanan = () => {
                       No.
                     </Table.TextHeaderCell>
                     <Table.TextHeaderCell>Detail</Table.TextHeaderCell>
+                    <Table.TextHeaderCell>Penginapan</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Check In</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Check Out</Table.TextHeaderCell>
                     <Table.TextHeaderCell>Total</Table.TextHeaderCell>
@@ -241,6 +242,9 @@ const Pesanan = () => {
                             {order.email}
                             <br />
                             {order.phone}
+                          </Table.TextCell>
+                          <Table.TextCell>
+                            {object.filter((o) => o.id == order.room.object)}
                           </Table.TextCell>
                           <Table.TextCell>
                             {new Date(order.checkin).toLocaleString('id-ID', {
@@ -336,3 +340,11 @@ const Pesanan = () => {
 }
 
 export default Pesanan
+export async function getServerSideProps(context) {
+  const object = await axios
+    .get(process.env.API_URI + '/objects')
+    .then((res) => res.data)
+  return {
+    props: { object },
+  }
+}
