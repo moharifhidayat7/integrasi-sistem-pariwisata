@@ -66,34 +66,36 @@ const Bayar = ({ booking, object, payment }) => {
           <div className='row g-5'>
             <div className='col-md-5 col-lg-4 order-md-last'>
               <h4 className='mb-3'>Kamar</h4>
-              <a
-                className='list-group-item list-group-item-action'
-                aria-current='true'
-              >
-                <div className='d-flex w-100 justify-content-between align-items-center'>
-                  <div>
-                    <h5 className='mb-1'>{booking.room.name}</h5>
-                    <span>
-                      {(new Date(booking.checkout) -
-                        new Date(booking.checkin)) /
-                        (1000 * 3600 * 24)}{' '}
-                      Malam x {formatRp(booking.room.price)}
-                    </span>
-                    <br />
-                    <Link href={'/penginapan/' + object.id}>
-                      <a target='_blank'>{object.name}</a>
-                    </Link>
+              <div>
+                <a
+                  className='list-group-item list-group-item-action'
+                  aria-current='true'
+                >
+                  <div className='d-flex w-100 justify-content-between align-items-center'>
+                    <div>
+                      <h5 className='mb-1'>{booking.room.name}</h5>
+                      <span>
+                        {(new Date(booking.checkout) -
+                          new Date(booking.checkin)) /
+                          (1000 * 3600 * 24)}{' '}
+                        Malam x {formatRp(booking.room.price)}
+                      </span>
+                      <br />
+                      <Link href={'/penginapan/' + object.id}>
+                        <a target='_blank'>{object.name}</a>
+                      </Link>
+                    </div>
+                    <strong style={{ color: '#38b520' }}>
+                      {formatRp(
+                        ((new Date(booking.checkout) -
+                          new Date(booking.checkin)) /
+                          (1000 * 3600 * 24)) *
+                          booking.room.price
+                      )}
+                    </strong>
                   </div>
-                  <strong style={{ color: '#38b520' }}>
-                    {formatRp(
-                      ((new Date(booking.checkout) -
-                        new Date(booking.checkin)) /
-                        (1000 * 3600 * 24)) *
-                        booking.room.price
-                    )}
-                  </strong>
-                </div>
-              </a>
+                </a>
+              </div>
               {/* <div className='card'>
                 <div style={{ height: '15rem', position: 'relative' }}>
                   <Image
