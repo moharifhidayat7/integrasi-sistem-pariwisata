@@ -24,7 +24,7 @@ const Navbar = () => {
           className={`d-flex justify-content-between align-items-center ${style.menuRes}`}
         >
           <Link href='/'>
-            <a className='navbar-brand fw-bold'>Rumah Digital Gombengsari</a>
+            <a className='navbar-brand fw-bold tsm'>Rumah Digital Gombengsari</a>
           </Link>
           <div className='d-flex align-items-center'>
             <CartDropdown className='d-lg-none'/>

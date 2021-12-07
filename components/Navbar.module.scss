@@ -6,6 +6,10 @@
   .menuRes {
     width: 100%;
   }
+  .tsm {
+    width: 70%;
+    white-space: wrap;
+  }
 }
 
 @include media-breakpoint-up(lg) {
@@ -13,6 +17,8 @@
     width: auto;
   }
 }
+
+
 
 .showMenu {
   -webkit-transition: display 2s ease-out;
