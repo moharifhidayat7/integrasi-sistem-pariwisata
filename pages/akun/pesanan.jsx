@@ -55,7 +55,7 @@ const Pesanan = () => {
                       {formatRp(
                         _.sumBy(
                           order.items,
-                          (k) => k.qty * (k.variation.price + k.varitaion.fee)
+                          (k) => k.qty * (k.variation.price + k.variation.fee)
                         ) + order.ongkir
                       )}
                     </span>
