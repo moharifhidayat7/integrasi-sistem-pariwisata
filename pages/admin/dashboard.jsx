@@ -31,7 +31,7 @@ import Link from 'next/link'
 import axios from 'axios'
 import Konfirmasi from '@components/Dialogs/Konfirmasi'
 
-const index = () => {
+const Dashboard = () => {
   const [data, setData] = useState([])
   const [value, setValue] = useState([])
   const [showDelete, setShowDelete] = useState(false)
@@ -321,4 +321,4 @@ const index = () => {
   )
 }
 
-export default index
+export default Dashboard
