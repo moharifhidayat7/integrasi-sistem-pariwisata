@@ -9,6 +9,7 @@ module.exports = {
       'rumahdigitalgombengsari.com',
       '10.0.0.3',
       'localhost',
+      'api.rumahdigitalgombengsari.com'
     ],
   },
 }
