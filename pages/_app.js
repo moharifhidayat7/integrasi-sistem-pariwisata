@@ -10,6 +10,7 @@ import { GlobalProvider } from '@components/Contexts/KeranjangContext'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
+    
     <GlobalProvider>
       <SessionProvider session={session} refetchInterval={5 * 60}>
         <Component {...pageProps} />

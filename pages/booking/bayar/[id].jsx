@@ -81,7 +81,7 @@ const Bayar = ({ booking, object, payment }) => {
                         Malam x {formatRp(booking.room.price)}
                       </span>
                       <br />
-                      <Link href={'/penginapan/' + object.id}>
+                      <Link href={'/penginapan/' + object.slug}>
                         <a target='_blank'>{object.name}</a>
                       </Link>
                     </div>

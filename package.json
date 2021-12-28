@@ -41,6 +41,7 @@
     "react-scrollmagic": "^2.3.0",
     "react-step-wizard": "^5.3.9",
     "sass": "^1.43.4",
+    "sharp": "^0.29.3",
     "swr": "^1.0.1"
   },
   "devDependencies": {
