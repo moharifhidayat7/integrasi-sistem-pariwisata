@@ -108,14 +108,14 @@ const ClientLoginForm = () => {
         </div>
       </form>
       <div className='text-center'>
-        <div className='mb-4'>
+        {/* <div className='mb-4'>
           <Link href='#ss'>
             <a>Lupa kata sandi?</a>
           </Link>
         </div>
         <div className='mb-4'>
           <span className='text-muted'>atau</span>
-        </div>
+        </div> */}
         <div className='mb-4'>
           <Link href='/register'>
             <a>Daftar Akun Baru</a>

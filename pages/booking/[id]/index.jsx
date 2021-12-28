@@ -62,11 +62,11 @@ const Bayar = ({ kamar }) => {
 
   useEffect(() => {
     // console.log((new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24))
-    if ((new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) < 1) {
+    if ((new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) == 0) {
+      setValid(true)
+    } else if ((new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) < 0) {
       setValid(false)
     } else if (isNaN(new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24)) {
-      setValid(false)
-    } else if (new Date(wIn) < new Date()) {
       setValid(false)
     } else {
       setValid(true)
@@ -91,8 +91,10 @@ const Bayar = ({ kamar }) => {
                   <div>
                     <h5 className='mb-1'>{kamar.name}</h5>
                     <span>
+                      {(new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) ==
+                        0 && <>1 Malam x {formatRp(kamar.price)}</>}
                       {(new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) <
-                        1 && '-'}
+                        0 && '-'}
                       {(new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) >=
                         1 && (
                         <>
@@ -113,8 +115,10 @@ const Bayar = ({ kamar }) => {
                     </Link>
                   </div>
                   <strong style={{ color: '#38b520' }}>
+                    {(new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) ==
+                      0 && <>{formatRp(1 * kamar.price)}</>}
                     {(new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) <
-                      1 && '-'}
+                      0 && '-'}
                     {(new Date(wOut) - new Date(wIn)) / (1000 * 3600 * 24) >=
                       1 && (
                       <>
@@ -168,6 +172,7 @@ const Bayar = ({ kamar }) => {
                       type='date'
                       className='form-control'
                       id='checkin'
+                      min={new Date().toISOString().slice(0, 10)}
                       {...register('checkin', { required: 'Harus di isi!' })}
                     />
                     {errors.checkin && (
@@ -184,6 +189,7 @@ const Bayar = ({ kamar }) => {
                       type='date'
                       className='form-control'
                       id='checkout'
+                      min={new Date().toISOString().slice(0, 10)}
                       {...register('checkout', { required: 'Harus di isi!' })}
                     />
                     {errors.checkOut && (
