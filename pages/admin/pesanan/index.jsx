@@ -317,16 +317,18 @@ const Pesanan = () => {
                                 >
                                   Lihat Item
                                 </Button> */}
-                                <Button
-                                  appearance='primary'
-                                  intent='success'
-                                  onClick={() => {
-                                    setKonfirmasi(true)
-                                    setRowData(order)
-                                  }}
-                                >
-                                  Konfirmasi
-                                </Button>
+                                {order.konfirmasi != null && (
+                                  <Button
+                                    appearance='primary'
+                                    intent='success'
+                                    onClick={() => {
+                                      setKonfirmasi(true)
+                                      setRowData(order)
+                                    }}
+                                  >
+                                    Konfirmasi
+                                  </Button>
+                                )}
                                 <Button
                                   appearance='primary'
                                   intent='danger'

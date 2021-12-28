@@ -8,7 +8,7 @@ const index = () => {
       <Content>
         <Content.Body>
           <Pane className='mt-5'>
-            <Heading is='h1' size={900} className='pb-4'>
+            <Heading is='h1' size={900} className='pb-4 mt-4'>
               Dashboard
             </Heading>
             <Pane>

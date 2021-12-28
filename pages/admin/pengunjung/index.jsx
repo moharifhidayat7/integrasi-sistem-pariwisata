@@ -62,13 +62,17 @@ const Pengunjung = () => {
         <Content.Header
           title='Laporan Pengunjung'
           button={
-            <Button
-              size='large'
-              iconBefore={BarcodeIcon}
-              onClick={() => console.log(data)}
-            >
-              Download QR Code
-            </Button>
+            <Link href='https://rumahdigitalgombengsari.com/qrcode_rumahdigitalgombengsari.com.png'>
+              <a target='_blank'>
+                <Button
+                  appearance='primary'
+                  size='large'
+                  iconBefore={BarcodeIcon}
+                >
+                  Download QR Code
+                </Button>
+              </a>
+            </Link>
           }
         />
         <Content.Body>
