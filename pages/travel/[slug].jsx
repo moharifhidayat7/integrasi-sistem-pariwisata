@@ -170,7 +170,7 @@ const DetailWisata = ({ data }) => {
                 </div>
               </div>
             </div>
-            <div className='row'>
+            {/* <div className='row'>
               <div className='col-12'>
                 <h2 id='paketwisata' className='mb-4 mt-4 sectionTitle'>
                   Paket Wisata
@@ -189,7 +189,7 @@ const DetailWisata = ({ data }) => {
                   )}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className='row'>
               <div className='mt-4 '>
