@@ -7,7 +7,6 @@ export async function getServerSideProps(context) {
   return {
     redirect: {
       destination: '/admin/dashboard',
-      permanent: false,
     },
   }
 }
