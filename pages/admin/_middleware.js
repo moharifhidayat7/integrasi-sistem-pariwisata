@@ -3,8 +3,8 @@ import { getToken } from 'next-auth/jwt'
 
 export async function middleware(req) {
   const session = await getToken({ req, secret: process.env.SECRET })
-
-  if (!session) return NextResponse.redirect('/login')
+  console.log(session)
+  // if (!session) return NextResponse.redirect('/login')
 
   return NextResponse.next()
 }
