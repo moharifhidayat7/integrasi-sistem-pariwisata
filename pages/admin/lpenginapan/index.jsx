@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import Layout from '../../../components/Layouts/Admin'
 import Content from '../../../components/Content'
 import { useSession } from 'next-auth/react'
-import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css"
 import { formatRp } from '@helpers/functions'
 import _ from 'lodash'
 import {
@@ -25,13 +23,6 @@ import {
 } from 'evergreen-ui'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-
-const Start = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  return (
-    <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-  );
-};
 
 const Booking = () => {
   const [roles, setRoles] = useState([])
