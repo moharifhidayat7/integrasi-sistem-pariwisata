@@ -181,7 +181,7 @@ const DetailWisata = ({ data }) => {
                 </h2>
                 <div className='produk row g-2'>
                   {data.products.length > 0 &&
-                    data.products.slice(0, 8).map((room) => (
+                    data.products.filter((d) => d.visible == true).slice(0, 8).map((room) => (
                       <div className='col-lg-3 col-md-4 col-sm-6' key={room.id}>
                         <div className='card'>
                           <Link href={'/produk/' + room.id}>
@@ -240,7 +240,7 @@ const DetailWisata = ({ data }) => {
                 </div>
                 <div className='text-center mt-3'>
                   {data.products.length >= 8 && (
-                    <Link href='#'>
+                    <Link href='/marketplace'>
                       <a
                         role='button'
                         className='btn rounded-pill ms-auto px-3 mb-2 mb-lg-0 ispBtn-secondary'
