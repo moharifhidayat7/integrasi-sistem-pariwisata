@@ -69,7 +69,6 @@ const Bayar = ({ kota }) => {
       phone: postData.phone,
       items: keranjang,
       ongkir: active.cost[0].value,
-      fee: payment.fee,
       users_permissions_user: session.id,
     }
     await clientAxios

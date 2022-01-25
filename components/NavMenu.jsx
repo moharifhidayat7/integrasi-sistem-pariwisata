@@ -28,6 +28,7 @@ import {
   SettingsIcon,
   Button,
   Card,
+  DatabaseIcon,
   KnownVehicleIcon,
   GroupedBarChartIcon,
   DriveTimeIcon,
@@ -116,6 +117,16 @@ const NavMenu = () => {
           icon={<GroupedBarChartIcon color='#F9FAFC' />}
           text='Pengunjung'
           href='/admin/pengunjung'
+        />
+        <CustomItem
+          icon={<DatabaseIcon color='#F9FAFC' />}
+          text='Penjualan'
+          href='/admin/penjualan'
+        />
+        <CustomItem
+          icon={<DatabaseIcon color='#F9FAFC' />}
+          text='Booking'
+          href='/admin/lpenginapan'
         />
         {/* <CustomItem
           icon={<KnownVehicleIcon color='#F9FAFC' />}
