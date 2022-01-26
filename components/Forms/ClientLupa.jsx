@@ -21,7 +21,7 @@ const ClientLupa = () => {
   } = useForm()
 
   const instance = axios.create({
-    baseURL: NEXT_PUBLIC_API_URI,
+    baseURL: process.env.NEXT_PUBLIC_API_URI,
   })
 
   instance.interceptors.request.use(
