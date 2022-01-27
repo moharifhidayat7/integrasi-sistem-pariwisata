@@ -56,7 +56,7 @@ const Penjualan = () => {
   const download = async (start, end) => {
     axios({
       method: 'post',
-      url: 'https://rumahdigitalgombengsari.com/api/export/penjualan',
+      url: 'http://localhost:3000/api/export/penjualan',
       responseType: 'blob',
       data: {
         start:start,

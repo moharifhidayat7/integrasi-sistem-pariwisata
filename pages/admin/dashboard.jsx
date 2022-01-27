@@ -161,7 +161,9 @@ const Dashboard = () => {
                         No.
                       </Table.TextHeaderCell>
                       <Table.TextHeaderCell>User</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>
+                      <Table.TextHeaderCell flexBasis={400}
+                            flexShrink={0}
+                            flexGrow={0}>
                         Alamat Pengiriman
                       </Table.TextHeaderCell>
                       <Table.TextHeaderCell>Item</Table.TextHeaderCell>
@@ -198,7 +200,9 @@ const Dashboard = () => {
                                 {order.users_permissions_user.name}
                               </Strong>
                             </Table.TextCell>
-                            <Table.TextCell>
+                            <Table.TextCell flexBasis={400}
+                            flexShrink={0}
+                            flexGrow={0}>
                               <Strong>{order.name}</Strong>
                               <br />
                               {order.address.line1}

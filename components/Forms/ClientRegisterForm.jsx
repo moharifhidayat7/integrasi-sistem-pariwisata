@@ -48,7 +48,6 @@ const ClientRegisterForm = () => {
           setSuccess(false)
           setIsLoading(false)
           setError('email', { message: 'Email sudah digunakan!' })
-          console.log('An error occurred:', error.response)
         })
   }
 

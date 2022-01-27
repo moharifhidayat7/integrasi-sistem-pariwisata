@@ -45,7 +45,7 @@ const Booking = () => {
   const download = async (start, end) => {
     axios({
       method: 'post',
-      url: 'https://rumahdigitalgombengsari.com/api/export/booking',
+      url: 'http://localhost:3000/api/export/booking',
       responseType: 'blob',
       data: {
         start:start,

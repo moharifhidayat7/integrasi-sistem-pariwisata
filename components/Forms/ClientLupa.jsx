@@ -58,13 +58,13 @@ const ClientLupa = () => {
         className={`alert alert-warning ${error ? 'd-block' : 'd-none'}`}
         role='alert'
       >
-        Terjadi kesalahan pada server.
+        Email Tidak Terdaftar
       </div>
       <div
         className={`alert alert-success ${success ? 'd-block' : 'd-none'}`}
         role='alert'
       >
-        Jika Email anda terdaftar, anda akan menerima link untuk melakukan reset password. Silakan cek email anda!
+        Permintaan reset password berhasil. Anda akan menerima link untuk melakukan reset password. Silakan cek email anda!
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>

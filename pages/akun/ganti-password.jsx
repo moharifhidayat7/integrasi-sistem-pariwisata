@@ -16,6 +16,7 @@ const Profil = () => {
     formState: { errors },
   } = useForm()
   const [data, setData] = useState([])
+  const [showMessage, setShowMessage] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { data: session, status } = useSession()
   const currentPassword = useRef({})
@@ -44,14 +45,19 @@ const Profil = () => {
       })
       .catch(function (error) {
         setIsLoading(false)
-        console.log(error)
-        setError('currentPassword', 'Password Salah')
+        setShowMessage(true)
       })
   }
 
   return (
     <Layout title='Profil'>
       <form className='row g-3' onSubmit={handleSubmit(onSubmit)}>
+      <div
+        className={`alert alert-danger ${showMessage ? 'd-block' : 'd-none'}`}
+        role='alert'
+      >
+        Password Lama Salah!
+      </div>
         <div className='col-md-12'>
           <label htmlFor='currentPassword' className='form-label text-left'>
             Password Lama *
@@ -65,6 +71,11 @@ const Profil = () => {
               required: 'Harus di isi!',
             })}
           />
+          {errors.currentPassword && (
+            <div className='invalid-feedback d-block'>
+              {errors.currentPassword.message}
+            </div>
+          )}
         </div>
         <div className='col-md-12'>
           <label htmlFor='newPassword' className='form-label text-left'>
@@ -82,7 +93,13 @@ const Profil = () => {
                 message: 'Password minimal 8 karakter',
               },
             })}
+
           />
+          {errors.newPassword && (
+            <div className='invalid-feedback d-block'>
+              {errors.newPassword.message}
+            </div>
+          )}
         </div>
         <div className='col-md-12'>
           <label htmlFor='confirmNewPassword' className='form-label text-left'>
@@ -99,6 +116,11 @@ const Profil = () => {
                 value === currentPassword.current || 'Password tidak sesuai',
             })}
           />
+          {errors.confirmNewPassword && (
+            <div className='invalid-feedback d-block'>
+              {errors.confirmNewPassword.message}
+            </div>
+          )}
         </div>
 
         <div className='d-flex justify-content-end'>
